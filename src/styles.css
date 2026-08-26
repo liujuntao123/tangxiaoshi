@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f3ebe0;
+  --color-paper-deep: #e4d5c0;
+  --color-ink: #1c1712;
+  --color-ink-soft: #5c5348;
+  --color-pine: #3d5a4c;
+  --color-pine-fg: #f3ebe0;
+  --color-seal: #8f3d32;
+  --color-border: color-mix(in oklab, #1c1712 14%, transparent);
+  --font-display: "Ma Shan Zheng", "Noto Serif SC", "Songti SC", serif;
+  --font-serif: "Noto Serif SC", "Songti SC", serif;
+  --font-sans: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html,
+  body,
+  #app {
+    min-height: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-family: var(--font-display);
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+.title-art {
+  font-family: var(--font-display);
+  letter-spacing: 0.14em;
+  line-height: 1.15;
+  text-shadow:
+    0 1px 0 rgb(28 23 18 / 50%),
+    0 6px 16px rgb(28 23 18 / 40%);
+}
+
+.hud-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-shadow:
+    0 1px 2px rgb(28 23 18 / 75%),
+    0 4px 10px rgb(28 23 18 / 45%);
+}
+
+.title-ink {
+  font-family: var(--font-display);
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  color: var(--color-ink);
+  text-shadow: 0 1px 0 rgb(243 235 224 / 55%);
+}
+
+.paper-glow {
+  text-shadow:
+    0 1px 2px rgb(28 23 18 / 85%),
+    0 0 14px rgb(28 23 18 / 55%);
+}
+
+.poem-line {
+  font-family: var(--font-serif);
+}
+
+.hud-fade {
+  background: linear-gradient(to bottom, rgb(28 23 18 / 55%), transparent);
+}
+
+.dock-fade {
+  background: linear-gradient(to top, rgb(28 23 18 / 78%), rgb(28 23 18 / 28%), transparent);
+}
+
+.ink-fade {
+  background: linear-gradient(to top, rgb(28 23 18 / 82%), rgb(28 23 18 / 35%), transparent);
+}
+
+.row-ink {
+  border-bottom: 1px solid rgb(243 235 224 / 22%);
+}
+
+@keyframes idle-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes pose-lunge {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  35% {
+    transform: translateX(14px) scale(1.08) rotate(3deg);
+  }
+  100% {
+    transform: translateX(8px) scale(1.03);
+  }
+}
+@keyframes pose-recoil {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+  30% {
+    transform: translateX(-14px) rotate(-8deg) scale(0.96);
+  }
+  100% {
+    transform: translateX(-7px) rotate(-4deg);
+  }
+}
+@keyframes stage-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-7px) rotate(-0.5deg);
+  }
+  40% {
+    transform: translateX(7px) rotate(0.5deg);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes hit-flash {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  35% {
+    filter: brightness(2.1) saturate(0.5);
+  }
+}
+@keyframes fly-right {
+  0% {
+    left: 16%;
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5) rotate(-20deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    left: 68%;
+    opacity: 0;
+    transform: translateY(-50%) scale(1.25) rotate(18deg);
+  }
+}
+@keyframes fly-left {
+  0% {
+    left: 68%;
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5) rotate(20deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    left: 16%;
+    opacity: 0;
+    transform: translateY(-50%) scale(1.25) rotate(-18deg);
+  }
+}
+@keyframes glyph-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 48px)) scale(1.2);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.idle-bob {
+  animation: idle-bob 2.2s ease-in-out infinite;
+}
+.pose-lunge {
+  animation: pose-lunge 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.pose-recoil {
+  animation: pose-recoil 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stage-shake {
+  animation: stage-shake 0.38s ease-out;
+}
+.hit-flash {
+  animation: hit-flash 0.32s ease-out;
+}
+.fly-right {
+  animation: fly-right 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.fly-left {
+  animation: fly-left 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.glyph-burst {
+  animation: glyph-burst 0.7s ease-out forwards;
+}
+.pop-in {
+  animation: pop-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.caret {
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+
+.sprite-shadow {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  z-index: 0;
+  width: 70%;
+  height: 12px;
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgb(28 23 18 / 55%), transparent 72%);
+  transform: translateX(-50%);
+}
+
+.speech-box {
+  background: linear-gradient(to top, rgb(28 23 18 / 78%), rgb(28 23 18 / 18%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
