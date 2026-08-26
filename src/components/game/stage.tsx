@@ -68,13 +68,13 @@ export function BackButton({ to }: { to: string }) {
 
 export function ArtPanel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={`relative ${className}`}>
       <img
         src="/ui/speech-panel.png"
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
       />
-      <div className="relative z-10 px-12 py-11">{children}</div>
+      <div className="relative z-10 px-[16%] pt-[20%] pb-[22%]">{children}</div>
     </div>
   );
 }

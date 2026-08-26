@@ -7,7 +7,7 @@ import { sfxHit, sfxHurt, sfxTap, sfxWin } from "@/lib/game/sfx";
 import { bustOf, FX_BOLT, FX_IMPACT, HERO_ATTACK, HERO_HURT, HERO_IDLE, poseFrames } from "@/lib/game/sprites";
 import type { DialogueLine, Question } from "@/lib/game/types";
 import { useEffect, useMemo, useState } from "react";
-import { ChoiceSlip } from "./choice-slip";
+import { ChoiceSlip, PlaqueButton, PlaqueFace } from "./choice-slip";
 import { HpPips } from "./hp-pips";
 import { SpeechBox } from "./speech-box";
 import { SpriteFrames } from "./sprite-frames";
@@ -262,16 +262,14 @@ export function PlayLevel({ levelId }: { levelId: string }) {
           <ArtPanel className="text-center">
             <p className="title-ink text-3xl">本关失败</p>
             <p className="mt-1 text-sm text-ink-soft">可立刻重试，进度还在。</p>
-            <div className="mt-4 flex justify-center gap-8">
-              <button type="button" onClick={retry} className="tap title-ink text-2xl">
-                重试
-              </button>
+            <div className="mt-4 flex justify-center gap-3">
+              <PlaqueButton onClick={retry}>重试</PlaqueButton>
               <Link
                 to="/story/$dynastyId/$chapterId"
                 params={{ dynastyId: chapter.dynastyId, chapterId: chapter.poetId }}
-                className="title-ink text-2xl opacity-60"
+                className="tap"
               >
-                回地图
+                <PlaqueFace>回地图</PlaqueFace>
               </Link>
             </div>
           </ArtPanel>

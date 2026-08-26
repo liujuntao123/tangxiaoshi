@@ -3,8 +3,8 @@ import { questionsFromPoems } from "@/lib/game/content";
 import { applyEndlessRun, unlockedPoemIds } from "@/lib/game/progress";
 import { useSave } from "@/lib/game/save-context";
 import { useMemo, useState } from "react";
-import { ChoiceSlip } from "./choice-slip";
-import { ArtPanel, JadeEnter, Stage, StageHud } from "./stage";
+import { ChoiceSlip, PlaqueButton, PlaqueFace } from "./choice-slip";
+import { ArtPanel, Stage, StageHud } from "./stage";
 
 export function EndlessView() {
   const { save, patchSave } = useSave();
@@ -48,8 +48,8 @@ export function EndlessView() {
             <img src="/sprites/fx/bolt.png" alt="" className="mx-auto h-10 w-10 object-contain" />
             <p className="title-ink mt-2 text-2xl">还没有解锁的诗</p>
             <p className="mt-2 text-sm text-ink-soft">先去历险过一关，无尽才会出题。</p>
-            <Link to="/story" className="title-ink mt-4 inline-block text-xl">
-              去历险
+            <Link to="/story" className="tap mt-4 inline-flex justify-center">
+              <PlaqueFace>去历险</PlaqueFace>
             </Link>
           </ArtPanel>
         </div>
@@ -67,8 +67,8 @@ export function EndlessView() {
             <p className="mt-2 text-sm tracking-widest text-ink-soft">
               最高连对 {save.endlessBestStreak} · 最高分 {save.endlessBestScore}
             </p>
-            <div className="mt-3">
-              <JadeEnter label="开始" onClick={() => setStarted(true)} />
+            <div className="mt-4 flex justify-center">
+              <PlaqueButton onClick={() => setStarted(true)}>开始</PlaqueButton>
             </div>
           </ArtPanel>
         </div>
@@ -85,16 +85,17 @@ export function EndlessView() {
             <p className="title-ink text-2xl">本局结束</p>
             <p className="title-ink mt-1 text-5xl">{score}</p>
             <p className="text-sm tracking-widest text-ink-soft">连对</p>
-            <div className="mt-3">
-              <JadeEnter
-                label="再来一局"
+            <div className="mt-4 flex justify-center">
+              <PlaqueButton
                 onClick={() => {
                   setIndex(0);
                   setScore(0);
                   setPicked(null);
                   setEnded(false);
                 }}
-              />
+              >
+                再来一局
+              </PlaqueButton>
             </div>
           </ArtPanel>
         </div>

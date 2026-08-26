@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type SlipState = "idle" | "on" | "miss";
+type SlipSize = "row" | "choice";
 
 const SRC: Record<SlipState, string> = {
   idle: "/ui/choice-slip.png",
@@ -11,17 +12,26 @@ const SRC: Record<SlipState, string> = {
 export function SlipShell({
   children,
   state = "idle",
+  size = "row",
   className = "",
 }: {
   children: ReactNode;
   state?: SlipState;
+  size?: SlipSize;
   className?: string;
 }) {
   const glow = state === "on" ? "picked" : state === "miss" ? "picked-miss" : "";
+  const tall = size === "row" ? "min-h-[7.6rem]" : "min-h-[5.6rem]";
   return (
-    <span className={`relative block min-h-[5.75rem] overflow-hidden ${glow} ${className}`}>
-      <img src={SRC[state]} alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
-      <span className="relative z-10 flex min-h-[5.75rem] w-full items-center justify-between gap-2 px-11 py-3.5">
+    <span className={`relative block overflow-hidden ${tall} ${glow} ${className}`}>
+      <img
+        src={SRC[state]}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-[center_40%]"
+      />
+      <span
+        className={`relative z-10 flex ${tall} w-full items-center justify-between gap-2 px-[15%] pt-[12%] pb-[18%]`}
+      >
         {children}
       </span>
     </span>
@@ -31,19 +41,23 @@ export function SlipShell({
 export function WoodSlip({
   children,
   state = "idle",
+  size = "row",
   disabled,
   onClick,
   className = "",
 }: {
   children: ReactNode;
   state?: SlipState;
+  size?: SlipSize;
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
 }) {
   return (
     <button type="button" disabled={disabled} onClick={onClick} className={`tap block w-full ${className}`}>
-      <SlipShell state={state}>{children}</SlipShell>
+      <SlipShell state={state} size={size}>
+        {children}
+      </SlipShell>
     </button>
   );
 }
@@ -60,8 +74,29 @@ export function ChoiceSlip({
   onClick?: () => void;
 }) {
   return (
-    <WoodSlip state={state} disabled={disabled} onClick={onClick} className="my-0.5">
-      <span className="w-full px-1 text-center text-[13px] leading-snug text-ink">{text}</span>
+    <WoodSlip state={state} size="choice" disabled={disabled} onClick={onClick} className="my-0.5">
+      <span className="w-full text-center text-[13px] leading-snug text-ink">{text}</span>
     </WoodSlip>
+  );
+}
+
+export function PlaqueFace({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <span className={`relative inline-flex min-h-[3.5rem] min-w-[7.2rem] items-center justify-center ${className}`}>
+      <img src="/ui/plaque.png" alt="" className="absolute inset-0 h-full w-full object-cover object-[center_42%]" />
+      <span className="relative z-10 title-ink px-7 pt-1.5 pb-2.5 text-lg leading-none">{children}</span>
+    </span>
+  );
+}
+
+export function PlaqueButton({
+  children,
+  className = "",
+  ...props
+}: { children: ReactNode } & ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button type="button" {...props} className={`tap ${className}`}>
+      <PlaqueFace>{children}</PlaqueFace>
+    </button>
   );
 }

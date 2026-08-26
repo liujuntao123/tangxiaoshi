@@ -1,4 +1,5 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { PlaqueButton } from "@/components/game/choice-slip";
 import { ArtPanel, JadeEnter } from "@/components/game/stage";
 import { authClient, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
@@ -89,8 +90,8 @@ function Login() {
             </div>
           </div>
           <ArtPanel>
-            <p className="title-ink text-2xl">{registering ? "注册" : "登录"}</p>
-            <label className="mt-2 block text-[11px] tracking-widest text-ink-soft">
+            <p className="title-ink text-xl">{registering ? "注册" : "登录"}</p>
+            <label className="mt-1.5 block text-[11px] tracking-widest text-ink-soft">
               邮箱
               <input
                 type="email"
@@ -98,10 +99,10 @@ function Login() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 h-9 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
+                className="mt-0.5 h-8 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
               />
             </label>
-            <label className="mt-2 block text-[11px] tracking-widest text-ink-soft">
+            <label className="mt-1.5 block text-[11px] tracking-widest text-ink-soft">
               密码
               <input
                 type="password"
@@ -110,11 +111,11 @@ function Login() {
                 autoComplete={registering ? "new-password" : "current-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 h-9 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
+                className="mt-0.5 h-8 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
               />
             </label>
             {registering ? (
-              <label className="mt-2 block text-[11px] tracking-widest text-ink-soft">
+              <label className="mt-1.5 block text-[11px] tracking-widest text-ink-soft">
                 再写一遍密码
                 <input
                   type="password"
@@ -123,11 +124,11 @@ function Login() {
                   autoComplete="new-password"
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
-                  className="mt-1 h-9 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
+                  className="mt-0.5 h-8 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
                 />
               </label>
             ) : null}
-            {error ? <p className="mt-2 text-sm text-seal">{error}</p> : null}
+            {error ? <p className="mt-1.5 text-sm text-seal">{error}</p> : null}
             <div className="mt-2">
               <JadeEnter
                 type="submit"
@@ -135,17 +136,17 @@ function Login() {
                 disabled={busy || !authEnabled}
               />
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setMode(registering ? "in" : "up");
-                setConfirm("");
-                setError(null);
-              }}
-              className="mt-1 block w-full text-center text-[11px] tracking-widest text-ink-soft"
-            >
-              {registering ? "已有账号，去登录" : "没有账号，去注册"}
-            </button>
+            <div className="mt-2 flex justify-center">
+              <PlaqueButton
+                onClick={() => {
+                  setMode(registering ? "in" : "up");
+                  setConfirm("");
+                  setError(null);
+                }}
+              >
+                {registering ? "去登录" : "去注册"}
+              </PlaqueButton>
+            </div>
           </ArtPanel>
         </form>
       </div>

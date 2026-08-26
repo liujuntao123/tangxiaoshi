@@ -41,14 +41,14 @@ export function SpeechBox({
         }
         onNext();
       }}
-      className="tap pop-in absolute inset-x-2 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-20 h-[15.75rem] text-left"
+      className="tap pop-in absolute inset-x-2 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-20 h-[16.75rem] text-left"
     >
       <img src="/ui/speech-panel.png" alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
-      <div className="relative z-10 flex h-full items-center gap-3 px-12 pb-10 pt-10">
+      <div className="relative z-10 flex h-full items-center gap-3 px-[14%] pt-[20%] pb-[22%]">
         <img
           src={art}
           alt=""
-          className="h-28 w-[4.75rem] shrink-0 object-contain object-bottom"
+          className="h-[6.2rem] w-[4.2rem] shrink-0 object-contain object-bottom"
           onError={(event) => {
             event.currentTarget.src = "/sprites/poets/default.png";
           }}

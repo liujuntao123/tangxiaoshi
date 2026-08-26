@@ -1,7 +1,7 @@
 import { DYNASTIES, POEMS, poemsByPoet, poetsInDynasty } from "@/lib/game/content";
 import { sfxHit, sfxHurt, sfxTap } from "@/lib/game/sfx";
 import { useMemo, useState } from "react";
-import { ChoiceSlip, WoodSlip } from "./choice-slip";
+import { ChoiceSlip, PlaqueButton, WoodSlip } from "./choice-slip";
 import { ArtPanel, Stage, StageHud } from "./stage";
 
 export function PracticeView() {
@@ -55,13 +55,9 @@ export function PracticeView() {
       <Stage bg="/art/scene-tower.jpg">
         <StageHud title="练习" backTo="/" />
         <div className="absolute inset-x-0 bottom-0 top-[18%] z-10 overflow-y-auto px-3 pb-8">
-          <button
-            type="button"
-            onClick={() => setDynastyId(null)}
-            className="tap paper-glow mb-2 block w-full text-center text-[11px] tracking-widest text-paper/75"
-          >
-            ← 朝代
-          </button>
+          <div className="mb-2 flex justify-center">
+            <PlaqueButton onClick={() => setDynastyId(null)}>回朝代</PlaqueButton>
+          </div>
           {poets.map((poet) => (
             <WoodSlip
               key={poet.poetId}
@@ -85,13 +81,9 @@ export function PracticeView() {
       <Stage bg="/art/scene-tower.jpg">
         <StageHud title="练习" backTo="/" />
         <div className="absolute inset-x-0 bottom-0 top-[18%] z-10 overflow-y-auto px-3 pb-8">
-          <button
-            type="button"
-            onClick={() => setPoetId(null)}
-            className="tap paper-glow mb-2 block w-full text-center text-[11px] tracking-widest text-paper/75"
-          >
-            ← 诗人
-          </button>
+          <div className="mb-2 flex justify-center">
+            <PlaqueButton onClick={() => setPoetId(null)}>回诗人</PlaqueButton>
+          </div>
           {poetPoems.map((item) => (
             <WoodSlip
               key={item.id}
@@ -114,16 +106,16 @@ export function PracticeView() {
   return (
     <Stage bg="/art/scene-tower.jpg">
       <StageHud title="练习" backTo="/" />
-      <button
-        type="button"
-        onClick={() => {
-          setPoemId(null);
-          resetQuestion();
-        }}
-        className="paper-glow absolute inset-x-0 top-[14%] z-10 text-center text-[11px] tracking-widest text-paper/75"
-      >
-        ← 《{poem.title}》
-      </button>
+      <div className="absolute inset-x-0 top-[14%] z-10 flex justify-center">
+        <PlaqueButton
+          onClick={() => {
+            setPoemId(null);
+            resetQuestion();
+          }}
+        >
+          回诗文
+        </PlaqueButton>
+      </div>
 
       {showPoem ? (
         <button
@@ -139,7 +131,9 @@ export function PracticeView() {
                 <p key={line}>{line}</p>
               ))}
             </div>
-            <p className="mt-3 text-[11px] tracking-widest text-ink-soft">点这里收起</p>
+            <p className="mt-3 text-center">
+              <span className="title-ink text-sm tracking-widest text-ink-soft">点牌收回</span>
+            </p>
           </ArtPanel>
         </button>
       ) : null}
@@ -150,17 +144,15 @@ export function PracticeView() {
             <span className="paper-glow">
               {qIndex + 1} / {poem.questions.length}
             </span>
-            <button
-              type="button"
+            <PlaqueButton
               onClick={() => {
                 sfxTap();
                 setShowPoem(true);
                 setPicked(question.answerIndex);
               }}
-              className="tap paper-glow"
             >
               查看答案
-            </button>
+            </PlaqueButton>
           </div>
           <p className="title-art paper-glow mt-1 px-3 text-center text-[clamp(1.05rem,4.6vw,1.35rem)] leading-snug text-paper">
             {question.prompt}
@@ -187,29 +179,25 @@ export function PracticeView() {
               );
             })}
           </div>
-          <div className="mt-1 flex justify-between px-6">
-            <button
-              type="button"
+          <div className="mt-2 flex justify-between gap-3 px-2">
+            <PlaqueButton
               disabled={qIndex === 0}
               onClick={() => {
                 setQIndex((n) => Math.max(0, n - 1));
                 resetQuestion();
               }}
-              className="tap hud-title text-paper disabled:opacity-30"
             >
               上一题
-            </button>
-            <button
-              type="button"
+            </PlaqueButton>
+            <PlaqueButton
               disabled={qIndex >= poem.questions.length - 1}
               onClick={() => {
                 setQIndex((n) => Math.min(poem.questions.length - 1, n + 1));
                 resetQuestion();
               }}
-              className="tap hud-title text-paper disabled:opacity-30"
             >
               下一题
-            </button>
+            </PlaqueButton>
           </div>
         </section>
       ) : null}
