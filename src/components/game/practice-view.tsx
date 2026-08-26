@@ -139,7 +139,7 @@ export function PracticeView() {
       ) : null}
 
       {question ? (
-        <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.7rem,env(safe-area-inset-bottom))] pt-8">
+        <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
           <div className="flex items-center justify-between px-4 text-[11px] tracking-widest text-paper/85">
             <span className="paper-glow">
               {qIndex + 1} / {poem.questions.length}

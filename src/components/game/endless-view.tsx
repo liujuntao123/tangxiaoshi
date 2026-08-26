@@ -111,8 +111,8 @@ export function EndlessView() {
       <p className="paper-glow absolute inset-x-0 top-[16%] z-10 text-center text-[11px] tracking-[0.22em] text-paper/80">
         连对 {score}
       </p>
-      <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.8rem,env(safe-area-inset-bottom))] pt-8">
-        <p className="title-art paper-glow mb-1 px-3 text-center text-[clamp(1.05rem,4.6vw,1.35rem)] leading-snug text-paper">
+      <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
+        <p className="title-art paper-glow mb-0.5 px-3 text-center text-[clamp(0.95rem,4.2vw,1.2rem)] leading-snug text-paper">
           {question.prompt}
         </p>
         {question.choices.map((choice, choiceIndex) => {

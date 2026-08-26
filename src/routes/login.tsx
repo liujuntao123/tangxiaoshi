@@ -69,7 +69,7 @@ function Login() {
           alt=""
           decoding="async"
           onLoad={() => setBgReady(true)}
-          className={`absolute inset-0 h-full w-full object-cover object-[center_72%] stage-photo ${bgReady ? "is-in" : ""}`}
+          className={`absolute inset-0 h-full w-full object-cover object-[center_48%] stage-photo ${bgReady ? "is-in" : ""}`}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-transparent to-ink/25" />
         <p className="title-art paper-glow absolute inset-x-0 top-[8%] z-10 px-4 text-center text-[clamp(1.8rem,8vw,2.4rem)] text-paper">
