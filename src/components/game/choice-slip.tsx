@@ -21,17 +21,17 @@ export function SlipShell({
   className?: string;
 }) {
   const glow = state === "on" ? "picked" : state === "miss" ? "picked-miss" : "";
-  const tall = size === "row" ? "min-h-[7.6rem]" : "min-h-[5.6rem]";
+  // row：列表两行；choice：答题选项尽量矮，避免挡住场上角色
+  const tall = size === "row" ? "min-h-[7.2rem]" : "min-h-[3.85rem]";
+  const pad = size === "row" ? "px-[15%] pt-[12%] pb-[18%]" : "px-[14%] pt-[10%] pb-[14%]";
   return (
     <span className={`relative block overflow-hidden ${tall} ${glow} ${className}`}>
       <img
         src={SRC[state]}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover object-[center_40%]"
+        className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
       />
-      <span
-        className={`relative z-10 flex ${tall} w-full items-center justify-between gap-2 px-[15%] pt-[12%] pb-[18%]`}
-      >
+      <span className={`relative z-10 flex ${tall} w-full items-center justify-between gap-2 ${pad}`}>
         {children}
       </span>
     </span>
@@ -74,8 +74,8 @@ export function ChoiceSlip({
   onClick?: () => void;
 }) {
   return (
-    <WoodSlip state={state} size="choice" disabled={disabled} onClick={onClick} className="my-0.5">
-      <span className="w-full text-center text-[13px] leading-snug text-ink">{text}</span>
+    <WoodSlip state={state} size="choice" disabled={disabled} onClick={onClick} className="my-0">
+      <span className="w-full text-center text-[12.5px] leading-snug text-ink">{text}</span>
     </WoodSlip>
   );
 }
