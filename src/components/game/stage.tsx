@@ -45,7 +45,7 @@ export function Stage({
           alt=""
           decoding="async"
           onLoad={() => setReady(true)}
-          className={`absolute inset-0 h-full w-full object-cover object-[center_72%] stage-photo ${ready ? "is-in" : ""}`}
+          className={`absolute inset-0 h-full w-full object-cover object-[center_48%] stage-photo ${ready ? "is-in" : ""}`}
         />
         <div
           className={`absolute inset-0 ${

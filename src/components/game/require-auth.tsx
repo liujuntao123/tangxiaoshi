@@ -12,7 +12,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
         <img
           src="/art/scene-moon.jpg"
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-[center_70%]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_48%]"
         />
         <div className="relative z-10 px-6 text-center">
           <img src="/sprites/hero.png" alt="" className="mx-auto h-28 w-auto object-contain idle-bob" />
