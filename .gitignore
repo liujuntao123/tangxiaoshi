@@ -18,3 +18,6 @@ AGENTS.md
 startup.sh
 .DS_Store
 *.local
+
+__pycache__/
+*.pyc

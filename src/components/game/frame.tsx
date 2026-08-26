@@ -1,6 +1,7 @@
 import { signOut } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { KEYS_TO_BOSS } from "@/lib/game/content";
+import { CHAPTERS } from "@/lib/game/content";
+import { rescuedCount } from "@/lib/game/progress";
 import { useSave } from "@/lib/game/save-context";
 import { useState, type ReactNode } from "react";
 import { BackButton } from "./stage";
@@ -17,6 +18,7 @@ export function GameFrame({
   const { user, isPending } = useCurrentUserState();
   const { save } = useSave();
   const [signingOut, setSigningOut] = useState(false);
+  const poets = rescuedCount(save);
 
   return (
     <div className="paper-bg min-h-dvh text-ink">
@@ -33,7 +35,7 @@ export function GameFrame({
             </p>
             <p className="flex items-center gap-1 text-xs text-ink-soft">
               <img src="/sprites/key.png" alt="" className="h-3.5 w-3.5 object-contain" />
-              钥匙 {save.keysOwned}/{KEYS_TO_BOSS}
+              诗人 {poets.have}/{poets.total || CHAPTERS.length}
             </p>
           </div>
           {isPending ? (

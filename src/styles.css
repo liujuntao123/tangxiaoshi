@@ -38,6 +38,11 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
   h1,
   h2,
   h3 {
@@ -262,8 +267,29 @@
   transform: translateX(-50%);
 }
 
-.speech-box {
-  background: linear-gradient(to top, rgb(28 23 18 / 78%), rgb(28 23 18 / 18%));
+.stage-photo {
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.stage-photo.is-in {
+  opacity: 1;
+}
+
+.tap {
+  transition:
+    transform 0.14s ease,
+    filter 0.14s ease;
+}
+.tap:active:not(:disabled) {
+  transform: scale(0.97);
+  filter: brightness(0.94) saturate(1.08);
+}
+.picked {
+  filter: drop-shadow(0 0 10px rgb(61 90 76 / 40%));
+}
+.picked-miss {
+  filter: drop-shadow(0 0 10px rgb(143 61 50 / 40%));
 }
 
 @media (prefers-reduced-motion: reduce) {

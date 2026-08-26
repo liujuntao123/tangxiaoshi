@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { rescuedCount } from "@/lib/game/progress";
+import { useSave } from "@/lib/game/save-context";
 import { Stage, StageHud } from "./stage";
 
 const modes = [
@@ -9,11 +11,16 @@ const modes = [
 ];
 
 export function HomeScreen() {
+  const { save } = useSave();
+  const poets = rescuedCount(save);
   return (
     <Stage bg="/art/scene-moon.jpg">
       <StageHud />
       <p className="title-art paper-glow absolute inset-x-0 top-[15%] z-10 text-center text-[2.1rem] text-paper">
-        去救李白
+        去救诗人
+      </p>
+      <p className="paper-glow absolute inset-x-0 top-[22%] z-10 text-center text-[11px] tracking-[0.22em] text-paper/80">
+        {poets.have === 0 ? "从先秦一路走到宋" : `已救出 ${poets.have} 位`}
       </p>
       <div className="absolute inset-x-0 bottom-[18%] z-10 flex justify-center">
         <div className="relative flex h-44 w-36 items-end justify-center">
@@ -30,7 +37,7 @@ export function HomeScreen() {
           <Link
             key={mode.to}
             to={mode.to}
-            className="flex flex-col items-center gap-1 py-2 transition-transform duration-150 active:scale-95"
+            className="tap flex flex-col items-center gap-1 py-2"
           >
             <img src={mode.art} alt="" className="h-10 w-10 object-contain drop-shadow-md" />
             <span className="hud-title text-paper">{mode.title}</span>

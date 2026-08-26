@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { levelById, poemById, shuffleQuestions } from "@/lib/game/content";
+import { chapterOfLevel, levelById, poemById, poetBust, shuffleQuestions } from "@/lib/game/content";
+import { preloadImages } from "@/lib/game/preload";
 import { applyLevelWin } from "@/lib/game/progress";
 import { useSave } from "@/lib/game/save-context";
 import { sfxHit, sfxHurt, sfxTap, sfxWin } from "@/lib/game/sfx";
@@ -8,6 +9,7 @@ import type { DialogueLine, Question } from "@/lib/game/types";
 import { useEffect, useMemo, useState } from "react";
 import { ChoiceSlip } from "./choice-slip";
 import { HpPips } from "./hp-pips";
+import { SpeechBox } from "./speech-box";
 import { SpriteFrames } from "./sprite-frames";
 import { ArtPanel, Stage, StageHud } from "./stage";
 
@@ -17,6 +19,7 @@ type Bolt = { id: number; dir: "right" | "left" };
 
 export function PlayLevel({ levelId }: { levelId: string }) {
   const level = levelById(levelId);
+  const chapter = chapterOfLevel(level);
   const poem = poemById(level.poemId);
   const { patchSave } = useSave();
   const navigate = useNavigate();
@@ -35,6 +38,21 @@ export function PlayLevel({ levelId }: { levelId: string }) {
   const [impact, setImpact] = useState<"hero" | "boss" | null>(null);
   const [floatText, setFloatText] = useState<{ side: "hero" | "boss"; text: string } | null>(null);
 
+  useEffect(() => {
+    preloadImages([
+      level.sceneBg,
+      level.monsterArt,
+      ...level.monsterIdle,
+      ...level.monsterAttack,
+      ...level.monsterHurt,
+      ...HERO_IDLE,
+      ...HERO_ATTACK,
+      ...HERO_HURT,
+      bustOf(level.monsterArt),
+      poetBust(chapter.poetId),
+    ]);
+  }, [level, chapter.poetId]);
+
   const lines: DialogueLine[] = phase === "outro" ? level.outro : level.intro;
   const question: Question | undefined = deck[qIndex % deck.length];
   const currentLine = lines[lineIndex];
@@ -43,8 +61,8 @@ export function PlayLevel({ levelId }: { levelId: string }) {
   const speakerArt =
     currentLine?.speaker === "tang"
       ? "/sprites/hero-bust.png"
-      : currentLine?.name === "李白"
-        ? "/sprites/libai-bust.png"
+      : currentLine?.name === chapter.poetName
+        ? poetBust(chapter.poetId)
         : bustOf(level.monsterArt);
 
   async function finishWin() {
@@ -52,7 +70,10 @@ export function PlayLevel({ levelId }: { levelId: string }) {
     setSaving(true);
     try {
       await patchSave((current) => applyLevelWin(current, level.id, playerHp === 3));
-      await navigate({ to: "/story" });
+      await navigate({
+        to: "/story/$dynastyId/$chapterId",
+        params: { dynastyId: chapter.dynastyId, chapterId: chapter.poetId },
+      });
     } catch {
       setSaving(false);
     }
@@ -128,7 +149,7 @@ export function PlayLevel({ levelId }: { levelId: string }) {
 
   return (
     <Stage bg={level.sceneBg} shake={shake}>
-      <StageHud title={level.place} backTo="/story" />
+      <StageHud title={`${chapter.poetName} · ${level.place}`} backTo={`/story/${chapter.dynastyId}/${chapter.poetId}`} />
 
       <div className={`absolute inset-x-0 z-10 flex items-end justify-between px-1 ${ground}`}>
         <Fighter
@@ -182,7 +203,7 @@ export function PlayLevel({ levelId }: { levelId: string }) {
 
       {phase === "battle" && question ? (
         <section className="pop-in absolute inset-x-0 bottom-0 z-20 px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-8">
-          <p className="title-art paper-glow mb-1 px-3 text-center text-xl leading-snug text-paper">
+          <p className="title-art paper-glow mb-1 px-3 text-center text-[clamp(1.05rem,4.6vw,1.35rem)] leading-snug text-paper">
             {question.prompt}
           </p>
           <div>
@@ -238,14 +259,18 @@ export function PlayLevel({ levelId }: { levelId: string }) {
 
       {phase === "lose" ? (
         <div className="pop-in absolute inset-x-2 bottom-4 z-20">
-          <ArtPanel className="px-6 py-8 text-center">
+          <ArtPanel className="text-center">
             <p className="title-ink text-3xl">本关失败</p>
             <p className="mt-1 text-sm text-ink-soft">可立刻重试，进度还在。</p>
             <div className="mt-4 flex justify-center gap-8">
-              <button type="button" onClick={retry} className="title-ink text-2xl">
+              <button type="button" onClick={retry} className="tap title-ink text-2xl">
                 重试
               </button>
-              <Link to="/story" className="title-ink text-2xl opacity-60">
+              <Link
+                to="/story/$dynastyId/$chapterId"
+                params={{ dynastyId: chapter.dynastyId, chapterId: chapter.poetId }}
+                className="title-ink text-2xl opacity-60"
+              >
                 回地图
               </Link>
             </div>
@@ -273,91 +298,26 @@ function Fighter({
   align: "left" | "right";
   flip?: boolean;
 }) {
-  const motion = pose === "attack" ? "pose-lunge" : pose === "hurt" ? "pose-recoil" : "idle-bob";
+  const shift = pose === "attack" ? "translate-x-2" : pose === "hurt" ? "-translate-x-2" : "idle-bob";
   return (
     <div className={`w-[48%] ${align === "right" ? "text-right" : "text-left"}`}>
       <div className={`mb-1 ${align === "right" ? "flex flex-col items-end" : ""}`}>
-        <p className="hud-title text-paper">{name}</p>
+        <p className="hud-title truncate text-paper">{name}</p>
         <HpPips value={hp} label="" />
       </div>
       <div className={`relative mx-auto flex h-48 items-end justify-center ${hit ? "hit-flash" : ""}`}>
         <span className="sprite-shadow" />
         <div className={flip ? "-scale-x-100" : ""}>
-          <div className={motion}>
+          <div className={shift}>
             <SpriteFrames
               frames={frames}
-              fps={pose === "idle" ? 0 : 8}
-              playing={pose !== "idle"}
+              fps={0}
+              playing={false}
               className="relative z-10 h-48 w-auto max-w-full object-contain object-bottom drop-shadow-lg"
             />
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function SpeechBox({
-  art,
-  line,
-  hint,
-  showKey,
-  disabled,
-  onNext,
-}: {
-  art: string;
-  line: DialogueLine;
-  hint: string;
-  showKey?: boolean;
-  disabled?: boolean;
-  onNext: () => void;
-}) {
-  const [shown, setShown] = useState("");
-  const done = shown.length >= line.text.length;
-
-  useEffect(() => {
-    setShown("");
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += 1;
-      setShown(line.text.slice(0, i));
-      if (i >= line.text.length) window.clearInterval(id);
-    }, 28);
-    return () => window.clearInterval(id);
-  }, [line.text]);
-
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={() => {
-        if (!done) {
-          setShown(line.text);
-          return;
-        }
-        onNext();
-      }}
-      className="pop-in absolute inset-x-2 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-20 h-[168px] text-left"
-    >
-      <img src="/ui/speech-panel.png" alt="" className="absolute inset-0 h-full w-full object-fill" />
-      <div className="relative z-10 flex h-full items-end gap-3 px-5 pb-4 pt-6">
-        <img src={art} alt="" className="h-[7.5rem] w-[4.4rem] shrink-0 object-contain object-bottom" />
-        <div className="min-w-0 flex-1 pb-1">
-          {line.name ? (
-            <p className="title-ink text-lg">{line.name}</p>
-          ) : (
-            <p className="text-[11px] tracking-widest text-ink-soft">旁白</p>
-          )}
-          <p className="poem-line mt-1 min-h-12 text-sm leading-relaxed text-ink">
-            {shown}
-            {!done ? <span className="caret">▌</span> : null}
-          </p>
-          <div className="mt-1 flex items-center justify-end gap-2">
-            {showKey ? <img src="/sprites/key.png" alt="" className="h-6 w-6 object-contain idle-bob" /> : null}
-            <p className="text-[11px] tracking-widest text-ink/45">{hint}</p>
-          </div>
-        </div>
-      </div>
-    </button>
   );
 }

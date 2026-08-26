@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql } from "@/lib/db";
+import { migrateSave } from "./progress";
 import { EMPTY_SAVE, type PlayerSave } from "./types";
 
 const saveSchema = z.object({
@@ -50,7 +51,7 @@ export const getSave = createServerFn({ method: "GET" })
       where user_id = ${context.userId}
     `;
     const existing = rows[0];
-    if (existing) return toSave(existing);
+    if (existing) return migrateSave(toSave(existing));
     await sql`insert into player_saves (user_id) values (${context.userId})`;
     return { ...EMPTY_SAVE };
   });

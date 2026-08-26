@@ -15,9 +15,11 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAchievementsRouteImport } from './routes/_app/achievements'
 import { Route as AppEndlessRouteImport } from './routes/_app/endless'
 import { Route as AppPracticeRouteImport } from './routes/_app/practice'
-import { Route as AppStoryRouteImport } from './routes/_app/story'
 import { Route as AppPlayLevelIdRouteImport } from './routes/_app/play.$levelId'
+import { Route as AppStoryIndexRouteImport } from './routes/_app/story/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppStoryDynastyIdIndexRouteImport } from './routes/_app/story/$dynastyId/index'
+import { Route as AppStoryDynastyIdChapterIdRouteImport } from './routes/_app/story/$dynastyId/$chapterId'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -48,14 +50,14 @@ const AppPracticeRoute = AppPracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => AppRoute,
 } as any)
-const AppStoryRoute = AppStoryRouteImport.update({
-  id: '/story',
-  path: '/story',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppPlayLevelIdRoute = AppPlayLevelIdRouteImport.update({
   id: '/play/$levelId',
   path: '/play/$levelId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStoryIndexRoute = AppStoryIndexRouteImport.update({
+  id: '/story/',
+  path: '/story/',
   getParentRoute: () => AppRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -63,6 +65,17 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppStoryDynastyIdIndexRoute = AppStoryDynastyIdIndexRouteImport.update({
+  id: '/story/$dynastyId/',
+  path: '/story/$dynastyId/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStoryDynastyIdChapterIdRoute =
+  AppStoryDynastyIdChapterIdRouteImport.update({
+    id: '/story/$dynastyId/$chapterId',
+    path: '/story/$dynastyId/$chapterId',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -70,19 +83,23 @@ export interface FileRoutesByFullPath {
   '/achievements': typeof AppAchievementsRoute
   '/endless': typeof AppEndlessRoute
   '/practice': typeof AppPracticeRoute
-  '/story': typeof AppStoryRoute
   '/play/$levelId': typeof AppPlayLevelIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/story/': typeof AppStoryIndexRoute
+  '/story/$dynastyId/$chapterId': typeof AppStoryDynastyIdChapterIdRoute
+  '/story/$dynastyId/': typeof AppStoryDynastyIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/achievements': typeof AppAchievementsRoute
   '/endless': typeof AppEndlessRoute
   '/practice': typeof AppPracticeRoute
-  '/story': typeof AppStoryRoute
   '/': typeof AppIndexRoute
   '/play/$levelId': typeof AppPlayLevelIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/story': typeof AppStoryIndexRoute
+  '/story/$dynastyId/$chapterId': typeof AppStoryDynastyIdChapterIdRoute
+  '/story/$dynastyId': typeof AppStoryDynastyIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -91,10 +108,12 @@ export interface FileRoutesById {
   '/_app/achievements': typeof AppAchievementsRoute
   '/_app/endless': typeof AppEndlessRoute
   '/_app/practice': typeof AppPracticeRoute
-  '/_app/story': typeof AppStoryRoute
   '/_app/': typeof AppIndexRoute
   '/_app/play/$levelId': typeof AppPlayLevelIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_app/story/': typeof AppStoryIndexRoute
+  '/_app/story/$dynastyId/$chapterId': typeof AppStoryDynastyIdChapterIdRoute
+  '/_app/story/$dynastyId/': typeof AppStoryDynastyIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -104,19 +123,23 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/endless'
     | '/practice'
-    | '/story'
     | '/play/$levelId'
     | '/api/auth/$'
+    | '/story/'
+    | '/story/$dynastyId/$chapterId'
+    | '/story/$dynastyId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/achievements'
     | '/endless'
     | '/practice'
-    | '/story'
     | '/'
     | '/play/$levelId'
     | '/api/auth/$'
+    | '/story'
+    | '/story/$dynastyId/$chapterId'
+    | '/story/$dynastyId'
   id:
     | '__root__'
     | '/_app'
@@ -124,10 +147,12 @@ export interface FileRouteTypes {
     | '/_app/achievements'
     | '/_app/endless'
     | '/_app/practice'
-    | '/_app/story'
     | '/_app/'
     | '/_app/play/$levelId'
     | '/api/auth/$'
+    | '/_app/story/'
+    | '/_app/story/$dynastyId/$chapterId'
+    | '/_app/story/$dynastyId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -180,18 +205,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPracticeRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/story': {
-      id: '/_app/story'
-      path: '/story'
-      fullPath: '/story'
-      preLoaderRoute: typeof AppStoryRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/play/$levelId': {
       id: '/_app/play/$levelId'
       path: '/play/$levelId'
       fullPath: '/play/$levelId'
       preLoaderRoute: typeof AppPlayLevelIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/story/': {
+      id: '/_app/story/'
+      path: '/story'
+      fullPath: '/story/'
+      preLoaderRoute: typeof AppStoryIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/api/auth/$': {
@@ -201,6 +226,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/story/$dynastyId/': {
+      id: '/_app/story/$dynastyId/'
+      path: '/story/$dynastyId'
+      fullPath: '/story/$dynastyId/'
+      preLoaderRoute: typeof AppStoryDynastyIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/story/$dynastyId/$chapterId': {
+      id: '/_app/story/$dynastyId/$chapterId'
+      path: '/story/$dynastyId/$chapterId'
+      fullPath: '/story/$dynastyId/$chapterId'
+      preLoaderRoute: typeof AppStoryDynastyIdChapterIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -208,18 +247,22 @@ interface AppRouteChildren {
   AppAchievementsRoute: typeof AppAchievementsRoute
   AppEndlessRoute: typeof AppEndlessRoute
   AppPracticeRoute: typeof AppPracticeRoute
-  AppStoryRoute: typeof AppStoryRoute
   AppIndexRoute: typeof AppIndexRoute
   AppPlayLevelIdRoute: typeof AppPlayLevelIdRoute
+  AppStoryIndexRoute: typeof AppStoryIndexRoute
+  AppStoryDynastyIdChapterIdRoute: typeof AppStoryDynastyIdChapterIdRoute
+  AppStoryDynastyIdIndexRoute: typeof AppStoryDynastyIdIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAchievementsRoute: AppAchievementsRoute,
   AppEndlessRoute: AppEndlessRoute,
   AppPracticeRoute: AppPracticeRoute,
-  AppStoryRoute: AppStoryRoute,
   AppIndexRoute: AppIndexRoute,
   AppPlayLevelIdRoute: AppPlayLevelIdRoute,
+  AppStoryIndexRoute: AppStoryIndexRoute,
+  AppStoryDynastyIdChapterIdRoute: AppStoryDynastyIdChapterIdRoute,
+  AppStoryDynastyIdIndexRoute: AppStoryDynastyIdIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

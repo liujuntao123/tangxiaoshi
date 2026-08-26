@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlayLevel } from "@/components/game/play-level";
-import { LEVELS } from "@/lib/game/content";
+import { LEGACY_LEVEL_IDS, LEVELS } from "@/lib/game/content";
 
 export const Route = createFileRoute("/_app/play/$levelId")({
   component: LevelPage,
@@ -8,7 +8,8 @@ export const Route = createFileRoute("/_app/play/$levelId")({
 
 function LevelPage() {
   const { levelId } = Route.useParams();
-  const exists = LEVELS.some((level) => level.id === levelId);
+  const mapped = LEGACY_LEVEL_IDS[levelId] ?? levelId;
+  const exists = LEVELS.some((level) => level.id === mapped);
   if (!exists) {
     return (
       <div className="paper-bg grid min-h-dvh place-items-center text-ink">
@@ -16,5 +17,5 @@ function LevelPage() {
       </div>
     );
   }
-  return <PlayLevel levelId={levelId} />;
+  return <PlayLevel levelId={mapped} />;
 }

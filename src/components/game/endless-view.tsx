@@ -43,10 +43,10 @@ export function EndlessView() {
     return (
       <Stage bg="/art/scene-peach.jpg">
         <StageHud title="无尽" backTo="/" />
-        <div className="absolute inset-x-3 bottom-[16%] z-10">
-          <ArtPanel className="px-6 py-8 text-center">
-            <img src="/sprites/fx/bolt.png" alt="" className="mx-auto h-14 w-14 object-contain" />
-            <p className="title-ink mt-2 text-3xl">还没有解锁的诗</p>
+        <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
+          <ArtPanel className="text-center">
+            <img src="/sprites/fx/bolt.png" alt="" className="mx-auto h-10 w-10 object-contain" />
+            <p className="title-ink mt-2 text-2xl">还没有解锁的诗</p>
             <p className="mt-2 text-sm text-ink-soft">先去历险过一关，无尽才会出题。</p>
             <Link to="/story" className="title-ink mt-4 inline-block text-xl">
               去历险
@@ -61,14 +61,13 @@ export function EndlessView() {
     return (
       <Stage bg="/art/scene-peach.jpg">
         <StageHud title="无尽" backTo="/" />
-        <div className="absolute inset-x-3 bottom-[16%] z-10">
-          <ArtPanel className="px-6 py-8 text-center">
-            <img src="/sprites/fx/bolt.png" alt="" className="mx-auto h-14 w-14 object-contain drop-shadow" />
-            <p className="title-ink mt-2 text-3xl">一题错，本局结束</p>
+        <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
+          <ArtPanel className="text-center">
+            <p className="title-ink text-2xl">一题错，本局结束</p>
             <p className="mt-2 text-sm tracking-widest text-ink-soft">
               最高连对 {save.endlessBestStreak} · 最高分 {save.endlessBestScore}
             </p>
-            <div className="mt-4">
+            <div className="mt-3">
               <JadeEnter label="开始" onClick={() => setStarted(true)} />
             </div>
           </ArtPanel>
@@ -81,12 +80,12 @@ export function EndlessView() {
     return (
       <Stage bg="/art/scene-peach.jpg">
         <StageHud title="无尽" backTo="/" />
-        <div className="absolute inset-x-3 bottom-8 z-10">
-          <ArtPanel className="px-6 py-8 text-center">
-            <p className="title-ink text-3xl">本局结束</p>
+        <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
+          <ArtPanel className="text-center">
+            <p className="title-ink text-2xl">本局结束</p>
             <p className="title-ink mt-1 text-5xl">{score}</p>
             <p className="text-sm tracking-widest text-ink-soft">连对</p>
-            <div className="mt-4">
+            <div className="mt-3">
               <JadeEnter
                 label="再来一局"
                 onClick={() => {
@@ -112,7 +111,7 @@ export function EndlessView() {
         连对 {score}
       </p>
       <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.8rem,env(safe-area-inset-bottom))] pt-8">
-        <p className="title-art paper-glow mb-1 px-3 text-center text-xl leading-snug text-paper">
+        <p className="title-art paper-glow mb-1 px-3 text-center text-[clamp(1.05rem,4.6vw,1.35rem)] leading-snug text-paper">
           {question.prompt}
         </p>
         {question.choices.map((choice, choiceIndex) => {

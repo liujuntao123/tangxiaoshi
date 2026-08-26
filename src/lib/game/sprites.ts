@@ -1,6 +1,6 @@
 export const HERO_IDLE = ["/sprites/hero.png"];
-export const HERO_ATTACK = ["/sprites/hero-attack.png", "/sprites/hero-attack-2.png"];
-export const HERO_HURT = ["/sprites/hero-hurt.png", "/sprites/hero-hurt-2.png"];
+export const HERO_ATTACK = ["/sprites/hero-attack-2.png"];
+export const HERO_HURT = ["/sprites/hero-hurt-2.png"];
 
 export const HERO_WALK = {
   down: ["/sprites/hero.png"],
@@ -31,7 +31,13 @@ export function poseFrames(
   attack: readonly string[],
   hurt: readonly string[],
 ): readonly string[] {
-  if (pose === "attack") return attack;
-  if (pose === "hurt") return hurt;
+  if (pose === "attack") {
+    const frame = attack[attack.length - 1] ?? idle[0];
+    return frame ? [frame] : idle;
+  }
+  if (pose === "hurt") {
+    const frame = hurt[hurt.length - 1] ?? idle[0];
+    return frame ? [frame] : idle;
+  }
   return idle;
 }

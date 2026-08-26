@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { CORE_IMAGES, preloadImages } from "@/lib/game/preload";
+import { useEffect } from "react";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "唐小诗历险记";
@@ -36,10 +38,22 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap",
       },
+      ...CORE_IMAGES.slice(0, 8).map((href) => ({
+        rel: "preload" as const,
+        href,
+        as: "image" as const,
+      })),
     ],
   }),
   component: RootDocument,
 });
+
+function BootPreload() {
+  useEffect(() => {
+    preloadImages(CORE_IMAGES);
+  }, []);
+  return null;
+}
 
 function RootDocument() {
   return (
@@ -49,6 +63,7 @@ function RootDocument() {
       </head>
       <body>
         <PreviewHostBridge />
+        <BootPreload />
         <AuthProvider>
           <Outlet />
         </AuthProvider>
