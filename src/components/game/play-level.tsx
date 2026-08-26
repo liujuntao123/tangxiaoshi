@@ -145,7 +145,8 @@ export function PlayLevel({ levelId }: { levelId: string }) {
 
   const heroFrames = poseFrames(heroPose, HERO_IDLE, HERO_ATTACK, HERO_HURT);
   const bossFrames = poseFrames(bossPose, level.monsterIdle, level.monsterAttack, level.monsterHurt);
-  const ground = phase === "battle" ? "bottom-[38%]" : "bottom-[24%]";
+  // 答题时角色抬高，给底部选项留空，避免木牍盖住立绘
+  const ground = phase === "battle" ? "bottom-[46%]" : "bottom-[24%]";
 
   return (
     <Stage bg={level.sceneBg} shake={shake}>
@@ -172,7 +173,7 @@ export function PlayLevel({ levelId }: { levelId: string }) {
       </div>
 
       {bolts.map((bolt) => (
-        <div key={bolt.id} className="pointer-events-none absolute bottom-[50%] z-20 h-16 w-full">
+        <div key={bolt.id} className="pointer-events-none absolute bottom-[56%] z-20 h-16 w-full">
           <SpriteFrames
             frames={FX_BOLT}
             fps={12}
@@ -185,7 +186,7 @@ export function PlayLevel({ levelId }: { levelId: string }) {
 
       {impact ? (
         <div
-          className={`pointer-events-none absolute bottom-[44%] z-20 ${impact === "boss" ? "right-[8%]" : "left-[8%]"}`}
+          className={`pointer-events-none absolute bottom-[50%] z-20 ${impact === "boss" ? "right-[8%]" : "left-[8%]"}`}
         >
           <SpriteFrames frames={FX_IMPACT} fps={12} className="h-24 w-24 object-contain" />
         </div>
@@ -193,7 +194,7 @@ export function PlayLevel({ levelId }: { levelId: string }) {
 
       {floatText ? (
         <p
-          className={`glyph-burst pointer-events-none absolute bottom-[54%] z-30 font-display text-3xl text-seal ${
+          className={`glyph-burst pointer-events-none absolute bottom-[60%] z-30 font-display text-3xl text-seal ${
             floatText.side === "boss" ? "right-[18%]" : "left-[18%]"
           }`}
         >
@@ -202,11 +203,11 @@ export function PlayLevel({ levelId }: { levelId: string }) {
       ) : null}
 
       {phase === "battle" && question ? (
-        <section className="pop-in absolute inset-x-0 bottom-0 z-20 px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-8">
-          <p className="title-art paper-glow mb-1 px-3 text-center text-[clamp(1.05rem,4.6vw,1.35rem)] leading-snug text-paper">
+        <section className="pop-in absolute inset-x-0 bottom-0 z-20 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
+          <p className="title-art paper-glow mb-0.5 px-3 text-center text-[clamp(0.95rem,4.2vw,1.2rem)] leading-snug text-paper">
             {question.prompt}
           </p>
-          <div>
+          <div className="flex flex-col gap-0">
             {question.choices.map((choice, index) => {
               const selected = picked === index;
               const right = index === question.answerIndex;
@@ -303,7 +304,7 @@ function Fighter({
         <p className="hud-title truncate text-paper">{name}</p>
         <HpPips value={hp} label="" />
       </div>
-      <div className={`relative mx-auto flex h-48 items-end justify-center ${hit ? "hit-flash" : ""}`}>
+      <div className={`relative mx-auto flex h-40 items-end justify-center ${hit ? "hit-flash" : ""}`}>
         <span className="sprite-shadow" />
         <div className={flip ? "-scale-x-100" : ""}>
           <div className={shift}>
@@ -311,7 +312,7 @@ function Fighter({
               frames={frames}
               fps={0}
               playing={false}
-              className="relative z-10 h-48 w-auto max-w-full object-contain object-bottom drop-shadow-lg"
+              className="relative z-10 h-40 w-auto max-w-full object-contain object-bottom drop-shadow-lg"
             />
           </div>
         </div>
