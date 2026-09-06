@@ -97,11 +97,15 @@ const explicitBaseURL = env("BETTER_AUTH_URL");
 const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS];
 // Local `npm run dev` (port 8080 contract). Browsers may send Origin as any of
 // these for the same server — trusting only `localhost` rejects `127.0.0.1` and
-// breaks email/password with "Invalid origin".
+// breaks email/password with "Invalid origin". 8090 是自托管 Docker（host 网络，
+// 见 deploy/docker-compose.yml）的本机直连端口，同样三式全收。
 const LOCAL_DEV_ORIGINS: string[] = [
   "http://localhost:8080",
   "http://127.0.0.1:8080",
   "http://[::1]:8080",
+  "http://localhost:8090",
+  "http://127.0.0.1:8090",
+  "http://[::1]:8090",
 ];
 // Custom domains (and extra origins) must be trusted or email/password POSTs
 // fail with FORBIDDEN "Invalid origin".
