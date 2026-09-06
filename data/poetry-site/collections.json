@@ -1,0 +1,138 @@
+{
+  "count": 11,
+  "collections": [
+    {
+      "id": "huajianji",
+      "title": "花间集",
+      "editor": "赵崇祚",
+      "dynasties": [
+        "wudai"
+      ],
+      "authorCount": 19,
+      "chapterCount": 11,
+      "poemCount": 498
+    },
+    {
+      "id": "nantang-erzhu-ci",
+      "title": "南唐二主词",
+      "editor": "李煜 李璟",
+      "dynasties": [
+        "wudai"
+      ],
+      "authorCount": 3,
+      "chapterCount": 3,
+      "poemCount": 46
+    },
+    {
+      "id": "tangshi-sanbaishou",
+      "title": "唐诗三百首",
+      "editor": null,
+      "dynasties": [
+        "tang"
+      ],
+      "authorCount": 73,
+      "chapterCount": 1,
+      "poemCount": 317
+    },
+    {
+      "id": "songci-sanbaishou",
+      "title": "宋词三百首",
+      "editor": null,
+      "dynasties": [
+        "tang",
+        "wudai",
+        "song"
+      ],
+      "authorCount": 115,
+      "chapterCount": 1,
+      "poemCount": 291
+    },
+    {
+      "id": "jiaokeshu-xuanshi",
+      "title": "教科书选诗",
+      "editor": "教科书出版社包含人民教育出版社、江苏教育出版社等",
+      "dynasties": [
+        "xianqin",
+        "hanwei",
+        "tang",
+        "wudai",
+        "song",
+        "yuan",
+        "ming",
+        "qing",
+        "modern",
+        "unknown"
+      ],
+      "authorCount": 133,
+      "chapterCount": 33,
+      "poemCount": 328
+    },
+    {
+      "id": "gushi-shijiu-shou",
+      "title": "古诗十九首",
+      "editor": null,
+      "dynasties": [
+        "hanwei"
+      ],
+      "authorCount": 1,
+      "chapterCount": 1,
+      "poemCount": 19
+    },
+    {
+      "id": "shijing",
+      "title": "诗经",
+      "editor": "佚名",
+      "dynasties": [
+        "xianqin"
+      ],
+      "authorCount": 2,
+      "chapterCount": 31,
+      "poemCount": 306
+    },
+    {
+      "id": "qianjiashi",
+      "title": "千家诗",
+      "editor": "南宋·谢枋得明代·王相",
+      "dynasties": [
+        "tang",
+        "unknown"
+      ],
+      "authorCount": 70,
+      "chapterCount": 5,
+      "poemCount": 214
+    },
+    {
+      "id": "shenglv-qimeng",
+      "title": "声律启蒙",
+      "editor": "清·车万育",
+      "dynasties": [
+        "qing"
+      ],
+      "authorCount": 2,
+      "chapterCount": 3,
+      "poemCount": 31
+    },
+    {
+      "id": "sanzijing",
+      "title": "三字经",
+      "editor": "王应麟",
+      "dynasties": [
+        "song"
+      ],
+      "authorCount": 1,
+      "chapterCount": 2,
+      "poemCount": 2
+    },
+    {
+      "id": "tangshi-mengxue",
+      "title": "唐诗三百首·蒙学",
+      "editor": "清代·蘅塘退士",
+      "dynasties": [
+        "tang"
+      ],
+      "authorCount": 75,
+      "chapterCount": 7,
+      "poemCount": 320
+    }
+  ]
+}

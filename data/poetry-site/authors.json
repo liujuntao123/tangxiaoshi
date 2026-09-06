@@ -1,0 +1,4482 @@
+{
+  "count": 283,
+  "authors": [
+    {
+      "id": "yiming",
+      "name": "佚名",
+      "variants": [
+        "佚名"
+      ],
+      "anonymous": true,
+      "dynasties": [
+        "xianqin",
+        "hanwei",
+        "tang",
+        "wudai",
+        "song",
+        "qing",
+        "unknown"
+      ],
+      "poemCount": 370,
+      "collections": [
+        "gushi-shijiu-shou",
+        "jiaokeshu-xuanshi",
+        "nantang-erzhu-ci",
+        "qianjiashi",
+        "shijing",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuxiang",
+      "name": "刘向",
+      "variants": [
+        "刘向"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin",
+        "hanwei"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "hanfei",
+      "name": "韩非",
+      "variants": [
+        "韩非"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "baike",
+      "name": "百科",
+      "variants": [
+        "百科"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin",
+        "qing",
+        "unknown"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "qianjiashi",
+        "shenglv-qimeng",
+        "shijing"
+      ]
+    },
+    {
+      "id": "lieyukou",
+      "name": "列御寇",
+      "variants": [
+        "列御寇"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lvbuweizhuan",
+      "name": "吕不韦 撰",
+      "variants": [
+        "吕不韦 撰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "mengzijiqidizi",
+      "name": "孟子及其弟子",
+      "variants": [
+        "孟子及其弟子"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuxiangbian",
+      "name": "刘向 编",
+      "variants": [
+        "刘向 编"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin",
+        "hanwei"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuxiangzhuan",
+      "name": "刘向 撰",
+      "variants": [
+        "刘向 撰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin",
+        "hanwei"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zuoqiuming",
+      "name": "左丘明",
+      "variants": [
+        "左丘明"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "mengzidizilu",
+      "name": "孟子弟子录",
+      "variants": [
+        "孟子弟子录"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "mozijidizi",
+      "name": "墨子及弟子",
+      "variants": [
+        "墨子及弟子"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "quyuan",
+      "name": "屈原",
+      "variants": [
+        "屈原"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "xunzi",
+      "name": "荀子",
+      "variants": [
+        "荀子"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhuangzhou",
+      "name": "庄周",
+      "variants": [
+        "庄周"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "xianqin"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuyiqing",
+      "name": "刘义庆",
+      "variants": [
+        "刘义庆"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei",
+        "song"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "taoyuanming",
+      "name": "陶渊明",
+      "variants": [
+        "陶渊明"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "simaqian",
+      "name": "司马迁",
+      "variants": [
+        "司马迁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "fanye",
+      "name": "范晔",
+      "variants": [
+        "范晔"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei",
+        "song"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "caocao",
+      "name": "曹操",
+      "variants": [
+        "曹操"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wujun",
+      "name": "吴均",
+      "variants": [
+        "吴均"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "bangu",
+      "name": "班固",
+      "variants": [
+        "班固"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "caozhi",
+      "name": "曹植",
+      "variants": [
+        "曹植"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "chenshou",
+      "name": "陈寿",
+      "variants": [
+        "陈寿"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "gawana",
+      "name": "伽腽肭",
+      "variants": [
+        "伽腽肭"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "handanchun",
+      "name": "邯郸淳",
+      "variants": [
+        "邯郸淳"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "handanchunzhuan",
+      "name": "邯郸淳 撰",
+      "variants": [
+        "邯郸淳 撰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "jiayi",
+      "name": "贾谊",
+      "variants": [
+        "贾谊"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lidaoyuan",
+      "name": "郦道元",
+      "variants": [
+        "郦道元"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuan",
+      "name": "刘安",
+      "variants": [
+        "刘安"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuanzhuan",
+      "name": "刘安 撰",
+      "variants": [
+        "刘安 撰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuzhen",
+      "name": "刘桢",
+      "variants": [
+        "刘桢"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "senggasina",
+      "name": "僧伽斯那",
+      "variants": [
+        "僧伽斯那"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "taohongjing",
+      "name": "陶弘景",
+      "variants": [
+        "陶弘景"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wangxizhi",
+      "name": "王羲之",
+      "variants": [
+        "王羲之"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "xijinlimi",
+      "name": "西晋·李密",
+      "variants": [
+        "西晋·李密"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yuefushiji",
+      "name": "乐府诗集",
+      "variants": [
+        "乐府诗集"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhugeliang",
+      "name": "诸葛亮",
+      "variants": [
+        "诸葛亮"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "hanwei"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "dufu",
+      "name": "杜甫",
+      "variants": [
+        "杜甫"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 90,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "libai",
+      "name": "李白",
+      "variants": [
+        "李白"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 87,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wentingyun",
+      "name": "温庭筠",
+      "variants": [
+        "温庭筠"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 78,
+      "collections": [
+        "huajianji",
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangwei",
+      "name": "王维",
+      "variants": [
+        "王维"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 67,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "weizhuang",
+      "name": "韦庄",
+      "variants": [
+        "韦庄"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 58,
+      "collections": [
+        "huajianji",
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "guxiong",
+      "name": "顾敻",
+      "variants": [
+        "顾夐"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 55,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "lishangyin",
+      "name": "李商隐",
+      "variants": [
+        "李商隐"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 52,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "lixun",
+      "name": "李珣",
+      "variants": [
+        "李珣"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 39,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "menghaoran",
+      "name": "孟浩然",
+      "variants": [
+        "孟浩然"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 35,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "niujiao",
+      "name": "牛峤",
+      "variants": [
+        "牛峤"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 33,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangmi",
+      "name": "张泌",
+      "variants": [
+        "张泌"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 29,
+      "collections": [
+        "huajianji",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "dumu",
+      "name": "杜牧",
+      "variants": [
+        "杜牧"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 25,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "weiyingwu",
+      "name": "韦应物",
+      "variants": [
+        "韦应物"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 25,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "baijuyi",
+      "name": "白居易",
+      "variants": [
+        "白居易"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 23,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuzhangqing",
+      "name": "刘长卿",
+      "variants": [
+        "刘长卿"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 22,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "xuezhaoyun",
+      "name": "薛昭蕴",
+      "variants": [
+        "薛昭蕴"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 20,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangchangling",
+      "name": "王昌龄",
+      "variants": [
+        "王昌龄"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 18,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "cencan",
+      "name": "岑参",
+      "variants": [
+        "岑参"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 17,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuyuxi",
+      "name": "刘禹锡",
+      "variants": [
+        "刘禹锡"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 15,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "hanyu",
+      "name": "韩愈",
+      "variants": [
+        "韩愈"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 14,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "huangfusong",
+      "name": "皇甫松",
+      "variants": [
+        "皇甫松"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang",
+        "wudai"
+      ],
+      "poemCount": 14,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liqi",
+      "name": "李颀",
+      "variants": [
+        "李颀"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 14,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuzongyuan",
+      "name": "柳宗元",
+      "variants": [
+        "柳宗元"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 12,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "lulun",
+      "name": "卢纶",
+      "variants": [
+        "卢纶"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 12,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhanghu",
+      "name": "张祜",
+      "variants": [
+        "张祜"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangjiuling",
+      "name": "张九龄",
+      "variants": [
+        "张九龄"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "cuihao",
+      "name": "崔颢",
+      "variants": [
+        "崔颢"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 9,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "yuanzhen",
+      "name": "元稹",
+      "variants": [
+        "元稹"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 8,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "hanhong",
+      "name": "韩翃",
+      "variants": [
+        "韩翃"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liyi",
+      "name": "李益",
+      "variants": [
+        "李益"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "mengjiao",
+      "name": "孟郊",
+      "variants": [
+        "孟郊"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "qianqi",
+      "name": "钱起",
+      "variants": [
+        "钱起"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "sikongshu",
+      "name": "司空曙",
+      "variants": [
+        "司空曙"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "changjian",
+      "name": "常建",
+      "variants": [
+        "常建"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liufangping",
+      "name": "刘方平",
+      "variants": [
+        "刘方平"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "cuitu",
+      "name": "崔涂",
+      "variants": [
+        "崔涂"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "gaoshi",
+      "name": "高适",
+      "variants": [
+        "高适"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "hezhizhang",
+      "name": "贺知章",
+      "variants": [
+        "贺知章"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "madai",
+      "name": "马戴",
+      "variants": [
+        "马戴"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "shenquanqi",
+      "name": "沈佺期",
+      "variants": [
+        "沈佺期"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "songzhiwen",
+      "name": "宋之问",
+      "variants": [
+        "宋之问"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangbo",
+      "name": "王勃",
+      "variants": [
+        "王勃"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "xuhun",
+      "name": "许浑",
+      "variants": [
+        "许浑"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "yuanjie",
+      "name": "元结",
+      "variants": [
+        "元结"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhuqingyu",
+      "name": "朱庆余",
+      "variants": [
+        "朱庆馀"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zuyong",
+      "name": "祖咏",
+      "variants": [
+        "祖咏"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "chenziang",
+      "name": "陈子昂",
+      "variants": [
+        "陈子昂"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "daishulun",
+      "name": "戴叔伦",
+      "variants": [
+        "戴叔伦"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "luobinwang",
+      "name": "骆宾王",
+      "variants": [
+        "骆宾王"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangjian",
+      "name": "王建",
+      "variants": [
+        "王建"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "qianjiashi",
+        "songci-sanbaishou",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangwan",
+      "name": "王湾",
+      "variants": [
+        "王湾"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangzhihuan",
+      "name": "王之涣",
+      "variants": [
+        "王之涣"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangji",
+      "name": "张籍",
+      "variants": [
+        "张籍"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "chentao",
+      "name": "陈陶",
+      "variants": [
+        "陈陶"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "cuishu",
+      "name": "崔曙",
+      "variants": [
+        "崔曙"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "dushenyan",
+      "name": "杜审言",
+      "variants": [
+        "杜审言"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "duxunhe",
+      "name": "杜荀鹤",
+      "variants": [
+        "杜荀鹤"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "hanwo",
+      "name": "韩偓",
+      "variants": [
+        "韩偓"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "jiadao",
+      "name": "贾岛",
+      "variants": [
+        "贾岛"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "jiaoran",
+      "name": "皎然",
+      "variants": [
+        "皎然"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "jinchangxu",
+      "name": "金昌绪",
+      "variants": [
+        "金昌绪"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liduan",
+      "name": "李端",
+      "variants": [
+        "李端"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "lilongji",
+      "name": "李隆基",
+      "variants": [
+        "李隆基"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liushenxu",
+      "name": "刘昚虚",
+      "variants": [
+        "刘昚虚"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuzhongyong",
+      "name": "柳中庸",
+      "variants": [
+        "柳中庸"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "peidi",
+      "name": "裴迪",
+      "variants": [
+        "裴迪"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "qintaoyu",
+      "name": "秦韬玉",
+      "variants": [
+        "秦韬玉"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "qiuwei",
+      "name": "丘为",
+      "variants": [
+        "丘为"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "qiwuqian",
+      "name": "綦毋潜",
+      "variants": [
+        "綦毋潜"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "quandeyu",
+      "name": "权德舆",
+      "variants": [
+        "权德舆"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "wanghan",
+      "name": "王翰",
+      "variants": [
+        "王翰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "xibiren",
+      "name": "西鄙人",
+      "variants": [
+        "西鄙人"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "xuefeng",
+      "name": "薛逢",
+      "variants": [
+        "薛逢"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangji-2",
+      "name": "张继",
+      "variants": [
+        "张继"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangqiao",
+      "name": "张乔",
+      "variants": [
+        "张乔"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangxu",
+      "name": "张旭",
+      "variants": [
+        "张旭"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangzhihe",
+      "name": "张志和",
+      "variants": [
+        "张志和"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhengtian",
+      "name": "郑畋",
+      "variants": [
+        "郑畋"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue",
+        "tangshi-sanbaishou"
+      ]
+    },
+    {
+      "id": "gukuang",
+      "name": "顾况",
+      "variants": [
+        "顾况"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue"
+      ]
+    },
+    {
+      "id": "huangfuran",
+      "name": "皇甫冉",
+      "variants": [
+        "皇甫冉"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "qianjiashi",
+        "tangshi-mengxue"
+      ]
+    },
+    {
+      "id": "hulingneng",
+      "name": "胡令能",
+      "variants": [
+        "胡令能"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lichaowei",
+      "name": "李朝威",
+      "variants": [
+        "李朝威"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lihe",
+      "name": "李贺",
+      "variants": [
+        "李贺"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "linjie",
+      "name": "林杰",
+      "variants": [
+        "林杰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liuxu",
+      "name": "刘昫",
+      "variants": [
+        "刘昫"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liyanshou",
+      "name": "李延寿",
+      "variants": [
+        "李延寿"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lvyan",
+      "name": "吕岩",
+      "variants": [
+        "吕岩"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "pirixiu",
+      "name": "皮日休",
+      "variants": [
+        "皮日休"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wangji",
+      "name": "王绩",
+      "variants": [
+        "王绩"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "weizheng",
+      "name": "魏征",
+      "variants": [
+        "魏征"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wujing",
+      "name": "吴兢",
+      "variants": [
+        "吴兢"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yangjiong",
+      "name": "杨炯",
+      "variants": [
+        "杨炯"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "tang"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "sunguangxian",
+      "name": "孙光宪",
+      "variants": [
+        "孙光宪"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 62,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liyu",
+      "name": "李煜",
+      "variants": [
+        "李煜"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 52,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "nantang-erzhu-ci",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "maowenxi",
+      "name": "毛文锡",
+      "variants": [
+        "毛文锡"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 29,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "maoxizhen",
+      "name": "毛熙震",
+      "variants": [
+        "毛熙震"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 29,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "hening",
+      "name": "和凝",
+      "variants": [
+        "和凝"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 20,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "ouyangjiong",
+      "name": "欧阳炯",
+      "variants": [
+        "欧阳炯"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 17,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "weichengban",
+      "name": "魏承班",
+      "variants": [
+        "魏承班"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 15,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "niuxiji",
+      "name": "牛希济",
+      "variants": [
+        "牛希济"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 12,
+      "collections": [
+        "huajianji",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yanxuan",
+      "name": "阎选",
+      "variants": [
+        "阎选"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 8,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "lijing",
+      "name": "李璟",
+      "variants": [
+        "李璟"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "nantang-erzhu-ci",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "luqianyi",
+      "name": "鹿虔扆",
+      "variants": [
+        "鹿虔扆"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "yineliushou",
+      "name": "尹鹗 六首",
+      "variants": [
+        "尹鹗 六首"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "fengyansi",
+      "name": "冯延巳",
+      "variants": [
+        "冯延巳"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "xuchangtu",
+      "name": "徐昌图",
+      "variants": [
+        "徐昌图"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhaochongzuo",
+      "name": "赵崇祚",
+      "variants": [
+        "赵崇祚"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "wudai"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "huajianji"
+      ]
+    },
+    {
+      "id": "sushi",
+      "name": "苏轼",
+      "variants": [
+        "苏轼"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 29,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "xinqiji",
+      "name": "辛弃疾",
+      "variants": [
+        "辛弃疾"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 23,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liqingzhao",
+      "name": "李清照",
+      "variants": [
+        "李清照"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 17,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhoubangyan",
+      "name": "周邦彦",
+      "variants": [
+        "周邦彦"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 13,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuyong",
+      "name": "柳永",
+      "variants": [
+        "柳永"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "luyou",
+      "name": "陆游",
+      "variants": [
+        "陆游"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "ouyangxiu",
+      "name": "欧阳修",
+      "variants": [
+        "欧阳修"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "qinguan",
+      "name": "秦观",
+      "variants": [
+        "秦观"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 10,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "jiangkui",
+      "name": "姜夔",
+      "variants": [
+        "姜夔"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 9,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wanganshi",
+      "name": "王安石",
+      "variants": [
+        "王安石"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 8,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yanshu",
+      "name": "晏殊",
+      "variants": [
+        "晏殊"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 8,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "hezhu",
+      "name": "贺铸",
+      "variants": [
+        "贺铸"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 7,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yanjidao",
+      "name": "晏几道",
+      "variants": [
+        "晏几道"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 7,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liukezhuang",
+      "name": "刘克庄",
+      "variants": [
+        "刘克庄"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yangwanli",
+      "name": "杨万里",
+      "variants": [
+        "杨万里"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 6,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "huangtingjian",
+      "name": "黄庭坚",
+      "variants": [
+        "黄庭坚"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wuwenying",
+      "name": "吴文英",
+      "variants": [
+        "吴文英"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangxiaoxiang",
+      "name": "张孝祥",
+      "variants": [
+        "张孝祥"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 5,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "fanzhongyan",
+      "name": "范仲淹",
+      "variants": [
+        "范仲淹"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangxian",
+      "name": "张先",
+      "variants": [
+        "张先"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 4,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhudunru",
+      "name": "朱敦儒",
+      "variants": [
+        "朱敦儒"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhushuzhen",
+      "name": "朱淑真",
+      "variants": [
+        "朱淑真"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhuxi",
+      "name": "朱熹",
+      "variants": [
+        "朱熹"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "chaobuzhi",
+      "name": "晁补之",
+      "variants": [
+        "晁补之"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "chenliang",
+      "name": "陈亮",
+      "variants": [
+        "陈亮"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "fanchengda",
+      "name": "范成大",
+      "variants": [
+        "范成大"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "jiangjie",
+      "name": "蒋捷",
+      "variants": [
+        "蒋捷"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuchenweng",
+      "name": "刘辰翁",
+      "variants": [
+        "刘辰翁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liuguo",
+      "name": "刘过",
+      "variants": [
+        "刘过"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "luzugao",
+      "name": "卢祖皋",
+      "variants": [
+        "卢祖皋"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "shidazu",
+      "name": "史达祖",
+      "variants": [
+        "史达祖"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "songqi",
+      "name": "宋祁",
+      "variants": [
+        "宋祁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangguan",
+      "name": "王观",
+      "variants": [
+        "王观"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi",
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangyinglin",
+      "name": "王应麟",
+      "variants": [
+        "王应麟"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "sanzijing"
+      ]
+    },
+    {
+      "id": "wuqian",
+      "name": "吴潜",
+      "variants": [
+        "吴潜"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yemengde",
+      "name": "叶梦得",
+      "variants": [
+        "叶梦得"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yuefei",
+      "name": "岳飞",
+      "variants": [
+        "岳飞"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangyan",
+      "name": "张炎",
+      "variants": [
+        "张炎"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangyuangan",
+      "name": "张元干",
+      "variants": [
+        "张元干"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhongshu",
+      "name": "仲殊",
+      "variants": [
+        "仲殊"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "caishen",
+      "name": "蔡伸",
+      "variants": [
+        "蔡伸"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "caoxun",
+      "name": "曹勋",
+      "variants": [
+        "曹勋"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "caozu",
+      "name": "曹组",
+      "variants": [
+        "曹组"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "chendongfu",
+      "name": "陈东甫",
+      "variants": [
+        "陈东甫"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "chenggai",
+      "name": "程垓",
+      "variants": [
+        "程垓"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "chenyuyi",
+      "name": "陈与义",
+      "variants": [
+        "陈与义"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "daifugu",
+      "name": "戴复古",
+      "variants": [
+        "戴复古"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "fangshunqing",
+      "name": "房舜卿",
+      "variants": [
+        "房舜卿"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "fangyue",
+      "name": "方岳",
+      "variants": [
+        "方岳"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "hanliu",
+      "name": "韩疁",
+      "variants": [
+        "韩疁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "hanyuanji",
+      "name": "韩元吉",
+      "variants": [
+        "韩元吉"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "hanzhen",
+      "name": "韩缜",
+      "variants": [
+        "韩缜"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "houmeng",
+      "name": "侯蒙",
+      "variants": [
+        "侯蒙"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "huanggongshao",
+      "name": "黄公绍",
+      "variants": [
+        "黄公绍"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "huangji",
+      "name": "黄机",
+      "variants": [
+        "黄机"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "huangshang",
+      "name": "黄裳",
+      "variants": [
+        "黄裳"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "huangsheng",
+      "name": "黄升",
+      "variants": [
+        "黄升"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "huangxiaomai",
+      "name": "黄孝迈",
+      "variants": [
+        "黄孝迈"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "jiangshinv",
+      "name": "蒋氏女",
+      "variants": [
+        "蒋氏女"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "kouzhun",
+      "name": "寇准",
+      "variants": [
+        "寇准"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "lihaogu",
+      "name": "李好古",
+      "variants": [
+        "李好古"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "linbu",
+      "name": "林逋",
+      "variants": [
+        "林逋"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "liyuanying",
+      "name": "李元膺",
+      "variants": [
+        "李元膺"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "lizhiyi",
+      "name": "李之仪",
+      "variants": [
+        "李之仪"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "lizhongyuan",
+      "name": "李重元",
+      "variants": [
+        "李重元"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "lubing",
+      "name": "卢炳",
+      "variants": [
+        "卢炳"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "lvbenzhong",
+      "name": "吕本中",
+      "variants": [
+        "吕本中"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "maopang",
+      "name": "毛滂",
+      "variants": [
+        "毛滂"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "meiyaochen",
+      "name": "梅尧臣",
+      "variants": [
+        "梅尧臣"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "moqiyong",
+      "name": "万俟咏",
+      "variants": [
+        "万俟咏"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "panlang",
+      "name": "潘阆",
+      "variants": [
+        "潘阆"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "shixiaoyou",
+      "name": "石孝友",
+      "variants": [
+        "石孝友"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "shiyan",
+      "name": "时彦",
+      "variants": [
+        "时彦"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "simaguangzhuan",
+      "name": "司马光 撰",
+      "variants": [
+        "司马光 撰"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "songzixun",
+      "name": "宋自逊",
+      "variants": [
+        "宋自逊"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "tangwan",
+      "name": "唐婉",
+      "variants": [
+        "唐婉"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wanganguo",
+      "name": "王安国",
+      "variants": [
+        "王安国"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangpang",
+      "name": "王雱",
+      "variants": [
+        "王雱"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangqinghui",
+      "name": "王清惠",
+      "variants": [
+        "王清惠"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangyan",
+      "name": "王炎",
+      "variants": [
+        "王炎"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangyucheng",
+      "name": "王禹偁",
+      "variants": [
+        "王禹偁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wangzao",
+      "name": "汪藻",
+      "variants": [
+        "汪藻"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wengjuan",
+      "name": "翁卷",
+      "variants": [
+        "翁卷"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wenjiweng",
+      "name": "文及翁",
+      "variants": [
+        "文及翁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "wentianxiang",
+      "name": "文天祥",
+      "variants": [
+        "文天祥"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "xiangziyin",
+      "name": "向子𬤇",
+      "variants": [
+        "向子𬤇"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "xieyi",
+      "name": "谢逸",
+      "variants": [
+        "谢逸"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yangwujiu",
+      "name": "杨无咎",
+      "variants": [
+        "杨无咎"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yanren",
+      "name": "严仁",
+      "variants": [
+        "严仁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yanrui",
+      "name": "严蕊",
+      "variants": [
+        "严蕊"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yeqingchen",
+      "name": "叶清臣",
+      "variants": [
+        "叶清臣"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yeshaoweng",
+      "name": "叶绍翁",
+      "variants": [
+        "叶绍翁"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yuanquhua",
+      "name": "袁去华",
+      "variants": [
+        "袁去华"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "yuguobao",
+      "name": "俞国宝",
+      "variants": [
+        "俞国宝"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangbian",
+      "name": "张昪",
+      "variants": [
+        "张昪"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhanglei",
+      "name": "张耒",
+      "variants": [
+        "张耒"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhanglun",
+      "name": "张抡",
+      "variants": [
+        "张抡"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangshunmin",
+      "name": "张舜民",
+      "variants": [
+        "张舜民"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhaoji",
+      "name": "赵佶",
+      "variants": [
+        "赵佶"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhaoshixiu",
+      "name": "赵师秀",
+      "variants": [
+        "赵师秀"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhaozhangqing",
+      "name": "赵长卿",
+      "variants": [
+        "赵长卿"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhoudunyi",
+      "name": "周敦颐",
+      "variants": [
+        "周敦颐"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhoumi",
+      "name": "周密",
+      "variants": [
+        "周密"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhouzizhi",
+      "name": "周紫芝",
+      "variants": [
+        "周紫芝"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhufu",
+      "name": "朱服",
+      "variants": [
+        "朱服"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "song"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "songci-sanbaishou"
+      ]
+    },
+    {
+      "id": "zhangyanghao",
+      "name": "张养浩",
+      "variants": [
+        "张养浩"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "yuan"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "mazhiyuan",
+      "name": "马致远",
+      "variants": [
+        "马致远"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "yuan"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "baipu",
+      "name": "白朴",
+      "variants": [
+        "白朴"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "yuan"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "songlian",
+      "name": "宋濂",
+      "variants": [
+        "宋濂"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "jiangyingke",
+      "name": "江盈科",
+      "variants": [
+        "江盈科"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "fengmenglong",
+      "name": "冯梦龙",
+      "variants": [
+        "冯梦龙"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "guiyouguang",
+      "name": "归有光",
+      "variants": [
+        "归有光"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lizan",
+      "name": "礼赞",
+      "variants": [
+        "礼赞"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wangpan",
+      "name": "王磐",
+      "variants": [
+        "王磐"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wangshizhen",
+      "name": "王世贞",
+      "variants": [
+        "王世贞"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "weixueyi",
+      "name": "魏学洢",
+      "variants": [
+        "魏学洢"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "xiawanchun",
+      "name": "夏完淳",
+      "variants": [
+        "夏完淳"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yuanhongdao",
+      "name": "袁宏道",
+      "variants": [
+        "袁宏道"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yuqian",
+      "name": "于谦",
+      "variants": [
+        "于谦"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhangdai",
+      "name": "张岱",
+      "variants": [
+        "张岱"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhangpu",
+      "name": "张溥",
+      "variants": [
+        "张溥"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhengzhizhen",
+      "name": "郑之珍",
+      "variants": [
+        "郑之珍"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "ming"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "chewanyu",
+      "name": "车万育",
+      "variants": [
+        "车万育"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 30,
+      "collections": [
+        "shenglv-qimeng"
+      ]
+    },
+    {
+      "id": "pusongling",
+      "name": "蒲松龄",
+      "variants": [
+        "蒲松龄"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 3,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "gongzizhen",
+      "name": "龚自珍",
+      "variants": [
+        "龚自珍"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "gaoding",
+      "name": "高鼎",
+      "variants": [
+        "高鼎"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "lejun",
+      "name": "乐钧",
+      "variants": [
+        "乐钧"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "linsihuan",
+      "name": "林嗣环",
+      "variants": [
+        "林嗣环"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "liukai",
+      "name": "刘开",
+      "variants": [
+        "刘开"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "nalanxingde",
+      "name": "纳兰性德",
+      "variants": [
+        "纳兰性德"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "pengduanshu",
+      "name": "彭端淑",
+      "variants": [
+        "彭端淑"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "shenfu",
+      "name": "沈复",
+      "variants": [
+        "沈复"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "wangguowei",
+      "name": "王国维",
+      "variants": [
+        "王国维"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yaonai",
+      "name": "姚鼐",
+      "variants": [
+        "姚鼐"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "yuanmei",
+      "name": "袁枚",
+      "variants": [
+        "袁枚"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhaoyi",
+      "name": "赵翼",
+      "variants": [
+        "赵翼"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "zhengxie",
+      "name": "郑燮",
+      "variants": [
+        "郑燮"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "qing"
+      ],
+      "poemCount": 1,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    },
+    {
+      "id": "maozedong",
+      "name": "毛泽东",
+      "variants": [
+        "毛泽东"
+      ],
+      "anonymous": false,
+      "dynasties": [
+        "modern"
+      ],
+      "poemCount": 2,
+      "collections": [
+        "jiaokeshu-xuanshi"
+      ]
+    }
+  ]
+}

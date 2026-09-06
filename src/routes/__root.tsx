@@ -6,7 +6,7 @@ import { CORE_IMAGES, preloadImages } from "@/lib/game/preload";
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "唐小诗历险记";
+const APP_NAME = "唐小诗环游记";
 
 const fetchSessionUser = createServerFn({ method: "GET" }).handler(async () => {
   const { getSessionUser } = await import("@/lib/auth/verify.server");

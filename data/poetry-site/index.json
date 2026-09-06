@@ -1,0 +1,107 @@
+{
+  "source": "https://awesome-poetry.top/huajianji/",
+  "sourceName": "中文诗歌 (chinese-poetry web reader)",
+  "scrapedAt": "2026-08-28T04:19:14Z",
+  "collections": [
+    {
+      "id": "huajianji",
+      "title": "花间集",
+      "editor": "赵崇祚",
+      "chapterCount": 11,
+      "poemCount": 498,
+      "duplicatePoemRefs": 0,
+      "file": "huajianji.json"
+    },
+    {
+      "id": "nantang-erzhu-ci",
+      "title": "南唐二主词",
+      "editor": "李煜 李璟",
+      "chapterCount": 3,
+      "poemCount": 46,
+      "duplicatePoemRefs": 0,
+      "file": "nantang-erzhu-ci.json"
+    },
+    {
+      "id": "tangshi-sanbaishou",
+      "title": "唐诗三百首",
+      "editor": null,
+      "chapterCount": 1,
+      "poemCount": 317,
+      "duplicatePoemRefs": 4,
+      "file": "tangshi-sanbaishou.json"
+    },
+    {
+      "id": "songci-sanbaishou",
+      "title": "宋词三百首",
+      "editor": null,
+      "chapterCount": 1,
+      "poemCount": 291,
+      "duplicatePoemRefs": 0,
+      "file": "songci-sanbaishou.json"
+    },
+    {
+      "id": "jiaokeshu-xuanshi",
+      "title": "教科书选诗",
+      "editor": "教科书出版社包含人民教育出版社、江苏教育出版社等",
+      "chapterCount": 33,
+      "poemCount": 328,
+      "duplicatePoemRefs": 0,
+      "file": "jiaokeshu-xuanshi.json"
+    },
+    {
+      "id": "gushi-shijiu-shou",
+      "title": "古诗十九首",
+      "editor": null,
+      "chapterCount": 1,
+      "poemCount": 19,
+      "duplicatePoemRefs": 0,
+      "file": "gushi-shijiu-shou.json"
+    },
+    {
+      "id": "shijing",
+      "title": "诗经",
+      "editor": "佚名",
+      "chapterCount": 31,
+      "poemCount": 306,
+      "duplicatePoemRefs": 0,
+      "file": "shijing.json"
+    },
+    {
+      "id": "qianjiashi",
+      "title": "千家诗",
+      "editor": "南宋·谢枋得明代·王相",
+      "chapterCount": 5,
+      "poemCount": 214,
+      "duplicatePoemRefs": 0,
+      "file": "qianjiashi.json"
+    },
+    {
+      "id": "shenglv-qimeng",
+      "title": "声律启蒙",
+      "editor": "清·车万育",
+      "chapterCount": 3,
+      "poemCount": 31,
+      "duplicatePoemRefs": 0,
+      "file": "shenglv-qimeng.json"
+    },
+    {
+      "id": "sanzijing",
+      "title": "三字经",
+      "editor": "王应麟",
+      "chapterCount": 2,
+      "poemCount": 2,
+      "duplicatePoemRefs": 0,
+      "file": "sanzijing.json"
+    },
+    {
+      "id": "tangshi-mengxue",
+      "title": "唐诗三百首·蒙学",
+      "editor": "清代·蘅塘退士",
+      "chapterCount": 7,
+      "poemCount": 320,
+      "duplicatePoemRefs": 0,
+      "file": "tangshi-mengxue.json"
+    }
+  ],
+  "urlsStripped": true
+}

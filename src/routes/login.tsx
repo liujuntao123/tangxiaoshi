@@ -22,6 +22,21 @@ function Login() {
     preloadImages(CORE_IMAGES);
   }, []);
 
+  // 背景就绪兜底：预载可能先于 React onLoad 完成，此时 onLoad 不再触发，
+  // 必须用 Image() 检查 complete，否则背景永远透明（看起来没背景）。
+  useEffect(() => {
+    let live = true;
+    const img = new Image();
+    img.onload = () => {
+      if (live) setBgReady(true);
+    };
+    img.src = "/art/bg/home.png";
+    if (img.complete) setBgReady(true);
+    return () => {
+      live = false;
+    };
+  }, []);
+
   if (!isPending && user) {
     return <Navigate to="/" />;
   }
@@ -65,15 +80,15 @@ function Login() {
     <main className="min-h-dvh bg-ink">
       <div className="relative mx-auto h-dvh w-full max-w-[430px] overflow-hidden">
         <img
-          src="/art/scene-moon.jpg"
+          src="/art/bg/home.png"
           alt=""
           decoding="async"
           onLoad={() => setBgReady(true)}
           className={`absolute inset-0 h-full w-full object-cover object-[center_48%] stage-photo ${bgReady ? "is-in" : ""}`}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-transparent to-ink/25" />
-        <p className="title-art paper-glow absolute inset-x-0 top-[8%] z-10 px-4 text-center text-[clamp(1.8rem,8vw,2.4rem)] text-paper">
-          唐小诗历险记
+        <p className="title-art paper-glow absolute inset-x-0 top-[24%] z-10 px-4 text-center text-[clamp(1.8rem,8vw,2.4rem)] text-paper">
+          唐小诗环游记
         </p>
         <form
           onSubmit={onSubmit}
@@ -132,7 +147,7 @@ function Login() {
             <div className="mt-2">
               <JadeEnter
                 type="submit"
-                label={busy ? "请稍候" : registering ? "注册并进入" : "进入游戏"}
+                label={busy ? "稍候" : registering ? "注册" : "进入"}
                 disabled={busy || !authEnabled}
               />
             </div>

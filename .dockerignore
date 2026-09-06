@@ -1,0 +1,31 @@
+# 依赖与产物（构建阶段全部重建）
+node_modules
+.output
+.nitro
+.tanstack
+.vercel
+
+# 版本库与本地状态
+.git
+.gitignore
+.grok
+.env
+.env.*
+!.env.example
+
+# 文档与开发素材（不进镜像）
+docs
+*.md
+LICENSE
+
+# 日志与临时产物
+*.log
+artifacts
+screenshots
+__pycache__
+*.pyc
+
+# Docker 自身（避免 COPY 循环语义歧义）
+Dockerfile
+docker-compose.yml
+.dockerignore

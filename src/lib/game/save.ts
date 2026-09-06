@@ -2,26 +2,26 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql } from "@/lib/db";
-import { migrateSave } from "./progress";
 import { EMPTY_SAVE, type PlayerSave } from "./types";
 
 const saveSchema = z.object({
-  clearedLevels: z.array(z.string()),
-  keysOwned: z.number(),
+  clearedPoems: z.array(z.string()),
   achievements: z.array(z.string()),
   endlessBestStreak: z.number(),
   endlessBestScore: z.number(),
+  metAuthors: z.array(z.string()),
 });
 
 type SaveRow = {
-  cleared_levels: string;
-  keys_owned: number;
+  cleared_poems: string;
   achievements: string;
   endless_best_streak: number;
   endless_best_score: number;
+  met_authors: string;
 };
 
-function parseList(value: string): string[] {
+function parseList(value: string | undefined): string[] {
+  if (!value) return [];
   try {
     const parsed: unknown = JSON.parse(value);
     return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
@@ -30,14 +30,13 @@ function parseList(value: string): string[] {
   }
 }
 
-function toSave(row: SaveRow | undefined): PlayerSave {
-  if (!row) return { ...EMPTY_SAVE };
+function toSave(row: SaveRow): PlayerSave {
   return {
-    clearedLevels: parseList(row.cleared_levels),
-    keysOwned: Number(row.keys_owned) || 0,
+    clearedPoems: parseList(row.cleared_poems),
     achievements: parseList(row.achievements),
     endlessBestStreak: Number(row.endless_best_streak) || 0,
     endlessBestScore: Number(row.endless_best_score) || 0,
+    metAuthors: parseList(row.met_authors),
   };
 }
 
@@ -46,12 +45,12 @@ export const getSave = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<PlayerSave> => {
     const sql = await getSql();
     const rows = await sql<SaveRow>`
-      select cleared_levels, keys_owned, achievements, endless_best_streak, endless_best_score
+      select cleared_poems, achievements, endless_best_streak, endless_best_score, met_authors
       from player_saves
       where user_id = ${context.userId}
     `;
     const existing = rows[0];
-    if (existing) return migrateSave(toSave(existing));
+    if (existing) return toSave(existing);
     await sql`insert into player_saves (user_id) values (${context.userId})`;
     return { ...EMPTY_SAVE };
   });
@@ -63,23 +62,23 @@ export const writeSave = createServerFn({ method: "POST" })
     const sql = await getSql();
     await sql`
       insert into player_saves (
-        user_id, cleared_levels, keys_owned, achievements,
-        endless_best_streak, endless_best_score, updated_at
+        user_id, cleared_poems, achievements,
+        endless_best_streak, endless_best_score, met_authors, updated_at
       ) values (
         ${context.userId},
-        ${JSON.stringify(data.clearedLevels)},
-        ${data.keysOwned},
+        ${JSON.stringify(data.clearedPoems)},
         ${JSON.stringify(data.achievements)},
         ${data.endlessBestStreak},
         ${data.endlessBestScore},
+        ${JSON.stringify(data.metAuthors)},
         now()
       )
       on conflict (user_id) do update set
-        cleared_levels = excluded.cleared_levels,
-        keys_owned = excluded.keys_owned,
+        cleared_poems = excluded.cleared_poems,
         achievements = excluded.achievements,
         endless_best_streak = excluded.endless_best_streak,
         endless_best_score = excluded.endless_best_score,
+        met_authors = excluded.met_authors,
         updated_at = now()
     `;
     return data;

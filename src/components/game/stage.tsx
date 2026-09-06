@@ -1,11 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { signOut } from "@/lib/auth/client";
-import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { CHAPTERS } from "@/lib/game/content";
 import { preloadImages } from "@/lib/game/preload";
-import { rescuedCount } from "@/lib/game/progress";
-import { useSave } from "@/lib/game/save-context";
 import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { SettingsButton } from "./settings-modal";
 
 export function Stage({
   bg,
@@ -60,7 +56,11 @@ export function Stage({
 
 export function BackButton({ to }: { to: string }) {
   return (
-    <Link to={to} className="tap relative grid h-11 w-11 shrink-0 place-items-center" aria-label="返回">
+    <Link
+      to={to}
+      className="tap pointer-events-auto relative grid h-11 w-11 shrink-0 place-items-center"
+      aria-label="返回"
+    >
       <img src="/ui/back-btn.png" alt="" className="h-10 w-10 object-contain drop-shadow-md" />
     </Link>
   );
@@ -68,13 +68,8 @@ export function BackButton({ to }: { to: string }) {
 
 export function ArtPanel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`relative ${className}`}>
-      <img
-        src="/ui/speech-panel.png"
-        alt=""
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
-      />
-      <div className="relative z-10 px-[16%] pt-[20%] pb-[22%]">{children}</div>
+    <div className={`ui-speech ${className}`}>
+      <div className="relative z-10 px-3 pt-4 pb-4">{children}</div>
     </div>
   );
 }
@@ -89,9 +84,14 @@ export function JadeEnter({
       type="button"
       aria-label={label}
       {...props}
-      className={`tap mx-auto block disabled:opacity-50 ${className}`}
+      className={`tap relative mx-auto block disabled:grayscale ${className}`}
     >
       <img src="/ui/jade-btn.png" alt="" className="h-14 w-auto object-contain drop-shadow-md" />
+      <span className="pointer-events-none absolute inset-0 grid place-items-center pb-0.5">
+        <span className="paper-glow whitespace-nowrap pb-1 font-display text-xl leading-none text-paper">
+          {label}
+        </span>
+      </span>
     </button>
   );
 }
@@ -104,47 +104,26 @@ export function PoetImg({ src, className = "" }: { src: string; className?: stri
       decoding="async"
       className={className}
       onError={(event) => {
-        event.currentTarget.src = "/sprites/poets/default.png";
+        // 素材未就位时隐藏而不是裂图（AGENTS.md：缺图显示占位底色）
+        event.currentTarget.style.visibility = "hidden";
       }}
     />
   );
 }
 
+/** 极简顶栏：返回 + 标题 + 设置入口。退出登录收进设置弹窗。
+ *  header 本体不拦截事件（pointer-events-none），只有按钮可点：
+ *  头部有 pb-8 的透明区，会把下方列表/成就分类 tab 的首行盖住，吃掉点击。 */
 export function StageHud({ title, backTo }: { title?: string; backTo?: string }) {
-  const { user, isPending } = useCurrentUserState();
-  const { save } = useSave();
-  const [signingOut, setSigningOut] = useState(false);
-  const poets = rescuedCount(save);
-
   return (
-    <header className="hud-fade absolute inset-x-0 top-0 z-20 flex items-center gap-3 px-3 pb-12 pt-[max(0.7rem,env(safe-area-inset-top))]">
+    <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center gap-2 px-3 pb-8 pt-[max(0.6rem,env(safe-area-inset-top))]">
       {backTo ? (
         <BackButton to={backTo} />
       ) : (
-        <img src="/ui/lantern.png" alt="" className="h-10 w-7 shrink-0 object-contain drop-shadow" />
+        <img src="/ui/lantern.png" alt="" className="h-9 w-6 shrink-0 object-contain drop-shadow" />
       )}
-      <div className="min-w-0 flex-1">
-        {title ? <p className="hud-title truncate text-paper">{title}</p> : null}
-        <p className="mt-0.5 flex items-center gap-1 text-[11px] tracking-[0.18em] text-paper/85">
-          <img src="/sprites/key.png" alt="" className="h-3.5 w-3.5 object-contain" />
-          诗人 {poets.have}/{poets.total || CHAPTERS.length}
-        </p>
-      </div>
-      {isPending ? (
-        <div className="h-8 w-10" />
-      ) : user ? (
-        <button
-          type="button"
-          disabled={signingOut}
-          onClick={() => {
-            setSigningOut(true);
-            void signOut("/login").catch(() => setSigningOut(false));
-          }}
-          className="tap shrink-0 text-[11px] tracking-[0.2em] text-paper/70"
-        >
-          {signingOut ? "…" : "退出"}
-        </button>
-      ) : null}
+      {title ? <p className="hud-title min-w-0 flex-1 truncate text-paper">{title}</p> : <span className="flex-1" />}
+      <SettingsButton />
     </header>
   );
 }

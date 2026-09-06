@@ -1,0 +1,9 @@
+{
+  "name": "tangxiaoshi-migrator",
+  "private": true,
+  "type": "module",
+  "comment": "运行时镜像只为 scripts/migrate.mjs 提供 pg 驱动；pg 版本随根 package.json 的 dependencies.pg 手动同步。",
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}

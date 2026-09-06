@@ -1,7 +1,7 @@
 {
   "name": "tangxiaoshi",
   "private": true,
-  "description": "唐小诗历险记 — 古诗文答题战斗网页游戏",
+  "description": "唐小诗环游记 — 古诗文答题战斗网页游戏",
   "sideEffects": false,
   "type": "module",
   "overrides": {
