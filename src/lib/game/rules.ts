@@ -6,16 +6,10 @@
  * 因此可以直接被 `node --test`（--experimental-strip-types）加载做纯函数测试。
  * progress.ts 在其上补充依赖诗卡内容的封装并统一对外导出。
  */
-import type {
-  ContinueTarget,
-  PlayerSave,
-  Poem,
-  PoemRecord,
-  PoemRunResult,
-  Question,
-  Stars,
-  TalismanDef,
-} from "./types";
+// 注意：本模块会被 node --test 直接加载，运行时值导入必须带 .ts 扩展名；
+// 纯类型导入会被擦除，写法随意。
+import type { Inventory, PlayerSave, Poem, PoemRecord, PoemRunResult, Question, Stars } from "./types";
+import { EMPTY_INVENTORY, ITEM_IDS, isItemId } from "./types.ts";
 
 /** 得分口径（docs/game-design.md §7.2）。 */
 export const BASE_ANSWER_SCORE = 100;
@@ -24,33 +18,6 @@ export const COMBO_BONUS_STEP = 25;
 export const COMBO_BONUS_CAP = 100;
 /** 连携正确额外加分。 */
 export const LINK_BONUS = 100;
-
-/** 三枚诗签的定义；答题界面按名称/符号/说明/剩余次数渲染。 */
-export const TALISMANS: TalismanDef[] = [
-  {
-    id: "clarity",
-    name: "明心",
-    symbol: "明",
-    description: "答题中使用一次，隐藏两个错误选项",
-    uses: 1,
-  },
-  {
-    id: "ward",
-    name: "护卷",
-    symbol: "护",
-    description: "第一次答错不灭灯笼，但仍断连",
-    uses: 1,
-  },
-  {
-    id: "echo",
-    name: "回响",
-    symbol: "响",
-    description: "第一次答对后，下一题正确获得额外分数与诗气",
-    uses: 1,
-  },
-];
-
-const TALISMAN_IDS = new Set<string>(TALISMANS.map((talisman) => talisman.id));
 
 export const EMPTY_POEM_RECORD: PoemRecord = {
   bestStars: 0,
@@ -98,6 +65,8 @@ export function normalizeSave(input: unknown): PlayerSave {
       metAuthors: [],
       poemRecords: {},
       totalScore: 0,
+      levelStars: {},
+      items: { ...EMPTY_INVENTORY },
     };
   }
   const poemRecords: Record<string, PoemRecord> = {};
@@ -117,7 +86,30 @@ export function normalizeSave(input: unknown): PlayerSave {
     metAuthors: unique(stringList(input.metAuthors)),
     poemRecords,
     totalScore: nonNegativeInt(input.totalScore),
+    levelStars: normalizeLevelStars(input.levelStars),
+    items: normalizeInventory(input.items),
   };
+}
+
+/** 关卡星级表：非法条目丢弃，星级钳制到 0–3。 */
+export function normalizeLevelStars(value: unknown): Record<string, Stars> {
+  if (!isPlainObject(value)) return {};
+  const stars: Record<string, Stars> = {};
+  for (const [key, raw] of Object.entries(value)) {
+    if (!/^\d+$/.test(key) || key === "0") continue;
+    stars[key] = clampStars(raw);
+  }
+  return stars;
+}
+
+/** 道具库存：未知道具丢弃，数量钳制到非负整数。 */
+export function normalizeInventory(value: unknown): Inventory {
+  const items: Inventory = { ...EMPTY_INVENTORY };
+  if (!isPlainObject(value)) return items;
+  for (const id of ITEM_IDS) {
+    if (isItemId(id)) items[id] = nonNegativeInt(value[id]);
+  }
+  return items;
 }
 
 /** 非法诗卡记录返回 null（调用方丢弃该条目），字段非法逐项回退默认值。 */
@@ -133,7 +125,6 @@ export function normalizePoemRecord(value: unknown): PoemRecord | null {
 
 /** 把答题组件上报的本轮表现整理成合法 PoemRunResult（越界钳制、非法回退）。 */
 export function normalizeRunResult(run: PoemRunResult): PoemRunResult {
-  const talisman = typeof run.talisman === "string" && TALISMAN_IDS.has(run.talisman) ? run.talisman : null;
   const chancesTotal = clampInt(run.chancesTotal, 1, 99);
   return {
     poemId: typeof run.poemId === "string" ? run.poemId : "",
@@ -143,7 +134,6 @@ export function normalizeRunResult(run: PoemRunResult): PoemRunResult {
     maxCombo: nonNegativeInt(run.maxCombo),
     score: nonNegativeInt(run.score),
     mistakes: nonNegativeInt(run.mistakes),
-    talisman,
   };
 }
 
@@ -214,28 +204,6 @@ export function applyEndlessRun(save: PlayerSave, score: number, streak: number)
   };
 }
 
-/** 继续环游目标的可测核心：poems 按环游顺序排列。 */
-export type PoemProgressNode = {
-  id: string;
-  unlocked: boolean;
-  cleared: boolean;
-};
-
-/**
- * 首页「继续环游」（docs/game-design.md §8，ADR-0015）：
- * 最早一张未通关的诗卡；全部通关时定位到最后一张已通关诗卡并改为「再战提分」；
- * 没有诗卡返回 null。
- */
-export function pickContinueTarget(poems: readonly PoemProgressNode[]): ContinueTarget | null {
-  const next = poems.find((poem) => poem.unlocked && !poem.cleared);
-  if (next) return { poemId: next.id, replay: false };
-  for (let i = poems.length - 1; i >= 0; i -= 1) {
-    const poem = poems[i];
-    if (poem && poem.cleared) return { poemId: poem.id, replay: true };
-  }
-  return null;
-}
-
 /** 全部诗卡的诗印总数（首页/成就页展示用）。 */
 export function totalStars(save: PlayerSave): number {
   return Object.values(normalizeSave(save).poemRecords).reduce(
@@ -246,9 +214,9 @@ export function totalStars(save: PlayerSave): number {
 
 /**
  * 答错时给出正确答案所在诗句及其相邻一句，最多两行，不写长解析。
- * （docs/game-design.md §5.2 的错题反馈口径；答题与无尽共用，避免各处复制。）
+ * （错题反馈口径；答题、关卡与无尽共用，避免各处复制。）
  */
-export function poemContextFor(poem: Poem, question: Question): string[] {
+export function poemContextFor(poem: Pick<Poem, "lines">, question: Question): string[] {
   const answer = question.choices[question.answerIndex] ?? "";
   const lines = poem.lines;
   const at = lines.indexOf(answer);

@@ -8,7 +8,7 @@ import { PlaqueFace } from "./choice-slip";
  * 不进错误边界，改为温和告知并引导去文集资料库（ADR-0015 内容重编排的过渡页）。
  */
 export function MissingCard({
-  bg = GAME_BACKGROUNDS.tour,
+  bg = GAME_BACKGROUNDS.levels,
   title = "诗境未找到",
   hint = "内容重新编排过了，这张旧卡片搬了家。去文集里挑一张吧。",
 }: {

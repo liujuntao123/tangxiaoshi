@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_app/library/")({
 
 /**
  * /library = 诗集资料库（入口拆分 2026-09，ADR-0017）：
- * 文集 → 章节 → 作者 → 诗卡的浏览层级整体从 /tour 迁出，
- * /tour 从此只承载墨潮远征的墨路选择，两个入口互不纠缠。
+ * 文集 → 章节 → 作者 → 诗卡的浏览层级（ADR-0017 迁出主线）。
+ * 主线闯关走 /levels，这里只做内容检索与收集。
  */
 function LibraryRoute() {
   return <LibraryView />;

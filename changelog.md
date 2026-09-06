@@ -2,6 +2,52 @@
 
 本文件记录项目的产品、玩法、工程和文档变更。未发布变更统一放在 `[Unreleased]`，发布版本再改为具体版本号。每次修改项目相关内容时，必须同步追加一条记录。
 
+## [Unreleased] - 2026-09-06（关卡制远征）
+
+### Added
+
+- 关卡制远征主线（ADR-0018，取代三节点墨路）：50 个平铺关卡、顺序解锁、每关 10 题答对 6 题过关；星级按答错数（零错三星 / ≤2 错两星 / 其余一星）。
+  - 出题算法（`src/lib/game/levels.ts`，纯函数）：种子由 userId 派生（FNV-1a → mulberry32），全库 2147 首诗确定性洗牌后按每关 13 首（10 正式 + 3 备用）切段——同一玩家每关题目永远固定、不同玩家互不相同（防透题），关卡内一诗一题、关卡之间诗不重复（50 关共 650 首 < 2147 首）。
+  - 道具系统（持久库存 `PlayerSave.items`）：去伪（隐两个错项）/ 补答（答错换备用题补位，每关最多 3 次）/ 双倍（下次答对翻倍），使用即时扣减落存档；奖励口径一句话——每拿到一颗新星奖 1 个随机道具（种子 = 玩家+关卡+星档，结果固定）。
+  - 新页面：`/levels` 关卡列表（50 卡：关号/星级/解锁态）与 `/levels/$levelId` 关卡答题场（开场规则说明、出处标注、答错不淘汰、十格对错进度点、过关直达下一关）。
+  - 首页改版：主按钮「继续闯关」直达下一关（全部通关变「挑战满星」），50 段进度条 + 已通关/星星/总分。
+- 单元测试：`src/lib/game/levels.test.ts`（出题确定性、防透题、关卡零重复、星级、道具奖励发放、解锁规则）；`npm test` 73 项全绿。
+- E2E 冒烟脚本：`scripts/smoke-level-win.mjs`（注册 → 用真实引擎算题全对通关 → 验证三星/道具奖励/下一关解锁/首页进度）、`scripts/smoke-redo.mjs`（补答道具全流程）。
+- 数据库迁移 `migrations/0005_level_progress.sql`：`player_saves` 新增 `level_stars`、`items`（JSON 文本列，Neon 与 PGLite 兼容）。
+
+### Changed
+
+- 存档契约扩展：`PlayerSave` 新增 `levelStars`（每关历史最佳星级）与 `items`（道具库存），`normalizeSave`/validator/读写 SQL 同步；旧存档缺字段按空值兜底。
+- 诗卡答题（资料库 `/play/$poemId`）与练习（`/practice/$poemId`）拆分为独立路由，`poem-quiz.tsx` 收敛为两种模式；练习的「先看答案」与诗卡的灯笼/诗印规则不变。
+
+### Removed
+
+- 整体移除三节点墨路远征（不做兼容）：`expedition.ts`（诗火/墨路/修页奖励/结局/localStorage `tangxiaoshi.expedition.v1`）、`tour-routes.tsx`、`/tour` 全部路由、诗签（明心/护卷/回响）与开局诗签选择、`pickContinueTarget`。
+- 资料库组件更名：`tour-author(s)/tour-chapters/tour-collections` → `library-*`（仍服务 `/library`）；`GAME_BACKGROUNDS.tour` → `.levels`。
+
+### Docs
+
+- 新增 `docs/adr/0018-level-based-expedition.md`；ADR 索引中 0016/0017 标记被取代。
+- 重写 `docs/game-design.md`（关卡制总案）、`CONTEXT.md`（新核心词汇：关卡/题库池/玩家专属题序/星星/道具）、`README.md`（玩法与存档说明）、`docs/playtest-checklist.md`（关卡制试玩清单）、`docs/content.md`（玩法读取关系与文件清单）。
+- `docs/deep-reboot-brief.md` 顶部标注已被 ADR-0018 取代，仅作历史记录。
+- 根 `AGENTS.md` 第 1/3/4 节同步：当前产品事实、存档边界（关卡星星/道具入库）、玩法红线（不回植旧隐喻）。
+
+### Changed（子代理双审查修复）
+
+- UI 文案审查（子代理 #1）修复：
+  - 道具「去伪」更名「排除」（显示名，机制不变）；关卡开场说明写全每个道具的用途（移动端无 hover）。
+  - 移除诗卡答题的「诗气」进度条（纯视觉、无机制作用，制造虚假预期）；HUD 改为连击 + 连携就绪提示。
+  - 诗卡模式补规则说明一行：「5 道题 · 答对 3 题通关 · 灯笼灭完本轮结束」，灯笼加文字标签；答错显示「还剩 N 盏」；失败结算写明过关线差几题。
+  - 「连携出手！诗韵加倍」改为与数值一致的「连携出手！额外 +100 分」；推进按钮统一为「下一题 / 看结果」（弃用内部术语「收句」，机制保留：仍须主动确认，AGENTS.md/CONTEXT.md/game-design.md/playtest-checklist 同步）。
+  - 关卡答错报告标题改「答错了」并前置「正确答案：」；「新星奖励」改「星星奖励」；「双倍·已备」改「双倍·已就绪」；星级规则改等式写法；三处「题目专属」措辞统一；首页通关文案去文言腔；library-view 过期入口指引改「继续闯关」。
+  - 修复题面泄露：诗名题（出自哪一首）不再在题面上方显示出处标注（来源移到作答后的报告层）。
+- 一致性审查（子代理 #2）确认 7 条核心声明全部与代码一致；顺手清理：死 CSS（`.talisman-lift`、`wash-fade`）、过时走查脚本 `scripts/ui-review/`（引用已废弃的 /tour 与 localStorage 键）。
+
+### 验收
+
+- `typecheck` / `lint` / `npm test`（73 项）/ `npm run build` 全绿；内容管线（build-bank / validate_content / export_story_docs）通过（2147 诗 10735 题不变）。
+- Playwright 实测（dev 8081）：注册 → 首页直达第 1 关 → 关卡列表 → 开场说明 → 答题/答错报告 → 失败结算与再试；全对通关三星 + 新星道具 + 下一关解锁直达；补答换题后计数回退；诗库练习与资料库路径回归通过，无控制台错误。
+
 ## [Unreleased] - 2026-09-07
 
 ### Changed

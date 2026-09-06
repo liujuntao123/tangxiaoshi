@@ -5,7 +5,7 @@ import { getSql } from "@/lib/db";
 import { normalizeSave } from "./rules";
 import { EMPTY_SAVE, type PlayerSave } from "./types";
 
-// poemRecords 的条目级校验交给 normalizeSave（非法条目回退/丢弃，
+// poemRecords / levelStars / items 的条目级校验交给 normalizeSave（非法条目回退/丢弃，
 // 不会因为个别脏数据丢掉整份记录），validator 只保证整体结构可用。
 const saveSchema = z.object({
   clearedPoems: z.array(z.string()),
@@ -15,6 +15,8 @@ const saveSchema = z.object({
   metAuthors: z.array(z.string()),
   poemRecords: z.record(z.string(), z.unknown()).catch({}),
   totalScore: z.number().catch(0),
+  levelStars: z.record(z.string(), z.unknown()).catch({}),
+  items: z.record(z.string(), z.unknown()).catch({}),
 });
 
 type SaveRow = {
@@ -25,6 +27,8 @@ type SaveRow = {
   met_authors: string;
   poem_records: string;
   total_score: number;
+  level_stars: string;
+  items: string;
 };
 
 function parseList(value: string | undefined): string[] {
@@ -57,6 +61,8 @@ function toSave(row: SaveRow): PlayerSave {
     metAuthors: parseList(row.met_authors),
     poemRecords: parseRecords(row.poem_records),
     totalScore: Number(row.total_score) || 0,
+    levelStars: parseRecords(row.level_stars),
+    items: parseRecords(row.items),
   });
 }
 
@@ -66,7 +72,7 @@ export const getSave = createServerFn({ method: "GET" })
     const sql = await getSql();
     const rows = await sql<SaveRow>`
       select cleared_poems, achievements, endless_best_streak, endless_best_score,
-             met_authors, poem_records, total_score
+             met_authors, poem_records, total_score, level_stars, items
       from player_saves
       where user_id = ${context.userId}
     `;
@@ -87,7 +93,7 @@ export const writeSave = createServerFn({ method: "POST" })
       insert into player_saves (
         user_id, cleared_poems, achievements,
         endless_best_streak, endless_best_score, met_authors,
-        poem_records, total_score, updated_at
+        poem_records, total_score, level_stars, items, updated_at
       ) values (
         ${context.userId},
         ${JSON.stringify(safe.clearedPoems)},
@@ -97,6 +103,8 @@ export const writeSave = createServerFn({ method: "POST" })
         ${JSON.stringify(safe.metAuthors)},
         ${JSON.stringify(safe.poemRecords)},
         ${safe.totalScore},
+        ${JSON.stringify(safe.levelStars)},
+        ${JSON.stringify(safe.items)},
         now()
       )
       on conflict (user_id) do update set
@@ -107,6 +115,8 @@ export const writeSave = createServerFn({ method: "POST" })
         met_authors = excluded.met_authors,
         poem_records = excluded.poem_records,
         total_score = excluded.total_score,
+        level_stars = excluded.level_stars,
+        items = excluded.items,
         updated_at = now()
     `;
     return safe;

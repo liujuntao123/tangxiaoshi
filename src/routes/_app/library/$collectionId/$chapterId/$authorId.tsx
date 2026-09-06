@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { findAuthor, findChapter, findCollection } from "@/lib/game/content";
 import { MissingCard } from "@/components/game/missing-card";
-import { TourAuthor } from "@/components/game/tour-author";
+import { LibraryAuthor } from "@/components/game/library-author";
 
 export const Route = createFileRoute("/_app/library/$collectionId/$chapterId/$authorId")({
   component: RouteComponent,
@@ -20,5 +20,5 @@ function RouteComponent() {
   ) {
     return <MissingCard title="作者未找到" hint="这一页不存在，或已随内容编排更新搬了家。" />;
   }
-  return <TourAuthor collectionId={collectionId} chapterId={chapterId} authorId={authorId} />;
+  return <LibraryAuthor collectionId={collectionId} chapterId={chapterId} authorId={authorId} />;
 }

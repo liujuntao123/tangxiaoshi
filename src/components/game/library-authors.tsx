@@ -6,7 +6,7 @@ import { ArtPanel, PanelCaption, PortraitMedal, RowChevron, Stage, StageHud } fr
 
 /** 资料库第三层：章节内的作者列表（首遇引导语在作者页，ADR-0011）。
  *  行卡 = 玉环头像 + 名号 + 通关进度条 + 进入箭头，压住右侧留白。 */
-export function TourAuthors({ collectionId, chapterId }: { collectionId: string; chapterId: string }) {
+export function LibraryAuthors({ collectionId, chapterId }: { collectionId: string; chapterId: string }) {
   const { save } = useSave();
   const collection = collectionById(collectionId);
   const chapter = chapterById(chapterId);

@@ -4,14 +4,14 @@ import {
   applyEndlessRun,
   applyPoemRun,
   mergePoemRecord,
+  normalizeInventory,
+  normalizeLevelStars,
   normalizePoemRecord,
   normalizeRunResult,
   normalizeSave,
-  pickContinueTarget,
   poemContextFor,
   scoreForAnswer,
   starsForRun,
-  TALISMANS,
   totalStars,
 } from "./rules.ts";
 import type { PlayerSave, Poem, PoemRecord, PoemRunResult, Question } from "./types.ts";
@@ -25,6 +25,8 @@ function baseSave(overrides: Partial<PlayerSave> = {}): PlayerSave {
     metAuthors: [],
     poemRecords: {},
     totalScore: 0,
+    levelStars: {},
+    items: { reveal: 0, redo: 0, double: 0 },
     ...overrides,
   };
 }
@@ -38,7 +40,6 @@ function run(overrides: Partial<PoemRunResult> = {}): PoemRunResult {
     maxCombo: 0,
     score: 0,
     mistakes: 0,
-    talisman: null,
     ...overrides,
   };
 }
@@ -69,7 +70,7 @@ function question(answerText: string): Question {
 }
 
 describe("normalizeSave", () => {
-  it("旧存档（v2 五字段，缺成绩字段）补默认值", () => {
+  it("旧存档（缺关卡与道具字段）补默认值", () => {
     const legacy = {
       clearedPoems: ["1"],
       achievements: ["author-liyu"],
@@ -82,6 +83,8 @@ describe("normalizeSave", () => {
     assert.deepEqual(save.metAuthors, ["liyu"]);
     assert.deepEqual(save.poemRecords, {});
     assert.equal(save.totalScore, 0);
+    assert.deepEqual(save.levelStars, {});
+    assert.deepEqual(save.items, { reveal: 0, redo: 0, double: 0 });
   });
 
   it("整体非对象返回全默认", () => {
@@ -102,6 +105,8 @@ describe("normalizeSave", () => {
         "1": { bestStars: 9, bestScore: -3, bestCombo: "x", attempts: 2 },
         bad: "junk",
       },
+      levelStars: { "1": 2, "x": 3, "0": 1, "2": 9 },
+      items: { reveal: 3, redo: -2, double: "x", hack: 9 },
     });
     assert.deepEqual(save.clearedPoems, ["1"]);
     assert.deepEqual(save.achievements, ["a"]);
@@ -111,6 +116,8 @@ describe("normalizeSave", () => {
     assert.equal(save.totalScore, 0); // 非数字（含数字字符串）不做强转，回退 0
     assert.deepEqual(save.poemRecords["1"], { bestStars: 3, bestScore: 0, bestCombo: 0, attempts: 2 });
     assert.equal(save.poemRecords.bad, undefined);
+    assert.deepEqual(save.levelStars, { "1": 2, "2": 3 }); // 非数字 key 丢弃，星级钳到 0-3
+    assert.deepEqual(save.items, { reveal: 3, redo: 0, double: 0 }); // 未知道具丢弃，负数回 0
   });
 
   it("不修改入参", () => {
@@ -137,15 +144,21 @@ describe("normalizePoemRecord / normalizeRunResult", () => {
     });
   });
 
-  it("run 结果：chancesLeft 钳到 [0, chancesTotal]，诗签白名单外回退 null", () => {
+  it("run 结果：chancesLeft 钳到 [0, chancesTotal]", () => {
     const dirty = run({ chancesLeft: 99, maxCombo: -4 }) as unknown as Record<string, unknown>;
     dirty.score = "x";
-    dirty.talisman = "hax";
     const safe = normalizeRunResult(dirty as unknown as PoemRunResult);
     assert.equal(safe.chancesLeft, 3);
     assert.equal(safe.maxCombo, 0);
     assert.equal(safe.score, 0);
-    assert.equal(safe.talisman, null);
+  });
+});
+
+describe("normalizeLevelStars / normalizeInventory", () => {
+  it("非法整体回空，合法条目保留", () => {
+    assert.deepEqual(normalizeLevelStars(null), {});
+    assert.deepEqual(normalizeLevelStars({ "3": 3 }), { "3": 3 });
+    assert.deepEqual(normalizeInventory(null), { reveal: 0, redo: 0, double: 0 });
   });
 });
 
@@ -221,33 +234,6 @@ describe("applyEndlessRun", () => {
   });
 });
 
-describe("pickContinueTarget", () => {
-  const nodes = [
-    { id: "a", unlocked: true, cleared: true },
-    { id: "b", unlocked: true, cleared: true },
-    { id: "c", unlocked: true, cleared: false },
-    { id: "d", unlocked: true, cleared: false },
-  ];
-
-  it("最早未通关的目标", () => {
-    assert.deepEqual(pickContinueTarget(nodes), { poemId: "c", replay: false });
-  });
-
-  it("全部通关时定位最后一张（再战提分）", () => {
-    const all = nodes.map((n) => ({ ...n, cleared: true }));
-    assert.deepEqual(pickContinueTarget(all), { poemId: "d", replay: true });
-  });
-
-  it("空列表返回 null", () => {
-    assert.equal(pickContinueTarget([]), null);
-  });
-
-  it("全部未通关时定位第一张", () => {
-    const none = nodes.map((n) => ({ ...n, cleared: false }));
-    assert.deepEqual(pickContinueTarget(none), { poemId: "a", replay: false });
-  });
-});
-
 describe("totalStars", () => {
   it("全部诗卡诗印求和", () => {
     const save = baseSave({
@@ -257,21 +243,6 @@ describe("totalStars", () => {
       },
     });
     assert.equal(totalStars(save), 4);
-  });
-});
-
-describe("TALISMANS", () => {
-  it("三枚诗签均一次性且 id 唯一", () => {
-    assert.equal(TALISMANS.length, 3);
-    assert.deepEqual(
-      TALISMANS.map((t) => t.id),
-      ["clarity", "ward", "echo"],
-    );
-    for (const t of TALISMANS) {
-      assert.equal(t.uses, 1);
-      assert.ok(t.symbol.length >= 1);
-      assert.ok(t.description.length >= 4);
-    }
   });
 });
 

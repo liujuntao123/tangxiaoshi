@@ -111,19 +111,6 @@ export type PoemRecord = {
   attempts: number;
 };
 
-/** 诗签：每轮问答开始三选一，只影响当前这一轮（docs/game-design.md §5.3）。 */
-export type TalismanId = "clarity" | "ward" | "echo";
-
-export type TalismanDef = {
-  id: TalismanId;
-  name: string;
-  /** 按钮上的单字符号，配合名称与说明，不依赖美术资源。 */
-  symbol: string;
-  description: string;
-  /** 每轮可用次数（当前三枚均为一次性）。 */
-  uses: number;
-};
-
 /** 一轮诗卡问答结束时的表现快照，由答题组件在结算时构造。 */
 export type PoemRunResult = {
   poemId: string;
@@ -138,15 +125,26 @@ export type PoemRunResult = {
   score: number;
   /** 答错次数，含被护卷挡下的那次（护卷挡下仍无法达成 3 印）。 */
   mistakes: number;
-  /** 本轮携带的诗签，未带/非法时为 null。 */
-  talisman?: TalismanId | null;
 };
 
-/** 首页「继续环游」目标：replay 为 true 时表示全部通关后的「再战提分」。 */
-export type ContinueTarget = {
-  poemId: string;
-  replay: boolean;
-};
+/** 每诗卡题数与配比：3 整句补全（2 next + 1 prev）+ 2 诗名 */
+export const QUESTIONS_PER_POEM = 5;
+/** 及格线 60% */
+export const PASS_RATE = 0.6;
+
+/** 关卡道具：去伪（隐藏两个错项）/ 补答（错题换新题补位）/ 双倍（答对得分翻倍）。 */
+export type ItemId = "reveal" | "redo" | "double";
+
+export const ITEM_IDS: readonly ItemId[] = ["reveal", "redo", "double"];
+
+export function isItemId(value: unknown): value is ItemId {
+  return typeof value === "string" && (ITEM_IDS as readonly string[]).includes(value);
+}
+
+/** 道具库存：每种道具的持有数量。 */
+export type Inventory = Record<ItemId, number>;
+
+export const EMPTY_INVENTORY: Inventory = { reveal: 0, redo: 0, double: 0 };
 
 export type PlayerSave = {
   clearedPoems: string[];
@@ -159,6 +157,10 @@ export type PlayerSave = {
   poemRecords: Record<string, PoemRecord>;
   /** 环游累计得分：每轮结算分数累加，不随重玩扣减。 */
   totalScore: number;
+  /** 关卡历史最佳星级（key 为关卡序号字符串，1 起；0/缺失 = 未通关）。 */
+  levelStars: Record<string, Stars>;
+  /** 道具库存。 */
+  items: Inventory;
 };
 
 export const EMPTY_SAVE: PlayerSave = {
@@ -169,9 +171,6 @@ export const EMPTY_SAVE: PlayerSave = {
   metAuthors: [],
   poemRecords: {},
   totalScore: 0,
+  levelStars: {},
+  items: { ...EMPTY_INVENTORY },
 };
-
-/** 每诗卡题数与配比：3 整句补全（2 next + 1 prev）+ 2 诗名 */
-export const QUESTIONS_PER_POEM = 5;
-/** 及格线 60% */
-export const PASS_RATE = 0.6;

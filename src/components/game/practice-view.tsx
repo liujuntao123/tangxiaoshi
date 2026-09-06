@@ -208,7 +208,7 @@ export function PracticeView() {
                     key={poem.id}
                     type="button"
                     className="tap tap-deep relative aspect-[3/4] overflow-hidden rounded-md border border-paper/40 bg-ink/40 text-left transition hover:brightness-105"
-                    onClick={() => navigate({ to: "/play/$poemId", params: { poemId: poem.id }, search: { from: "practice" } })}
+                    onClick={() => navigate({ to: "/practice/$poemId", params: { poemId: poem.id } })}
                   >
                     <img
                       src={poem.background}

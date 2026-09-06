@@ -1,49 +1,28 @@
 import { Link } from "@tanstack/react-router";
-import { findPoem } from "@/lib/game/content";
 import { GAME_BACKGROUNDS } from "@/lib/game/content/meta";
-import { PATH_DEFS, RELIC_DEFS, endingTitle, nodeQuality, useExpedition } from "@/lib/game/expedition";
-import { clearedCount, totalStars } from "@/lib/game/progress";
+import { LEVEL_COUNT, LEVEL_PASS, QUESTIONS_PER_LEVEL, levelProgress, nextLevelTarget } from "@/lib/game/levels";
 import { useSave } from "@/lib/game/save-context";
 import { PlaqueFace } from "./choice-slip";
 import { Stage, StageHud } from "./stage";
 
 /**
- * 首页 = 墨潮远征台（P0 深重构 §5.1）：
- * 唯一主线按钮「继续远征 / 去择墨路 / 再启远征 / 点亮第一盏诗火」，
- * 三节点旅程条 + 诗火/诗印/分数；底部次级导航（文集/诗库/墨潮试炼/诗册）。
- * 入口拆分（ADR-0017）：文集指向独立的 /library 资料库，与远征 /tour 分家。
+ * 首页 = 墨潮远征台（ADR-0018，关卡制）：
+ * 唯一主按钮「继续闯关」直达下一关；底部次级导航（文集/诗库/墨潮试炼/诗册）。
+ * 关卡题目由账号专属生成，因此首页只报进度，不剧透内容。
  */
 export function HomeScreen() {
   const { save } = useSave();
-  const { state } = useExpedition();
-  const progress = clearedCount(save);
-  const stars = totalStars(save);
-  // 进行中的远征才驱动首页主目标；已结束的远征只留一行结局回响。
-  const activeExp = state && !state.finished ? state : null;
-  const entry = activeExp ? (activeExp.nodes[activeExp.nodeIndex] ?? null) : null;
-  const entryPoem = entry ? findPoem(entry.poemId) : null;
+  const progress = levelProgress(save);
+  const nextLevel = nextLevelTarget(save);
+  const allCleared = nextLevel === null;
 
-  // 继续远征的语义（逻辑梳理 2026-09）：当前节点已择墨路 → 直达该页答题（续修），
-  // 不再绕去墨路选择页让玩家重选一遍；未择墨路时按钮诚实写「去择墨路」→ /tour。
-  const resumeEntry =
-    activeExp && entry && entryPoem
-      ? { poemId: entry.poemId, path: entry.path, nodeIndex: activeExp.nodeIndex }
-      : null;
-  const mainLabel = resumeEntry
-    ? "继续远征"
-    : activeExp
-      ? "去择墨路"
-      : state?.finished
-        ? "再启远征"
-        : "点亮第一盏诗火";
-  const caption = activeExp
-    ? entry && entryPoem
-      ? `续修本页：${PATH_DEFS[entry.path].name}《${entryPoem.title}》`
-      : `第 ${activeExp.nodeIndex + 1} / 3 页 · 选一条墨路，领一张诗卡`
-    : state?.finished
-      ? `${endingTitle(state.finished)} · 诗火可以再点起来`
-      : "三页诗路，一盏诗火";
-  const pendingRelic = activeExp && activeExp.relic !== "none" ? RELIC_DEFS[activeExp.relic] : null;
+  // 主按钮语义：有未通关 → 直达该关；全部通关 → 去关卡列表挑战满星。
+  const mainLabel = allCleared ? "挑战满星" : "继续闯关";
+  const mainTo = allCleared ? "/levels" : `/levels/$levelId`;
+  const mainParams = allCleared ? undefined : { levelId: String(nextLevel) };
+  const caption = allCleared
+    ? `${LEVEL_COUNT} 关全部通关，去把星星补满吧`
+    : `第 ${nextLevel} 关 · ${QUESTIONS_PER_LEVEL} 道题答对 ${LEVEL_PASS} 题过关`;
 
   return (
     <Stage bg={GAME_BACKGROUNDS.home}>
@@ -55,26 +34,19 @@ export function HomeScreen() {
         唐小诗环游记 · 修页人
       </p>
 
-      {/* 顶部三列统计：scenery-plate 深墨纸托底解耦背景花簇；诗火徽章统一用朱砂语义 */}
+      {/* 顶部三列统计：关卡进度 / 星星 / 总分 */}
       <div className="absolute inset-x-0 top-[19%] z-10 flex justify-center px-4">
         <div className="scenery-plate grid w-full max-w-sm grid-cols-3 gap-1 px-3 py-2 text-center">
           <div>
-            <p className="hud-title flex items-center justify-center gap-1 text-paper">
-              <span
-                aria-hidden
-                className="grid h-4 w-4 place-items-center rounded-full border border-seal bg-seal font-display text-[9px] leading-none text-paper"
-              >
-                火
-              </span>
-              {activeExp ? `${activeExp.fire}/4` : `${progress.have}/${progress.total}`}
+            <p className="hud-title text-paper">
+              {progress.cleared}
+              <span className="text-sm text-paper/75">/{LEVEL_COUNT}</span>
             </p>
-            <p className="paper-glow text-[11px] tracking-widest text-paper/80">
-              {activeExp ? "诗火" : "已通关"}
-            </p>
+            <p className="paper-glow text-[11px] tracking-widest text-paper/80">已通关</p>
           </div>
           <div>
-            <p className="hud-title text-paper">{stars}</p>
-            <p className="paper-glow text-[11px] tracking-widest text-paper/80">已获诗印</p>
+            <p className="hud-title text-paper">{progress.stars}</p>
+            <p className="paper-glow text-[11px] tracking-widest text-paper/80">关卡星星</p>
           </div>
           <div>
             <p className="hud-title text-paper">{save.totalScore}</p>
@@ -83,48 +55,12 @@ export function HomeScreen() {
         </div>
       </div>
 
-      {/* 三节点旅程条：墨座圆点 + 连接线；完成页盖印，当前页呼吸，未至页沉墨 */}
-      <div className="absolute inset-x-0 top-[28%] z-10 flex flex-col items-center gap-2">
-        <div className="relative flex items-center gap-4">
-          <span
-            aria-hidden
-            className="absolute inset-x-4 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-seal/65 via-ink/30 to-ink/15"
-          />
-          {[0, 1, 2].map((index) => {
-            const node = activeExp?.nodes[index] ?? null;
-            const done = node?.status === "done";
-            const failed = node?.status === "failed";
-            const current = activeExp?.nodeIndex === index && Boolean(activeExp);
-            return (
-              <span
-                key={index}
-                className={`jdot ${done ? "jdot-done" : failed ? "jdot-failed" : current ? "jdot-current" : ""}`}
-              >
-                {done ? "印" : failed ? "墨" : index + 1}
-              </span>
-            );
-          })}
-        </div>
+      {/* 关卡进度条：50 关的通过情况一眼可见 */}
+      <div className="absolute inset-x-0 top-[30%] z-10 flex flex-col items-center gap-2 px-6">
+        <LevelProgressBar cleared={progress.cleared} />
         <p className="caption-pill">
-          {activeExp
-            ? activeExp.nodes
-                .map((node, index) =>
-                  node?.status === "done"
-                    ? `第${index + 1}页·${nodeQuality(node.mistakes)}`
-                    : node?.status === "failed"
-                      ? `第${index + 1}页·墨痕`
-                      : index === activeExp.nodeIndex
-                        ? `第${index + 1}页·此刻`
-                        : `第${index + 1}页·未至`,
-                )
-                .join(" / ")
-            : "远征未启 · 三页待修"}
+          {allCleared ? "50 关全部通关！" : `下一关是第 ${nextLevel} 关 · 题目专为你出`}
         </p>
-        {pendingRelic ? (
-          <p className="caption-pill">
-            {`下一页带：${pendingRelic.name} · ${pendingRelic.desc}`}
-          </p>
-        ) : null}
       </div>
 
       <div className="absolute inset-x-0 bottom-[26%] z-10 flex justify-center">
@@ -142,22 +78,21 @@ export function HomeScreen() {
       </div>
 
       <div className="absolute inset-x-0 bottom-[15%] z-20 flex flex-col items-center gap-1 px-4">
-        {resumeEntry ? (
-          <Link
-            to="/play/$poemId"
-            params={{ poemId: resumeEntry.poemId }}
-            search={{ route: resumeEntry.path, node: resumeEntry.nodeIndex }}
-            className="tap tap-deep"
-            aria-label={mainLabel}
-          >
-            <PlaqueFace className="scale-110">{mainLabel}</PlaqueFace>
-          </Link>
-        ) : (
-          <Link to="/tour" className="tap tap-deep" aria-label={mainLabel}>
-            <PlaqueFace className="scale-110">{mainLabel}</PlaqueFace>
-          </Link>
-        )}
+        <Link
+          to={mainTo}
+          params={mainParams}
+          className="tap tap-deep"
+          aria-label={mainLabel}
+        >
+          <PlaqueFace className="scale-110">{mainLabel}</PlaqueFace>
+        </Link>
         <p className="paper-glow text-center text-[11px] tracking-widest text-paper/80">{caption}</p>
+        <Link
+          to="/levels"
+          className="tap paper-glow mt-0.5 text-[11px] tracking-widest text-paper/80 underline underline-offset-4"
+        >
+          查看全部 {LEVEL_COUNT} 关
+        </Link>
       </div>
 
       <nav className="dock-fade absolute inset-x-0 bottom-0 z-20 grid grid-cols-4 px-2 pb-[max(1rem,env(safe-area-inset-bottom))] pt-10 opacity-85">
@@ -179,5 +114,29 @@ export function HomeScreen() {
         </Link>
       </nav>
     </Stage>
+  );
+}
+
+/** 50 段进度条：已通关亮起，当前关呼吸，未至关沉墨。 */
+function LevelProgressBar({ cleared }: { cleared: number }) {
+  return (
+    <div
+      className="scenery-plate flex w-full max-w-sm items-center gap-1 rounded-full px-3 py-2"
+      aria-label={`已通关 ${cleared} 关`}
+    >
+      {Array.from({ length: LEVEL_COUNT }, (_, i) => {
+        const level = i + 1;
+        const done = level <= cleared;
+        const current = level === cleared + 1;
+        return (
+          <span
+            key={level}
+            className={`h-1.5 flex-1 rounded-full ${
+              done ? "bg-seal" : current ? "jdot-current bg-paper/70" : "bg-paper/20"
+            }`}
+          />
+        );
+      })}
+    </div>
   );
 }

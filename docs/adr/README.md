@@ -18,8 +18,9 @@
 | [0012](0012-per-collection-backgrounds-avatars.md) | 每文集 5 张专属背景 + 各维度形象 | 有效 |
 | [0013](0013-three-achievement-kinds.md) | 成就三类（文集/作者/朝代），全通制 | 有效；入口现称诗册 |
 | [0014](0014-all-collections-open-simplified.md) | 11 个文集一次性开放 + 源数据统一简体 | 有效 |
-| [0015](0015-poem-card-gameplay.md) | 诗签/连击/收句/诗印落到诗卡 | 诗卡规则有效；首页继续环游口径被 0016 取代 |
-| [0016](0016-ink-tide-expedition.md) | 墨潮远征三节点、三路线、诗火、修页奖励 | 当前主线有效 |
-| [0017](0017-expedition-library-entry-split.md) | 远征与文集分家：`/tour` 只留墨路，文集迁 `/library`，旧路径重定向 | 当前有效 |
+| [0015](0015-poem-card-gameplay.md) | 诗签/连击/收句/诗印落到诗卡 | 诗卡规则有效；诗签被 [0018](0018-level-based-expedition.md) 移除，诗印仍用于资料库诗卡 |
+| [0016](0016-ink-tide-expedition.md) | 墨潮远征三节点、三路线、诗火、修页奖励 | 被 [0018](0018-level-based-expedition.md) 取代 |
+| [0017](0017-expedition-library-entry-split.md) | 远征与文集分家：`/tour` 只留墨路，文集迁 `/library`，旧路径重定向 | `/library` 分家有效；`/tour` 已被 [0018](0018-level-based-expedition.md) 的 `/levels` 取代 |
+| [0018](0018-level-based-expedition.md) | 关卡制远征：50 关平铺、每关 10 题、玩家专属题序、道具奖励 | 当前主线有效 |
 
 旧 ADR 不删除，因为它们记录历史取舍；新功能只能依据“有效”且未被取代的条款。

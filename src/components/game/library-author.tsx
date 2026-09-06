@@ -15,7 +15,7 @@ import { SpeechBox } from "./speech-box";
  * 首次进入 → 对白框引导语（每作者仅一次，存档 metAuthors）；之后直接是诗卡列表。
  * 全开放：任意诗卡随时可玩（ADR-0011）。
  */
-export function TourAuthor({
+export function LibraryAuthor({
   collectionId,
   chapterId,
   authorId,

@@ -7,7 +7,7 @@ import { ArtPanel, ArtSlot, PanelCaption, RowChevron, Stage, StageHud } from "./
 /** 资料库第二层：文集的章节页（通用章节形象按章序循环，ADR-0012）。
  *  章节诗印取自各诗卡历史最佳（玩法重做口径，ADR-0015）。
  *  行卡 = 图槽书签 + 章名 + 作者名录 + 诗印进度条，压住卡片空白。 */
-export function TourChapters({ collectionId }: { collectionId: string }) {
+export function LibraryChapters({ collectionId }: { collectionId: string }) {
   const collection = collectionById(collectionId);
   const chapters = chaptersIn(collectionId);
   const { save } = useSave();

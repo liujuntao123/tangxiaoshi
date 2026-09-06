@@ -14,17 +14,16 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAchievementsRouteImport } from './routes/_app/achievements'
 import { Route as AppEndlessRouteImport } from './routes/_app/endless'
-import { Route as AppPracticeRouteImport } from './routes/_app/practice'
+import { Route as AppLevelsIndexRouteImport } from './routes/_app/levels.index'
+import { Route as AppLevelsLevelIdRouteImport } from './routes/_app/levels.$levelId'
 import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
 import { Route as AppPlayPoemIdRouteImport } from './routes/_app/play.$poemId'
-import { Route as AppTourIndexRouteImport } from './routes/_app/tour/index'
+import { Route as AppPracticeIndexRouteImport } from './routes/_app/practice.index'
+import { Route as AppPracticePoemIdRouteImport } from './routes/_app/practice.$poemId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AppLibraryCollectionIdIndexRouteImport } from './routes/_app/library/$collectionId/index'
-import { Route as AppTourCollectionIdIndexRouteImport } from './routes/_app/tour/$collectionId/index'
 import { Route as AppLibraryCollectionIdChapterIdIndexRouteImport } from './routes/_app/library/$collectionId/$chapterId/index'
 import { Route as AppLibraryCollectionIdChapterIdAuthorIdRouteImport } from './routes/_app/library/$collectionId/$chapterId/$authorId'
-import { Route as AppTourCollectionIdChapterIdIndexRouteImport } from './routes/_app/tour/$collectionId/$chapterId/index'
-import { Route as AppTourCollectionIdChapterIdAuthorIdRouteImport } from './routes/_app/tour/$collectionId/$chapterId/$authorId'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -50,9 +49,14 @@ const AppEndlessRoute = AppEndlessRouteImport.update({
   path: '/endless',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPracticeRoute = AppPracticeRouteImport.update({
-  id: '/practice',
-  path: '/practice',
+const AppLevelsIndexRoute = AppLevelsIndexRouteImport.update({
+  id: '/levels/',
+  path: '/levels/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLevelsLevelIdRoute = AppLevelsLevelIdRouteImport.update({
+  id: '/levels/$levelId',
+  path: '/levels/$levelId',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
@@ -65,9 +69,14 @@ const AppPlayPoemIdRoute = AppPlayPoemIdRouteImport.update({
   path: '/play/$poemId',
   getParentRoute: () => AppRoute,
 } as any)
-const AppTourIndexRoute = AppTourIndexRouteImport.update({
-  id: '/tour/',
-  path: '/tour/',
+const AppPracticeIndexRoute = AppPracticeIndexRouteImport.update({
+  id: '/practice/',
+  path: '/practice/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPracticePoemIdRoute = AppPracticePoemIdRouteImport.update({
+  id: '/practice/$poemId',
+  path: '/practice/$poemId',
   getParentRoute: () => AppRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -79,12 +88,6 @@ const AppLibraryCollectionIdIndexRoute =
   AppLibraryCollectionIdIndexRouteImport.update({
     id: '/library/$collectionId/',
     path: '/library/$collectionId/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppTourCollectionIdIndexRoute =
-  AppTourCollectionIdIndexRouteImport.update({
-    id: '/tour/$collectionId/',
-    path: '/tour/$collectionId/',
     getParentRoute: () => AppRoute,
   } as any)
 const AppLibraryCollectionIdChapterIdIndexRoute =
@@ -99,52 +102,38 @@ const AppLibraryCollectionIdChapterIdAuthorIdRoute =
     path: '/library/$collectionId/$chapterId/$authorId',
     getParentRoute: () => AppRoute,
   } as any)
-const AppTourCollectionIdChapterIdIndexRoute =
-  AppTourCollectionIdChapterIdIndexRouteImport.update({
-    id: '/tour/$collectionId/$chapterId/',
-    path: '/tour/$collectionId/$chapterId/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppTourCollectionIdChapterIdAuthorIdRoute =
-  AppTourCollectionIdChapterIdAuthorIdRouteImport.update({
-    id: '/tour/$collectionId/$chapterId/$authorId',
-    path: '/tour/$collectionId/$chapterId/$authorId',
-    getParentRoute: () => AppRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
   '/achievements': typeof AppAchievementsRoute
   '/endless': typeof AppEndlessRoute
-  '/practice': typeof AppPracticeRoute
+  '/levels/$levelId': typeof AppLevelsLevelIdRoute
   '/play/$poemId': typeof AppPlayPoemIdRoute
+  '/practice/$poemId': typeof AppPracticePoemIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/levels/': typeof AppLevelsIndexRoute
   '/library/': typeof AppLibraryIndexRoute
-  '/tour/': typeof AppTourIndexRoute
+  '/practice/': typeof AppPracticeIndexRoute
   '/library/$collectionId/': typeof AppLibraryCollectionIdIndexRoute
-  '/tour/$collectionId/': typeof AppTourCollectionIdIndexRoute
   '/library/$collectionId/$chapterId/$authorId': typeof AppLibraryCollectionIdChapterIdAuthorIdRoute
-  '/tour/$collectionId/$chapterId/$authorId': typeof AppTourCollectionIdChapterIdAuthorIdRoute
   '/library/$collectionId/$chapterId/': typeof AppLibraryCollectionIdChapterIdIndexRoute
-  '/tour/$collectionId/$chapterId/': typeof AppTourCollectionIdChapterIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/achievements': typeof AppAchievementsRoute
   '/endless': typeof AppEndlessRoute
-  '/practice': typeof AppPracticeRoute
   '/': typeof AppIndexRoute
+  '/levels/$levelId': typeof AppLevelsLevelIdRoute
   '/play/$poemId': typeof AppPlayPoemIdRoute
+  '/practice/$poemId': typeof AppPracticePoemIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/levels': typeof AppLevelsIndexRoute
   '/library': typeof AppLibraryIndexRoute
-  '/tour': typeof AppTourIndexRoute
+  '/practice': typeof AppPracticeIndexRoute
   '/library/$collectionId': typeof AppLibraryCollectionIdIndexRoute
-  '/tour/$collectionId': typeof AppTourCollectionIdIndexRoute
   '/library/$collectionId/$chapterId/$authorId': typeof AppLibraryCollectionIdChapterIdAuthorIdRoute
-  '/tour/$collectionId/$chapterId/$authorId': typeof AppTourCollectionIdChapterIdAuthorIdRoute
   '/library/$collectionId/$chapterId': typeof AppLibraryCollectionIdChapterIdIndexRoute
-  '/tour/$collectionId/$chapterId': typeof AppTourCollectionIdChapterIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,18 +141,17 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/achievements': typeof AppAchievementsRoute
   '/_app/endless': typeof AppEndlessRoute
-  '/_app/practice': typeof AppPracticeRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/levels/$levelId': typeof AppLevelsLevelIdRoute
   '/_app/play/$poemId': typeof AppPlayPoemIdRoute
+  '/_app/practice/$poemId': typeof AppPracticePoemIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_app/levels/': typeof AppLevelsIndexRoute
   '/_app/library/': typeof AppLibraryIndexRoute
-  '/_app/tour/': typeof AppTourIndexRoute
+  '/_app/practice/': typeof AppPracticeIndexRoute
   '/_app/library/$collectionId/': typeof AppLibraryCollectionIdIndexRoute
-  '/_app/tour/$collectionId/': typeof AppTourCollectionIdIndexRoute
   '/_app/library/$collectionId/$chapterId/$authorId': typeof AppLibraryCollectionIdChapterIdAuthorIdRoute
-  '/_app/tour/$collectionId/$chapterId/$authorId': typeof AppTourCollectionIdChapterIdAuthorIdRoute
   '/_app/library/$collectionId/$chapterId/': typeof AppLibraryCollectionIdChapterIdIndexRoute
-  '/_app/tour/$collectionId/$chapterId/': typeof AppTourCollectionIdChapterIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -172,52 +160,49 @@ export interface FileRouteTypes {
     | '/login'
     | '/achievements'
     | '/endless'
-    | '/practice'
+    | '/levels/$levelId'
     | '/play/$poemId'
+    | '/practice/$poemId'
     | '/api/auth/$'
+    | '/levels/'
     | '/library/'
-    | '/tour/'
+    | '/practice/'
     | '/library/$collectionId/'
-    | '/tour/$collectionId/'
     | '/library/$collectionId/$chapterId/$authorId'
-    | '/tour/$collectionId/$chapterId/$authorId'
     | '/library/$collectionId/$chapterId/'
-    | '/tour/$collectionId/$chapterId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/achievements'
     | '/endless'
-    | '/practice'
     | '/'
+    | '/levels/$levelId'
     | '/play/$poemId'
+    | '/practice/$poemId'
     | '/api/auth/$'
+    | '/levels'
     | '/library'
-    | '/tour'
+    | '/practice'
     | '/library/$collectionId'
-    | '/tour/$collectionId'
     | '/library/$collectionId/$chapterId/$authorId'
-    | '/tour/$collectionId/$chapterId/$authorId'
     | '/library/$collectionId/$chapterId'
-    | '/tour/$collectionId/$chapterId'
   id:
     | '__root__'
     | '/_app'
     | '/login'
     | '/_app/achievements'
     | '/_app/endless'
-    | '/_app/practice'
     | '/_app/'
+    | '/_app/levels/$levelId'
     | '/_app/play/$poemId'
+    | '/_app/practice/$poemId'
     | '/api/auth/$'
+    | '/_app/levels/'
     | '/_app/library/'
-    | '/_app/tour/'
+    | '/_app/practice/'
     | '/_app/library/$collectionId/'
-    | '/_app/tour/$collectionId/'
     | '/_app/library/$collectionId/$chapterId/$authorId'
-    | '/_app/tour/$collectionId/$chapterId/$authorId'
     | '/_app/library/$collectionId/$chapterId/'
-    | '/_app/tour/$collectionId/$chapterId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -263,11 +248,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEndlessRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/practice': {
-      id: '/_app/practice'
-      path: '/practice'
-      fullPath: '/practice'
-      preLoaderRoute: typeof AppPracticeRouteImport
+    '/_app/levels/': {
+      id: '/_app/levels/'
+      path: '/levels'
+      fullPath: '/levels/'
+      preLoaderRoute: typeof AppLevelsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/levels/$levelId': {
+      id: '/_app/levels/$levelId'
+      path: '/levels/$levelId'
+      fullPath: '/levels/$levelId'
+      preLoaderRoute: typeof AppLevelsLevelIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/library/': {
@@ -284,11 +276,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlayPoemIdRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/tour/': {
-      id: '/_app/tour/'
-      path: '/tour'
-      fullPath: '/tour/'
-      preLoaderRoute: typeof AppTourIndexRouteImport
+    '/_app/practice/': {
+      id: '/_app/practice/'
+      path: '/practice'
+      fullPath: '/practice/'
+      preLoaderRoute: typeof AppPracticeIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/practice/$poemId': {
+      id: '/_app/practice/$poemId'
+      path: '/practice/$poemId'
+      fullPath: '/practice/$poemId'
+      preLoaderRoute: typeof AppPracticePoemIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/api/auth/$': {
@@ -305,13 +304,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLibraryCollectionIdIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/tour/$collectionId/': {
-      id: '/_app/tour/$collectionId/'
-      path: '/tour/$collectionId'
-      fullPath: '/tour/$collectionId/'
-      preLoaderRoute: typeof AppTourCollectionIdIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/library/$collectionId/$chapterId/': {
       id: '/_app/library/$collectionId/$chapterId/'
       path: '/library/$collectionId/$chapterId'
@@ -326,57 +318,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLibraryCollectionIdChapterIdAuthorIdRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/tour/$collectionId/$chapterId/': {
-      id: '/_app/tour/$collectionId/$chapterId/'
-      path: '/tour/$collectionId/$chapterId'
-      fullPath: '/tour/$collectionId/$chapterId/'
-      preLoaderRoute: typeof AppTourCollectionIdChapterIdIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/tour/$collectionId/$chapterId/$authorId': {
-      id: '/_app/tour/$collectionId/$chapterId/$authorId'
-      path: '/tour/$collectionId/$chapterId/$authorId'
-      fullPath: '/tour/$collectionId/$chapterId/$authorId'
-      preLoaderRoute: typeof AppTourCollectionIdChapterIdAuthorIdRouteImport
-      parentRoute: typeof AppRoute
-    }
   }
 }
 
 interface AppRouteChildren {
   AppAchievementsRoute: typeof AppAchievementsRoute
   AppEndlessRoute: typeof AppEndlessRoute
-  AppPracticeRoute: typeof AppPracticeRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppLevelsLevelIdRoute: typeof AppLevelsLevelIdRoute
   AppPlayPoemIdRoute: typeof AppPlayPoemIdRoute
+  AppPracticePoemIdRoute: typeof AppPracticePoemIdRoute
+  AppLevelsIndexRoute: typeof AppLevelsIndexRoute
   AppLibraryIndexRoute: typeof AppLibraryIndexRoute
-  AppTourIndexRoute: typeof AppTourIndexRoute
+  AppPracticeIndexRoute: typeof AppPracticeIndexRoute
   AppLibraryCollectionIdIndexRoute: typeof AppLibraryCollectionIdIndexRoute
-  AppTourCollectionIdIndexRoute: typeof AppTourCollectionIdIndexRoute
   AppLibraryCollectionIdChapterIdAuthorIdRoute: typeof AppLibraryCollectionIdChapterIdAuthorIdRoute
-  AppTourCollectionIdChapterIdAuthorIdRoute: typeof AppTourCollectionIdChapterIdAuthorIdRoute
   AppLibraryCollectionIdChapterIdIndexRoute: typeof AppLibraryCollectionIdChapterIdIndexRoute
-  AppTourCollectionIdChapterIdIndexRoute: typeof AppTourCollectionIdChapterIdIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAchievementsRoute: AppAchievementsRoute,
   AppEndlessRoute: AppEndlessRoute,
-  AppPracticeRoute: AppPracticeRoute,
   AppIndexRoute: AppIndexRoute,
+  AppLevelsLevelIdRoute: AppLevelsLevelIdRoute,
   AppPlayPoemIdRoute: AppPlayPoemIdRoute,
+  AppPracticePoemIdRoute: AppPracticePoemIdRoute,
+  AppLevelsIndexRoute: AppLevelsIndexRoute,
   AppLibraryIndexRoute: AppLibraryIndexRoute,
-  AppTourIndexRoute: AppTourIndexRoute,
+  AppPracticeIndexRoute: AppPracticeIndexRoute,
   AppLibraryCollectionIdIndexRoute: AppLibraryCollectionIdIndexRoute,
-  AppTourCollectionIdIndexRoute: AppTourCollectionIdIndexRoute,
   AppLibraryCollectionIdChapterIdAuthorIdRoute:
     AppLibraryCollectionIdChapterIdAuthorIdRoute,
-  AppTourCollectionIdChapterIdAuthorIdRoute:
-    AppTourCollectionIdChapterIdAuthorIdRoute,
   AppLibraryCollectionIdChapterIdIndexRoute:
     AppLibraryCollectionIdChapterIdIndexRoute,
-  AppTourCollectionIdChapterIdIndexRoute:
-    AppTourCollectionIdChapterIdIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

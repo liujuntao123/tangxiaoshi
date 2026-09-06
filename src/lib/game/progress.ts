@@ -1,21 +1,16 @@
-import { ACHIEVEMENTS, COLLECTIONS, POEMS, achievementProgress, chaptersIn, poemsInChapter } from "./content";
-import type { ContinueTarget, PlayerSave, PoemRunResult } from "./types";
-import {
-  applyPoemRun,
-  normalizeSave,
-  pickContinueTarget,
-  type PoemProgressNode,
-} from "./rules";
+import { ACHIEVEMENTS, POEMS, achievementProgress } from "./content";
+import type { PlayerSave, PoemRunResult } from "./types";
+import { applyPoemRun, normalizeSave } from "./rules";
+import { buildLevelPlan, type LevelPlan } from "./levels";
 
-// 纯规则集中在 rules.ts（可被 node 纯函数测试直接加载），这里统一对外导出，
-// 页面与答题组件继续只从 progress.ts 取规则。
+// 纯规则集中在 rules.ts / levels.ts（可被 node 纯函数测试直接加载），这里统一对外导出，
+// 页面与答题组件继续只从 progress.ts 取规则与真实题库的绑定。
 export {
   EMPTY_POEM_RECORD,
   BASE_ANSWER_SCORE,
   COMBO_BONUS_STEP,
   COMBO_BONUS_CAP,
   LINK_BONUS,
-  TALISMANS,
   normalizeSave,
   normalizePoemRecord,
   normalizeRunResult,
@@ -23,24 +18,40 @@ export {
   scoreForAnswer,
   mergePoemRecord,
   applyPoemRun,
-  pickContinueTarget,
   poemContextFor,
   totalStars,
 } from "./rules";
+export {
+  ITEM_DEFS,
+  LEVEL_COUNT,
+  LEVEL_PASS,
+  QUESTIONS_PER_LEVEL,
+  SPARES_PER_LEVEL,
+  applyLevelResult,
+  isLevelUnlocked,
+  levelProgress,
+  levelStars,
+  nextLevelTarget,
+  starsForLevelRun,
+} from "./levels";
 
-function unique(items: string[]): string[] {
-  return [...new Set(items)];
+/**
+ * 玩家专属关卡计划：userId 决定全库诗的洗牌顺序，因此同一玩家的每关题目
+ * 永远固定，不同玩家互不相同（防透题，ADR-0018）。
+ */
+export function levelPlanFor(userId: string, level: number): LevelPlan {
+  return buildLevelPlan(POEMS, userId, level);
 }
 
 /**
  * 一张诗卡答完且及格 = 通关该诗卡。成就按全通制即时补发（只增不减，ADR-0013）。
- * 带 run 时同时合并该卡历史最佳成绩并累加总分（玩法重做口径，ADR-0015）。
+ * 带 run 时同时合并该卡历史最佳成绩并累加总分。
  */
 export function applyPoemWin(save: PlayerSave, poemId: string, run?: PoemRunResult): PlayerSave {
   const base = run ? applyPoemRun(save, run) : normalizeSave(save);
-  const clearedPoems = unique(
-    base.clearedPoems.includes(poemId) ? base.clearedPoems : [...base.clearedPoems, poemId],
-  );
+  const clearedPoems = base.clearedPoems.includes(poemId)
+    ? base.clearedPoems
+    : [...base.clearedPoems, poemId];
   const next: PlayerSave = { ...base, clearedPoems };
   return { ...next, achievements: earnedAchievements(next) };
 }
@@ -65,21 +76,4 @@ export { applyEndlessRun } from "./rules";
 
 export function clearedCount(save: PlayerSave): { have: number; total: number } {
   return { have: save.clearedPoems.length, total: POEMS.length };
-}
-
-/** 全部诗卡按环游顺序（文集序 → 章序 → 卡序）排列，供「继续环游」目标选择使用。 */
-const ORDERED_POEMS: string[] = COLLECTIONS.flatMap((collection) =>
-  chaptersIn(collection.id).flatMap((chapter) => poemsInChapter(chapter.id).map((poem) => poem.id)),
-);
-
-/** 首页「继续环游」目标：环游全开放（ADR-0011），未通关取下一张诗卡，
- *  全通关取环游顺序里最后一张已通关诗卡（「再战提分」）。 */
-export function continueTarget(save: PlayerSave): ContinueTarget | null {
-  const cleared = new Set(save.clearedPoems);
-  const nodes: PoemProgressNode[] = ORDERED_POEMS.map((id) => ({
-    id,
-    unlocked: true,
-    cleared: cleared.has(id),
-  }));
-  return pickContinueTarget(nodes);
 }

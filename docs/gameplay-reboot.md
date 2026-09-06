@@ -1,6 +1,7 @@
 # 墨潮远征：可玩性重构记录
 
-> 状态：已实现的 P0/P1 核心记录。后续新玩法以 [`deep-reboot-brief.md`](deep-reboot-brief.md)、[`game-design.md`](game-design.md) 和 ADR-0016 为准。
+> 状态：**历史记录（已被 ADR-0018 取代，2026-09）**。本文描述的三节点墨路/诗签/诗火骨架已整体移除；
+> 当前主线是关卡制远征，现行规范见 [`game-design.md`](game-design.md) 与 [`adr/0018-level-based-expedition.md`](adr/0018-level-based-expedition.md)。
 
 ## 为什么重构
 

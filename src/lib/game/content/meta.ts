@@ -1,9 +1,9 @@
 /** 素材目录：编译器与运行时共享的路径约定（docs/art.md）。 */
 
-/** 全局背景：首页 + 四主页面 + 环游三层（环游主页面=文集列表，共用一张） */
+/** 全局背景：首页 + 各主页面 + 资料库三层 */
 export const GAME_BACKGROUNDS = {
   home: "/art/bg/home.png",
-  tour: "/art/bg/tour-collections.png",
+  levels: "/art/bg/tour-collections.png",
   tourChapters: "/art/bg/tour-chapters.png",
   tourAuthor: "/art/bg/tour-author.png",
   endless: "/art/bg/endless.png",

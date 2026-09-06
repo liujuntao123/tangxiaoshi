@@ -2,7 +2,7 @@
 
 内容唯一数据源是 `data/poetry-site/`（chinese-poetry 官方展示站的抓取集，原始约 11 文集 / 98 章节 / 2155 首）。编译过滤后，当前游戏题库为 11 文集 / 89 章 / 281 位作者 / 2147 张诗卡 / 10735 题。
 
-不再依赖 `/tmp/chinese-poetry` 本地仓库。台词与问答生成规则见 [`content-rules.md`](content-rules.md)；生图规范见 [`art.md`](art.md)；总协作规范见根目录 [`AGENTS.md`](../AGENTS.md)。当前主线远征规范见 [`adr/0016-ink-tide-expedition.md`](adr/0016-ink-tide-expedition.md)。
+不再依赖 `/tmp/chinese-poetry` 本地仓库。台词与问答生成规则见 [`content-rules.md`](content-rules.md)；生图规范见 [`art.md`](art.md)；总协作规范见根目录 [`AGENTS.md`](../AGENTS.md)。当前主线关卡规范见 [`adr/0018-level-based-expedition.md`](adr/0018-level-based-expedition.md)。
 
 ## 数据分层
 
@@ -19,10 +19,12 @@
 
 | 入口 | 内容范围 | 规则 |
 | --- | --- | --- |
-| 墨潮远征 | `/tour` 从全部编译诗卡生成三条墨路候选 | 三节点；诗火 1–4；路线和修页奖励改变当前远征；永久诗卡成绩仍写 PlayerSave |
-| 诗集资料库 | `/library` → 文集 → 章节 → 作者 → 诗卡 | 资料浏览；任意已编译诗卡可直接进入答题，通关照常入档 |
-| 诗库 | 已编译全部诗卡 | 三轴筛选；练习模式可先看答案，不计主线通关 |
+| 墨潮远征（主线） | `/levels` 从全部编译题池按玩家专属题序抽题 | 50 关平铺；每关 10 题（一诗一题）+ 3 备用题；答对 6 题过关；星星与道具写 PlayerSave |
+| 诗集资料库 | `/library` → 文集 → 章节 → 作者 → 诗卡 | 资料浏览；任意已编译诗卡可进入 5 题修页答题（机会灯笼、诗印），通关照常入档 |
+| 诗库 | 已编译全部诗卡 | 三轴筛选；练习模式可先看答案，不写存档 |
 | 墨潮试炼 | 已编译全部题池 | 一题答错即止；记录最高连对和最高分 |
+
+所有入口共用同一份 `bank.json`，运行时不出新题；关卡只按确定性算法抽题（`src/lib/game/levels.ts`）。
 
 ## 文件清单
 
@@ -33,14 +35,15 @@
 | `scripts/content/build-bank.py` | 人 | 编译题库：文集/章节/作者/诗卡/题目/成就 |
 | `scripts/content/validate_content.py` | 人 | 质检门：题目完整性、引导语规范、禁词、长度 |
 | `scripts/content/export_story_docs.py` | 人 | 从 bank.json 生成 `docs/story/` 索引 |
-| `src/lib/game/content/bank.json` | 脚本生成 | 运行时内容定义，禁止手改 |
+| `src/lib/game/content/bank.json` | 脚本生成 | 运行时内容定义（题库池），禁止手改 |
 | `src/lib/game/content/index.ts` | 人 | 运行时数据 API、及格线、机会数、成就进度 |
 | `src/lib/game/content/meta.ts` | 人 | 背景、形象、立绘路径约定 |
-| `src/lib/game/expedition.ts` | 人 | 远征状态、路线池、诗火、奖励、结局、localStorage |
-| `src/components/game/tour-routes.tsx` | 人 | 三条墨路候选 UI |
-| `src/components/game/poem-quiz.tsx` | 人 | 诗卡答题、诗签、远征反馈和结算 |
+| `src/lib/game/levels.ts` | 人 | 关卡出题算法、星级、道具规则（纯函数） |
+| `src/components/game/level-quiz.tsx` | 人 | 关卡答题场 UI |
+| `src/components/game/level-list.tsx` | 人 | 关卡列表 UI |
+| `src/components/game/poem-quiz.tsx` | 人 | 诗卡答题（资料库/练习）、反馈和结算 |
 
-历史说明：`validate_story.py` 和旧 `scripts/content/story/` 已删除；旧关卡/钥匙字段也不再是当前内容契约。
+历史说明：`validate_story.py` 和旧 `scripts/content/story/` 已删除；旧关卡/钥匙字段、`expedition.ts` 与 `tour-routes.tsx` 已随 ADR-0018 移除。
 
 ## 编译命令
 
@@ -54,13 +57,14 @@ python3 scripts/content/export_story_docs.py
 
 ## 存档
 
-永久成绩按用户 ID 存数据库。`PlayerSave` 字段为 `clearedPoems / achievements / endlessBestStreak / endlessBestScore / metAuthors / poemRecords / totalScore`，读取统一经过 `normalizeSave`；数据库迁移为 `0001–0004`。
+永久成绩按用户 ID 存数据库。`PlayerSave` 字段为 `clearedPoems / achievements / endlessBestStreak / endlessBestScore / metAuthors / poemRecords / totalScore / levelStars / items`，读取统一经过 `normalizeSave`；数据库迁移为 `0001–0005`（`level_stars` 与 `items` 见 `0005_level_progress.sql`）。
 
-远征进行时状态不是数据库字段，而是浏览器 `localStorage` 的 `tangxiaoshi.expedition.v1`。它只保证刷新恢复，不保证跨设备、跨浏览器或账号隔离。续灯、磨墨、听句只影响当前远征；远征完成的诗卡表现会进入既有诗卡最佳分与总分。
+关卡没有独立的「进行时」状态：题目由 userId 即时确定性生成，关卡星星与道具库存都落在 `PlayerSave`，刷新、换设备一致。
 
 ## 当前状态
 
 - 11 个文集全部编译上线。
 - 89 章 / 281 位作者 / 2147 张诗卡 / 10735 题。
 - 成就 302 枚（作者 281 + 文集 11 + 朝代 10）。
+- 主线 50 关已全部由算法铺满（每关 10 题，使用 650 首诗 < 2147 首）。
 - 新增内容 = `catalog.py` 加条目 + 编译 + 必要素材生成。

@@ -7,7 +7,7 @@ import { ArtSlot, PanelCaption } from "./stage";
 /**
  * 诗集资料库网格（原「环游」文集列表，ADR-0011）。
  * 未编译文集锁定展示（置灰 +「待开放」）；每文集 5 张专属背景滚动预载。
- * 入口拆分（ADR-0017）：由独立资料库页 /library 挂载，/tour 只留远征。
+ * 诗集资料库的文集网格（ADR-0017 起由 /library 挂载，与主线关卡分家）。
  */
 export function CollectionGrid() {
   const playable = COLLECTIONS.filter((c) => c.playable);
