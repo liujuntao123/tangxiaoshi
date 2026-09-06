@@ -1,23 +1,21 @@
 /**
  * 纯游戏规则：存档规范化、评级、得分、历史最佳合并与目标选择。
  *
- * 设计依据 docs/game-design.md §5.3 / §7 / §8。本模块只依赖 `./types` 的
- * 类型（类型导入在 node 下会被擦除），不引入题库/剧情内容，因此可以直接被
- * `node --test`（--experimental-strip-types）加载做纯函数测试。progress.ts
- * 在其上补充依赖关卡/章节内容的封装并统一对外导出。
+ * 设计依据 docs/game-design.md §5.3 / §7 / §8，落地口径见 docs/adr/0015-poem-card-gameplay.md。
+ * 本模块只依赖 `./types` 的类型（类型导入在 node 下会被擦除），不引入内容库，
+ * 因此可以直接被 `node --test`（--experimental-strip-types）加载做纯函数测试。
+ * progress.ts 在其上补充依赖诗卡内容的封装并统一对外导出。
  */
 import type {
   ContinueTarget,
-  LevelRecord,
-  LevelRunResult,
   PlayerSave,
+  Poem,
+  PoemRecord,
+  PoemRunResult,
+  Question,
   Stars,
   TalismanDef,
 } from "./types";
-
-/** 玩家血量与妖怪诗魄上限（docs/game-design.md §4）。 */
-export const LEVEL_START_HP = 3;
-export const MONSTER_START_HP = 3;
 
 /** 得分口径（docs/game-design.md §7.2）。 */
 export const BASE_ANSWER_SCORE = 100;
@@ -27,23 +25,20 @@ export const COMBO_BONUS_CAP = 100;
 /** 连携正确额外加分。 */
 export const LINK_BONUS = 100;
 
-/** 无尽十连击成就阈值。 */
-export const TEN_STREAK = 10;
-
-/** 三枚诗签的定义；战斗界面按名称/符号/说明/剩余次数渲染。 */
+/** 三枚诗签的定义；答题界面按名称/符号/说明/剩余次数渲染。 */
 export const TALISMANS: TalismanDef[] = [
   {
     id: "clarity",
     name: "明心",
     symbol: "明",
-    description: "战斗中使用一次，隐藏两个错误选项",
+    description: "答题中使用一次，隐藏两个错误选项",
     uses: 1,
   },
   {
     id: "ward",
     name: "护卷",
     symbol: "护",
-    description: "第一次答错不扣血，但仍断连",
+    description: "第一次答错不灭灯笼，但仍断连",
     uses: 1,
   },
   {
@@ -57,7 +52,7 @@ export const TALISMANS: TalismanDef[] = [
 
 const TALISMAN_IDS = new Set<string>(TALISMANS.map((talisman) => talisman.id));
 
-export const EMPTY_LEVEL_RECORD: LevelRecord = {
+export const EMPTY_POEM_RECORD: PoemRecord = {
   bestStars: 0,
   bestScore: 0,
   bestCombo: 0,
@@ -96,37 +91,37 @@ function clampStars(value: unknown): Stars {
 export function normalizeSave(input: unknown): PlayerSave {
   if (!isPlainObject(input)) {
     return {
-      clearedLevels: [],
-      keysOwned: 0,
+      clearedPoems: [],
       achievements: [],
       endlessBestStreak: 0,
       endlessBestScore: 0,
-      levelRecords: {},
+      metAuthors: [],
+      poemRecords: {},
       totalScore: 0,
     };
   }
-  const levelRecords: Record<string, LevelRecord> = {};
-  const rawRecords = input.levelRecords;
+  const poemRecords: Record<string, PoemRecord> = {};
+  const rawRecords = input.poemRecords;
   if (isPlainObject(rawRecords)) {
-    for (const [levelId, raw] of Object.entries(rawRecords)) {
-      if (!levelId) continue;
-      const record = normalizeLevelRecord(raw);
-      if (record) levelRecords[levelId] = record;
+    for (const [poemId, raw] of Object.entries(rawRecords)) {
+      if (!poemId) continue;
+      const record = normalizePoemRecord(raw);
+      if (record) poemRecords[poemId] = record;
     }
   }
   return {
-    clearedLevels: unique(stringList(input.clearedLevels)),
-    keysOwned: nonNegativeInt(input.keysOwned),
+    clearedPoems: unique(stringList(input.clearedPoems)),
     achievements: unique(stringList(input.achievements)),
     endlessBestStreak: nonNegativeInt(input.endlessBestStreak),
     endlessBestScore: nonNegativeInt(input.endlessBestScore),
-    levelRecords,
+    metAuthors: unique(stringList(input.metAuthors)),
+    poemRecords,
     totalScore: nonNegativeInt(input.totalScore),
   };
 }
 
-/** 非法关卡记录返回 null（调用方丢弃该条目），字段非法逐项回退默认值。 */
-export function normalizeLevelRecord(value: unknown): LevelRecord | null {
+/** 非法诗卡记录返回 null（调用方丢弃该条目），字段非法逐项回退默认值。 */
+export function normalizePoemRecord(value: unknown): PoemRecord | null {
   if (!isPlainObject(value)) return null;
   return {
     bestStars: clampStars(value.bestStars),
@@ -136,13 +131,15 @@ export function normalizeLevelRecord(value: unknown): LevelRecord | null {
   };
 }
 
-/** 把战斗组件上报的本局表现整理成合法 LevelRunResult（越界钳制、非法回退）。 */
-export function normalizeRunResult(run: LevelRunResult): LevelRunResult {
+/** 把答题组件上报的本轮表现整理成合法 PoemRunResult（越界钳制、非法回退）。 */
+export function normalizeRunResult(run: PoemRunResult): PoemRunResult {
   const talisman = typeof run.talisman === "string" && TALISMAN_IDS.has(run.talisman) ? run.talisman : null;
+  const chancesTotal = clampInt(run.chancesTotal, 1, 99);
   return {
-    levelId: typeof run.levelId === "string" ? run.levelId : "",
+    poemId: typeof run.poemId === "string" ? run.poemId : "",
     won: run.won === true,
-    hpLeft: clampInt(run.hpLeft, 0, LEVEL_START_HP),
+    chancesTotal,
+    chancesLeft: clampInt(run.chancesLeft, 0, chancesTotal),
     maxCombo: nonNegativeInt(run.maxCombo),
     score: nonNegativeInt(run.score),
     mistakes: nonNegativeInt(run.mistakes),
@@ -151,17 +148,18 @@ export function normalizeRunResult(run: LevelRunResult): LevelRunResult {
 }
 
 /**
- * 评级（docs/game-design.md §7.1）：
- * 1 星完成关卡；2 星胜利时至少剩 2 血或最高连击达 3；
- * 3 星全程未掉血并全题答对（护卷挡下也算答错，拿不到 3 星）。
+ * 评级（docs/game-design.md §7.1，落到诗卡，ADR-0015）：
+ * 1 印完成诗卡；2 印灯笼至少剩 2 盏或最高连击达 3；
+ * 3 印全程未灭灯笼并全题答对（护卷挡下也算答错，拿不到 3 印）。
  */
 export function starsForRun(
-  run: Pick<LevelRunResult, "won" | "hpLeft" | "maxCombo" | "mistakes">,
+  run: Pick<PoemRunResult, "won" | "chancesLeft" | "chancesTotal" | "maxCombo" | "mistakes">,
 ): Stars {
   if (!run.won) return 0;
-  const hpLeft = clampInt(run.hpLeft, 0, LEVEL_START_HP);
-  if (hpLeft >= LEVEL_START_HP && run.mistakes <= 0) return 3;
-  if (hpLeft >= 2 || run.maxCombo >= 3) return 2;
+  const chancesTotal = clampInt(run.chancesTotal, 1, 99);
+  const chancesLeft = clampInt(run.chancesLeft, 0, chancesTotal);
+  if (chancesLeft >= chancesTotal && run.mistakes <= 0) return 3;
+  if (chancesLeft >= 2 || run.maxCombo >= 3) return 2;
   return 1;
 }
 
@@ -176,9 +174,9 @@ export function scoreForAnswer(input: { combo: number; linked?: boolean }): numb
   return BASE_ANSWER_SCORE + comboBonus + (input.linked === true ? LINK_BONUS : 0);
 }
 
-/** 历史只保留最高星级/分数/连击，attempts 每完成一局 +1。 */
-export function mergeLevelRecord(previous: LevelRecord | undefined, run: LevelRunResult): LevelRecord {
-  const prev = previous ?? EMPTY_LEVEL_RECORD;
+/** 历史只保留最高诗印/分数/连击，attempts 每完成一轮 +1。 */
+export function mergePoemRecord(previous: PoemRecord | undefined, run: PoemRunResult): PoemRecord {
+  const prev = previous ?? EMPTY_POEM_RECORD;
   const safe = normalizeRunResult(run);
   return {
     bestStars: Math.max(prev.bestStars, starsForRun(safe)) as Stars,
@@ -189,121 +187,76 @@ export function mergeLevelRecord(previous: LevelRecord | undefined, run: LevelRu
 }
 
 /**
- * 记录一局成绩（胜利或失败都可调用）：合并关卡历史最佳并累加总分。
- * 不改动 clearedLevels / 钥匙 / 成就 —— 那些属于通关进程，见 applyLevelWinCore。
+ * 记录一轮成绩（胜利或失败都可调用）：合并诗卡历史最佳并累加总分。
+ * 不改动 clearedPoems / 成就 —— 那些属于通关进程，见 applyPoemWin。
  */
-export function applyLevelRun(save: PlayerSave, run: LevelRunResult): PlayerSave {
+export function applyPoemRun(save: PlayerSave, run: PoemRunResult): PlayerSave {
   const base = normalizeSave(save);
   const safe = normalizeRunResult(run);
-  if (!safe.levelId) return base;
+  if (!safe.poemId) return base;
   return {
     ...base,
-    levelRecords: {
-      ...base.levelRecords,
-      [safe.levelId]: mergeLevelRecord(base.levelRecords[safe.levelId], safe),
+    poemRecords: {
+      ...base.poemRecords,
+      [safe.poemId]: mergePoemRecord(base.poemRecords[safe.poemId], safe),
     },
     totalScore: base.totalScore + safe.score,
   };
 }
 
-/**
- * applyLevelWin 的兼容层：旧调用只传“是否满血”布尔值。
- * 满血 → 3 星条件成立；不满血无法还原真实血量/连击，保守记 1 星。
- * 阶段 B 的战斗结算应改为直接传 LevelRunResult。
- */
-export function levelRunFromLegacy(levelId: string, runOrFullHp: LevelRunResult | boolean): LevelRunResult {
-  if (typeof runOrFullHp !== "boolean") return normalizeRunResult(runOrFullHp);
-  const fullHp = runOrFullHp;
-  return normalizeRunResult({
-    levelId,
-    won: true,
-    hpLeft: fullHp ? LEVEL_START_HP : 1,
-    maxCombo: 0,
-    score: 0,
-    mistakes: fullHp ? 0 : 1,
-  });
-}
-
-/** applyLevelWinCore 需要的关卡/章节事实，由 progress.ts 用内容数据填充。 */
-export type LevelWinWorld = {
-  isBoss: boolean;
-  /** 本章全部关卡（含 boss），用于按通关进度重算钥匙数。 */
-  chapterLevels: { id: string; boss: boolean }[];
-  /** boss 胜利时救出诗人的成就 id；非 boss 为 null。 */
-  poetAchievementId: string | null;
-  /** 本次胜利使朝代集齐时的成就 id；否则为 null。 */
-  dynastyAchievementId: string | null;
-};
-
-/**
- * 通关写入：记录成绩 + 计入通关 + 钥匙/成就。钥匙按通关的非 boss 关卡数重算，
- * 重战不重复增加；成就只在本次为胜利时授予。
- */
-export function applyLevelWinCore(
-  save: PlayerSave,
-  levelId: string,
-  run: LevelRunResult,
-  world: LevelWinWorld,
-): PlayerSave {
-  const base = applyLevelRun(save, run);
-  const safe = normalizeRunResult(run);
-  const clearedLevels =
-    safe.won && !base.clearedLevels.includes(levelId)
-      ? [...base.clearedLevels, levelId]
-      : base.clearedLevels;
-  const achievements = new Set(base.achievements);
-  if (safe.won && safe.hpLeft >= LEVEL_START_HP && safe.mistakes <= 0) {
-    achievements.add("no-damage");
-  }
-  if (safe.won && world.isBoss) {
-    if (world.poetAchievementId) achievements.add(world.poetAchievementId);
-    if (world.dynastyAchievementId) achievements.add(world.dynastyAchievementId);
-  }
-  const keysOwned = world.chapterLevels.filter(
-    (level) => !level.boss && clearedLevels.includes(level.id),
-  ).length;
-  return { ...base, clearedLevels, keysOwned, achievements: [...achievements] };
-}
-
-/** 无尽一局结束：连对刷新双最佳，达到阈值给“十连击”成就。 */
-export function applyEndlessRun(save: PlayerSave, score: number): PlayerSave {
+/** 无尽一局结束：连对与得分分别刷新双最佳（只记纪录，不发成就）。 */
+export function applyEndlessRun(save: PlayerSave, score: number, streak: number): PlayerSave {
   const base = normalizeSave(save);
-  const streak = typeof score === "number" && Number.isFinite(score) ? Math.max(0, Math.trunc(score)) : 0;
-  const achievements = new Set(base.achievements);
-  if (streak >= TEN_STREAK) achievements.add("ten-streak");
   return {
     ...base,
-    achievements: [...achievements],
-    endlessBestScore: Math.max(base.endlessBestScore, streak),
-    endlessBestStreak: Math.max(base.endlessBestStreak, streak),
+    endlessBestScore: Math.max(base.endlessBestScore, nonNegativeInt(score)),
+    endlessBestStreak: Math.max(base.endlessBestStreak, nonNegativeInt(streak)),
   };
 }
 
-/** 继续历险目标的可测核心：levels 按游玩顺序排列。 */
-export type LevelProgressNode = {
+/** 继续环游目标的可测核心：poems 按环游顺序排列。 */
+export type PoemProgressNode = {
   id: string;
   unlocked: boolean;
   cleared: boolean;
 };
 
 /**
- * 首页“继续历险”（docs/game-design.md §8）：最早一个已解锁且未通关的关卡；
- * 全部通关时定位到最近通关关卡并改为“再战提分”；无关卡返回 null。
+ * 首页「继续环游」（docs/game-design.md §8，ADR-0015）：
+ * 最早一张未通关的诗卡；全部通关时定位到最后一张已通关诗卡并改为「再战提分」；
+ * 没有诗卡返回 null。
  */
-export function pickContinueTarget(levels: readonly LevelProgressNode[]): ContinueTarget | null {
-  const next = levels.find((level) => level.unlocked && !level.cleared);
-  if (next) return { levelId: next.id, replay: false };
-  for (let i = levels.length - 1; i >= 0; i -= 1) {
-    const level = levels[i];
-    if (level && level.cleared) return { levelId: level.id, replay: true };
+export function pickContinueTarget(poems: readonly PoemProgressNode[]): ContinueTarget | null {
+  const next = poems.find((poem) => poem.unlocked && !poem.cleared);
+  if (next) return { poemId: next.id, replay: false };
+  for (let i = poems.length - 1; i >= 0; i -= 1) {
+    const poem = poems[i];
+    if (poem && poem.cleared) return { poemId: poem.id, replay: true };
   }
   return null;
 }
 
-/** 全部关卡的诗印总数（章节地图/成就页展示用）。 */
+/** 全部诗卡的诗印总数（首页/成就页展示用）。 */
 export function totalStars(save: PlayerSave): number {
-  return Object.values(normalizeSave(save).levelRecords).reduce(
+  return Object.values(normalizeSave(save).poemRecords).reduce(
     (sum, record) => sum + record.bestStars,
     0,
   );
+}
+
+/**
+ * 答错时给出正确答案所在诗句及其相邻一句，最多两行，不写长解析。
+ * （docs/game-design.md §5.2 的错题反馈口径；答题与无尽共用，避免各处复制。）
+ */
+export function poemContextFor(poem: Poem, question: Question): string[] {
+  const answer = question.choices[question.answerIndex] ?? "";
+  const lines = poem.lines;
+  const at = lines.indexOf(answer);
+  if (at >= 0) {
+    const withPrev = [lines[at - 1], lines[at]].filter((line): line is string => Boolean(line));
+    if (withPrev.length === 2) return withPrev;
+    const withNext = [lines[at], lines[at + 1]].filter((line): line is string => Boolean(line));
+    if (withNext.length >= 1) return withNext;
+  }
+  return lines.slice(0, 2);
 }

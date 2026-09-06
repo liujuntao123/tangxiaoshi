@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 import { defineConfig } from "vite";
@@ -50,6 +50,44 @@ function pgliteBootstrapPlugin(): Plugin {
     },
   };
 }
+
+/**
+ * PGLite ships its Postgres runtime (`pglite.data` / `pglite.wasm` /
+ * `initdb.wasm`) as sibling files the bundler does not inline. Nitro's output
+ * `_libs/` needs them or the embedded-DB server function crashes at boot
+ * (ENOENT on first request). Copy them into the built output after the build.
+ *
+ * The `_libs/` directory lands in a preset-specific location: the Vercel
+ * preset writes `.vercel/output/functions/__server.func/`, the `node-server`
+ * preset (Docker) writes `.output/server/`. Copy into whichever exists.
+ */
+function pgliteRuntimeCopyPlugin(): Plugin {
+  return {
+    name: "app-builder:pglite-runtime-copy",
+    apply: "build",
+    closeBundle() {
+      const dist = join(__dirname, "node_modules/@electric-sql/pglite/dist");
+      const candidates = [
+        join(__dirname, ".vercel/output/functions/__server.func/_libs"),
+        join(__dirname, ".output/server/_libs"),
+      ];
+      const out = candidates.find((dir) => existsSync(dir));
+      if (!out) return;
+      mkdirSync(out, { recursive: true });
+      for (const file of ["pglite.data", "pglite.wasm", "initdb.wasm"]) {
+        const src = join(dist, file);
+        if (existsSync(src)) copyFileSync(src, join(out, file));
+      }
+    },
+  };
+}
+
+/**
+ * Deployment target. Vercel stays the default so `npm run build` is unchanged;
+ * Docker builds pass `NITRO_PRESET=node-server` to emit a standalone Node
+ * server (`node .output/server/index.mjs`) instead of Vercel functions.
+ */
+const nitroPreset = process.env.NITRO_PRESET ?? process.env.SERVER_PRESET ?? "vercel";
 
 /**
  * Live-preview OAuth popup — handled HERE so the agent never has to create a
@@ -159,6 +197,7 @@ export default defineConfig(({ command, isPreview }) => ({
   resolve: { tsconfigPaths: true },
   plugins: [
     pgliteBootstrapPlugin(),
+    pgliteRuntimeCopyPlugin(),
     // Before tanstackStart so /auth/popup never falls through to the SPA.
     authPopupPlugin(),
     // Dev-only /__app-env, read by scripts/check-auth-invariant.mjs.
@@ -170,8 +209,7 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === "build" || isPreview
       ? [
           nitro({
-            // 默认 vercel（托管部署）；Docker 等自托管用 `NITRO_PRESET=node npm run build`。
-            preset: process.env.NITRO_PRESET ?? "vercel",
+            preset: nitroPreset,
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.

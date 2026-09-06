@@ -3,12 +3,6 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 type SlipState = "idle" | "on" | "miss";
 type SlipSize = "row" | "choice";
 
-const SRC: Record<SlipState, string> = {
-  idle: "/ui/choice-slip.png",
-  on: "/ui/choice-on.png",
-  miss: "/ui/choice-miss.png",
-};
-
 export function SlipShell({
   children,
   state = "idle",
@@ -21,19 +15,25 @@ export function SlipShell({
   className?: string;
 }) {
   const glow = state === "on" ? "picked" : state === "miss" ? "picked-miss" : "";
-  // row：列表两行；choice：答题选项尽量矮，避免挡住场上角色
-  const tall = size === "row" ? "min-h-[7.2rem]" : "min-h-[3.85rem]";
-  const pad = size === "row" ? "px-[15%] pt-[12%] pb-[18%]" : "px-[14%] pt-[10%] pb-[14%]";
+  // row：列表行（一屏 5 行不溢出）；choice：答题选项尽量矮，避免挡住场上角色
+  const tall = size === "row" ? "min-h-[3.75rem]" : "min-h-[3.1rem]";
+  // 答对不换底图（旧 choice-on.png 不透明，会糊成一条深色背景），
+  // 保持原木牍，在右端盖一枚玉印对勾；答错仍用原石色木牍。
+  const stateClass = state === "miss" ? "ui-slip-miss" : "";
   return (
-    <span className={`relative block overflow-hidden ${tall} ${glow} ${className}`}>
-      <img
-        src={SRC[state]}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
-      />
-      <span className={`relative z-10 flex ${tall} w-full items-center justify-between gap-2 ${pad}`}>
+    <span className={`ui-slip relative block ${stateClass} ${tall} ${glow} ${className}`}>
+      <span
+        className={`relative z-10 flex ${tall} w-full items-center justify-center gap-2 ${
+          size === "row" ? "px-10 py-2.5" : "px-4 py-1"
+        }`}
+      >
         {children}
       </span>
+      {state === "on" ? (
+        <span className="pointer-events-none absolute inset-y-0 right-11 z-20 flex items-center">
+          <img src="/ui/check-on.png" alt="" className="pop-in h-7 w-7 drop-shadow-md" />
+        </span>
+      ) : null}
     </span>
   );
 }
@@ -94,8 +94,14 @@ export function PlaqueButton({
   className = "",
   ...props
 }: { children: ReactNode } & ButtonHTMLAttributes<HTMLButtonElement>) {
+  // 未激活（disabled）统一置灰：牌匾连字一起变灰、降不透明度与饱和度，
+  // 与列表/箭头的处理一致。
   return (
-    <button type="button" {...props} className={`tap disabled:opacity-50 disabled:saturate-50 ${className}`}>
+    <button
+      type="button"
+      {...props}
+      className={`tap disabled:grayscale disabled:opacity-50 disabled:saturate-50 ${className}`}
+    >
       <PlaqueFace>{children}</PlaqueFace>
     </button>
   );

@@ -1,242 +1,216 @@
-import { DYNASTIES, POEMS, poemsByPoet, poetsInDynasty } from "@/lib/game/content";
-import { sfxHit, sfxHurt, sfxTap } from "@/lib/game/sfx";
+import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ChoiceSlip, PlaqueButton, WoodSlip } from "./choice-slip";
+import {
+  COLLECTIONS,
+  DYNASTIES,
+  PLAYABLE_COLLECTIONS,
+  POEMS,
+  authorOptions,
+  chaptersIn,
+} from "@/lib/game/content";
+import { GAME_BACKGROUNDS } from "@/lib/game/content/meta";
+import { sfxTap } from "@/lib/game/sfx";
+import { PagedList } from "./paged-list";
 import { ArtPanel, Stage, StageHud } from "./stage";
 
+/**
+ * 练习：三轴联动筛选（文集-章节级联 × 作者多选 × 朝代多选），条件取交集（ADR-0011）。
+ * 选中诗卡 → 同款 5 题 + 先看答案，无灯笼、不计通关。
+ */
 export function PracticeView() {
-  const [dynastyId, setDynastyId] = useState<string | null>(null);
-  const [poetId, setPoetId] = useState<string | null>(null);
-  const [poemId, setPoemId] = useState<string | null>(null);
-  const [qIndex, setQIndex] = useState(0);
-  const [picked, setPicked] = useState<number | null>(null);
-  const [showPoem, setShowPoem] = useState(false);
-  // 会话内完成记录：poemId -> 已完成题号。切诗文不丢记录，退出练习即清，不写存档。
-  const [done, setDone] = useState<Record<string, number[]>>({});
+  const navigate = useNavigate();
+  const [collectionId, setCollectionId] = useState<string>("");
+  const [chapterId, setChapterId] = useState<string>("");
+  const [authorIds, setAuthorIds] = useState<string[]>([]);
+  const [dynastyIds, setDynastyIds] = useState<string[]>([]);
 
-  const poets = useMemo(() => (dynastyId ? poetsInDynasty(dynastyId) : []), [dynastyId]);
-  const poetPoems = useMemo(() => (poetId ? poemsByPoet(poetId) : []), [poetId]);
-  const poem = POEMS.find((item) => item.id === poemId);
-  const question = poem?.questions[qIndex];
-  const doneForPoem = (id: string | null) => (id && done[id] ? done[id].length : 0);
-  const isDone = poemId !== null && !!done[poemId]?.includes(qIndex);
+  const chapters = useMemo(
+    () => (collectionId ? chaptersIn(collectionId) : []),
+    [collectionId],
+  );
+  const authors = useMemo(() => authorOptions(), []);
+  const compiledDynasties = useMemo(
+    () => DYNASTIES.filter((d) => POEMS.some((p) => p.dynastyId === d.id)),
+    [],
+  );
 
-  function markDone(id: string | null, index: number) {
-    if (!id) return;
-    setDone((prev) => {
-      const list = prev[id] ?? [];
-      if (list.includes(index)) return prev;
-      return { ...prev, [id]: [...list, index] };
-    });
+  const filtered = useMemo(
+    () =>
+      POEMS.filter((p) => {
+        if (collectionId && p.collectionId !== collectionId) return false;
+        if (chapterId) {
+          const parts = chapterId.match(/-c(\d+)$/);
+          if (!parts || Number(parts[1]) !== p.chapterIndex) return false;
+        }
+        if (authorIds.length > 0 && !authorIds.includes(p.authorId)) return false;
+        if (dynastyIds.length > 0 && !dynastyIds.includes(p.dynastyId)) return false;
+        return true;
+      }),
+    [collectionId, chapterId, authorIds, dynastyIds],
+  );
+
+  function toggle(list: string[], id: string, set: (next: string[]) => void) {
+    set(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
   }
 
-  function resetQuestion() {
-    setPicked(null);
-    setShowPoem(false);
-  }
-
-  if (!dynastyId) {
-    return (
-      <Stage bg="/art/scene-tower.jpg">
-        <StageHud title="练习" backTo="/" />
-        <div className="absolute inset-x-0 bottom-0 top-[18%] z-10 overflow-y-auto px-3 pb-8">
-          <p className="paper-glow px-2 pb-2 text-center text-[11px] tracking-[0.22em] text-paper/80">
-            按朝代出题。可答题，也可直接看答案。
-          </p>
-          {DYNASTIES.map((dynasty) => (
-            <WoodSlip
-              key={dynasty.id}
-              className="my-1 w-full"
-              onClick={() => {
-                sfxTap();
-                setDynastyId(dynasty.id);
-              }}
-            >
-              <span className="title-ink text-xl">{dynasty.name}</span>
-              <span className="max-w-[52%] truncate text-right text-[11px] tracking-widest text-ink-soft">
-                {POEMS.filter((item) => item.dynastyId === dynasty.id).length} 首
-              </span>
-            </WoodSlip>
-          ))}
-        </div>
-      </Stage>
-    );
-  }
-
-  if (!poetId) {
-    return (
-      <Stage bg="/art/scene-tower.jpg">
-        <StageHud title="练习" backTo="/" />
-        <div className="absolute inset-x-0 bottom-0 top-[18%] z-10 overflow-y-auto px-3 pb-8">
-          <div className="mb-2 flex justify-center">
-            <PlaqueButton onClick={() => setDynastyId(null)}>回朝代</PlaqueButton>
-          </div>
-          {poets.map((poet) => (
-            <WoodSlip
-              key={poet.poetId}
-              className="my-1 w-full"
-              onClick={() => {
-                sfxTap();
-                setPoetId(poet.poetId);
-              }}
-            >
-              <span className="title-ink text-xl">{poet.poetName}</span>
-              <span className="text-[11px] text-ink-soft">{poemsByPoet(poet.poetId).length} 首</span>
-            </WoodSlip>
-          ))}
-        </div>
-      </Stage>
-    );
-  }
-
-  if (!poem) {
-    return (
-      <Stage bg="/art/scene-tower.jpg">
-        <StageHud title="练习" backTo="/" />
-        <div className="absolute inset-x-0 bottom-0 top-[18%] z-10 overflow-y-auto px-3 pb-8">
-          <div className="mb-2 flex justify-center">
-            <PlaqueButton onClick={() => setPoetId(null)}>回诗人</PlaqueButton>
-          </div>
-          {poetPoems.map((item) => {
-            const doneCount = doneForPoem(item.id);
-            const total = item.questions.length;
-            return (
-              <WoodSlip
-                key={item.id}
-                className="my-1 w-full"
-                onClick={() => {
-                  sfxTap();
-                  setPoemId(item.id);
-                  setQIndex(0);
-                  resetQuestion();
-                }}
-              >
-                <span className="title-ink truncate text-lg">《{item.title}》</span>
-                <span
-                  className={`text-[11px] tracking-widest ${doneCount >= total ? "text-ink" : "text-ink-soft"}`}
-                >
-                  {doneCount >= total ? "已完成" : `${doneCount}/${total}`}
-                </span>
-              </WoodSlip>
-            );
-          })}
-        </div>
-      </Stage>
-    );
-  }
+  const chip = (on: boolean) =>
+    `tap rounded-full border px-3 py-1 text-xs tracking-wider ${
+      on ? "border-paper bg-paper/90 text-ink" : "border-paper/50 text-paper/90"
+    }`;
 
   return (
-    <Stage bg="/art/scene-tower.jpg">
+    <Stage bg={GAME_BACKGROUNDS.practice}>
       <StageHud title="练习" backTo="/" />
-      <div className="absolute inset-x-0 top-[14%] z-10 flex justify-center">
-        <PlaqueButton
-          onClick={() => {
-            setPoemId(null);
-            resetQuestion();
-          }}
-        >
-          回诗文
-        </PlaqueButton>
-      </div>
-
-      {showPoem ? (
-        <button
-          type="button"
-          className="absolute inset-x-3 top-[20%] z-30 text-left"
-          onClick={() => setShowPoem(false)}
-        >
-          <ArtPanel className="text-center">
-            <p className="title-ink text-2xl">《{poem.title}》</p>
-            <p className="mt-1 text-[11px] tracking-[0.28em] text-ink-soft">{poem.poetName}</p>
-            <div className="poem-line mt-3 max-h-48 space-y-0.5 overflow-y-auto text-[15px] leading-relaxed text-ink">
-              {poem.lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-            <p className="mt-3 text-center">
-              <span className="title-ink text-sm tracking-widest text-ink-soft">点牌收回</span>
-            </p>
-          </ArtPanel>
-        </button>
-      ) : null}
-
-      {question ? (
-        <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
-          <div className="flex items-center justify-between px-4 text-[11px] tracking-widest text-paper/85">
-            <span className="paper-glow">
-              第 {qIndex + 1}/{poem.questions.length} 题 · 已完成 {doneForPoem(poemId)}/{poem.questions.length}
-            </span>
-            <PlaqueButton
+      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 overflow-y-auto px-4 pb-[max(1.2rem,env(safe-area-inset-bottom))]">
+        <ArtPanel>
+          <p className="text-xs tracking-[0.25em] text-ink-soft">文集 · 章节</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              className={chip(!collectionId)}
               onClick={() => {
                 sfxTap();
-                setShowPoem(true);
-                setPicked(question.answerIndex);
-                markDone(poemId, qIndex);
+                setCollectionId("");
+                setChapterId("");
               }}
             >
-              查看答案
-            </PlaqueButton>
+              全部
+            </button>
+            {PLAYABLE_COLLECTIONS.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                className={chip(collectionId === c.id)}
+                onClick={() => {
+                  sfxTap();
+                  setCollectionId(c.id);
+                  setChapterId("");
+                }}
+              >
+                {c.title}
+              </button>
+            ))}
           </div>
-          <p className="title-art paper-glow mt-1 px-3 text-center text-[clamp(1.05rem,4.6vw,1.35rem)] leading-snug text-paper">
-            {question.prompt}
-          </p>
-          <div className="mt-1">
-            {question.choices.map((choice, index) => {
-              const selected = picked === index;
-              const right = index === question.answerIndex;
-              let state: "idle" | "on" | "miss" = "idle";
-              if (picked !== null && right) state = "on";
-              else if (selected && !right) state = "miss";
-              return (
-                <ChoiceSlip
-                  key={choice}
-                  text={choice}
-                  state={state}
-                  disabled={picked !== null}
+          {chapters.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                className={chip(!chapterId)}
+                onClick={() => {
+                  sfxTap();
+                  setChapterId("");
+                }}
+              >
+                整部文集
+              </button>
+              {chapters.map((ch) => (
+                <button
+                  key={ch.id}
+                  type="button"
+                  className={chip(chapterId === ch.id)}
                   onClick={() => {
-                    setPicked(index);
-                    markDone(poemId, qIndex);
-                    if (index === question.answerIndex) sfxHit();
-                    else sfxHurt();
+                    sfxTap();
+                    setChapterId(ch.id);
                   }}
-                />
-              );
-            })}
-          </div>
-          {picked !== null ? (
-            <p className="paper-glow mt-1.5 text-center text-[12px] tracking-widest text-paper">
-              {picked === question.answerIndex ? (
-                <span className="text-ink">✓ 答对了</span>
-              ) : (
-                <>
-                  正确答案：<span className="text-ink">{question.choices[question.answerIndex]}</span>
-                </>
-              )}
-              {isDone && doneForPoem(poemId) >= poem.questions.length ? " · 本篇已完成" : ""}
-            </p>
+                >
+                  {`第${ch.index}章 ${ch.title}`}
+                </button>
+              ))}
+            </div>
           ) : null}
-          <div className="mt-2 flex justify-between gap-3 px-2">
-            <PlaqueButton
-              disabled={qIndex === 0}
+
+          <p className="mt-3 text-xs tracking-[0.25em] text-ink-soft">作者</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              className={chip(authorIds.length === 0)}
               onClick={() => {
-                setQIndex((n) => Math.max(0, n - 1));
-                resetQuestion();
+                sfxTap();
+                setAuthorIds([]);
               }}
             >
-              上一题
-            </PlaqueButton>
-            <PlaqueButton
-              disabled={qIndex >= poem.questions.length - 1}
-              onClick={() => {
-                setQIndex((n) => Math.min(poem.questions.length - 1, n + 1));
-                resetQuestion();
-              }}
-            >
-              下一题
-            </PlaqueButton>
+              全部
+            </button>
+            {authors.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                className={chip(authorIds.includes(a.id))}
+                onClick={() => {
+                  sfxTap();
+                  toggle(authorIds, a.id, setAuthorIds);
+                }}
+              >
+                {a.name}
+              </button>
+            ))}
           </div>
-        </section>
-      ) : null}
+
+          <p className="mt-3 text-xs tracking-[0.25em] text-ink-soft">朝代</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              className={chip(dynastyIds.length === 0)}
+              onClick={() => {
+                sfxTap();
+                setDynastyIds([]);
+              }}
+            >
+              全部
+            </button>
+            {compiledDynasties.map((d) => (
+              <button
+                key={d.id}
+                type="button"
+                className={chip(dynastyIds.includes(d.id))}
+                onClick={() => {
+                  sfxTap();
+                  toggle(dynastyIds, d.id, setDynastyIds);
+                }}
+              >
+                {d.name}
+              </button>
+            ))}
+          </div>
+        </ArtPanel>
+
+        <p className="mb-2 mt-3 text-center text-xs tracking-[0.3em] text-paper/90">
+          {`${filtered.length} 首诗 · 点开答题，可先看答案`}
+        </p>
+        <PagedList pageSize={9} count={filtered.length}>
+          {(from, to) => (
+            <div className="grid grid-cols-3 gap-2">
+              {filtered.slice(from, to).map((poem) => {
+                const col = COLLECTIONS.find((c) => c.id === poem.collectionId);
+                return (
+                  <button
+                    key={poem.id}
+                    type="button"
+                    className="tap relative aspect-[3/4] overflow-hidden rounded-md border border-paper/40 bg-ink/40 text-left"
+                    onClick={() => navigate({ to: "/play/$poemId", params: { poemId: poem.id }, search: { from: "practice" } })}
+                  >
+                    <img
+                      src={poem.background}
+                      alt=""
+                      onError={(e) => {
+                        e.currentTarget.style.visibility = "hidden";
+                      }}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-transparent to-ink/60" />
+                    <p className="absolute inset-x-1 bottom-1 line-clamp-2 text-[11px] leading-tight text-paper drop-shadow">
+                      {poem.title}
+                    </p>
+                    <p className="absolute left-1 top-1 text-[9px] tracking-wider text-paper/80 drop-shadow">
+                      {col?.title}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </PagedList>
+      </div>
     </Stage>
   );
 }

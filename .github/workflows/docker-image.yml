@@ -1,0 +1,80 @@
+# 推送到 GitHub 即构建 Docker 镜像并发布到 GitHub Container Registry (GHCR)。
+#
+# 触发：
+#   - push 到 main      → 构建 ghcr.io/liujuntao123/tangxiaoshi:{latest, main-<sha>, sha-<sha>}
+#   - push tag v1.2.3   → 额外打 1.2.3 / 1.2 / 1 标签
+#   - Pull Request      → 只构建验证，不推送
+#   - 手动（workflow_dispatch）→ 同 push
+#
+# 服务器上更新：
+#   docker compose pull && docker compose up -d   （.env 里 APP_IMAGE 指向本镜像）
+#
+# 首次发布后如需公开拉取：GitHub → Packages → 该包 → Package settings → Change visibility。
+
+name: docker-image
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: docker-image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  # github.repository = liujuntao123/tangxiaoshi（metadata-action 会转小写）
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta (tags & labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # main 分支：main
+            type=ref,event=branch
+            # v1.2.3 → 1.2.3、1.2、1
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            # 每次提交可追溯的短 sha
+            type=sha,format=short
+            # 默认分支额外打 latest
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

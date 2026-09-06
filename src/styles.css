@@ -4,7 +4,8 @@
   --color-paper: #f3ebe0;
   --color-paper-deep: #e4d5c0;
   --color-ink: #1c1712;
-  --color-ink-soft: #5c5348;
+  /* 次要文字色：压深一档，保证木牍/纸面上的可读性 */
+  --color-ink-soft: #4a4136;
   --color-pine: #3d5a4c;
   --color-pine-fg: #f3ebe0;
   --color-seal: #8f3d32;
@@ -81,10 +82,19 @@
   text-shadow: 0 1px 0 rgb(243 235 224 / 55%);
 }
 
+/* 亮场/浅景上的文字：三层墨影加深，远处也能读清 */
 .paper-glow {
   text-shadow:
-    0 1px 2px rgb(28 23 18 / 85%),
-    0 0 14px rgb(28 23 18 / 55%);
+    0 1px 2px rgb(28 23 18 / 92%),
+    0 2px 10px rgb(28 23 18 / 70%),
+    0 0 18px rgb(28 23 18 / 45%);
+}
+
+/* 叠在场景上的小信息条：淡墨圆底，保证任何背景下都醒目 */
+.ink-chip {
+  border-radius: 9999px;
+  background: rgb(28 23 18 / 52%);
+  box-shadow: inset 0 0 0 1px rgb(243 235 224 / 22%);
 }
 
 .poem-line {
@@ -311,6 +321,26 @@
   opacity: 1;
 }
 
+/* ---------------------------------------------------------------------------
+ * 9-slice 风格化面板（AGENTS.md：装饰集中在角部/端部，中部留白可拉伸）
+ * speech-panel 779x1331：四角云纹 + 双线描边，角块取 130px；
+ * choice-slip 1536x301：两端金箍 + 玉环端饰，端块取 160px、上下边带 56px。
+ * 上下边带显示宽度 7px：列表行一屏 5 行不溢出（60px 内容 + 14px 边 + 8px 间距）。
+ * ------------------------------------------------------------------------- */
+.ui-speech {
+  border: 18px solid transparent;
+  border-image: url("/ui/speech-panel.png") 130 fill / 16px 22px stretch;
+}
+
+.ui-slip {
+  border: 7px solid transparent;
+  border-image: url("/ui/choice-slip.png") 56 160 fill / 7px 36px stretch;
+}
+
+.ui-slip-miss {
+  border-image-source: url("/ui/choice-miss.png");
+}
+
 .tap {
   transition:
     transform 0.14s ease,
@@ -335,4 +365,43 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* 环游记·情绪形态：答对欢呼（上跳+星星眨眼）、答错沮丧（下沉+耷拉） */
+@keyframes mood-happy {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-14px) scale(1.06);
+  }
+  55% {
+    transform: translateY(-6px) scale(0.99);
+  }
+  75% {
+    transform: translateY(-10px) scale(1.03);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes mood-sad {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  35% {
+    transform: translateY(6px) rotate(-3deg) scale(0.97);
+  }
+  70% {
+    transform: translateY(9px) rotate(-2deg) scale(0.96);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+.mood-happy {
+  animation: mood-happy 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mood-sad {
+  animation: mood-sad 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }

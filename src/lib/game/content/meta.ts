@@ -1,27 +1,42 @@
-/** Art catalogs the compiler and runtime share. Future modes can add beasts/scenes here. */
+/** 素材目录：编译器与运行时共享的路径约定（docs/art.md）。 */
 
-export const BEAST_IDS = ["sleep", "falls", "wind", "crane", "boat", "demon"] as const;
-export type BeastId = (typeof BEAST_IDS)[number];
+/** 全局背景：首页 + 四主页面 + 环游三层（环游主页面=文集列表，共用一张） */
+export const GAME_BACKGROUNDS = {
+  home: "/art/bg/home.png",
+  tour: "/art/bg/tour-collections.png",
+  tourChapters: "/art/bg/tour-chapters.png",
+  tourAuthor: "/art/bg/tour-author.png",
+  endless: "/art/bg/endless.png",
+  practice: "/art/bg/practice.png",
+  achievements: "/art/bg/achievements.png",
+} as const;
 
-export const SCENE_IDS = ["moon", "water", "spring", "tower", "river", "palace", "mountain", "winter"] as const;
-export type SceneId = (typeof SCENE_IDS)[number];
+export type GameBackgroundKey = keyof typeof GAME_BACKGROUNDS;
 
-export const SCENE_ART: Record<SceneId, string> = {
-  moon: "/art/scene-moon.jpg",
-  water: "/art/scene-falls.jpg",
-  spring: "/art/scene-peach.jpg",
-  tower: "/art/scene-tower.jpg",
-  river: "/art/scene-baidi.jpg",
-  palace: "/art/scene-palace.jpg",
-  mountain: "/art/scene-falls.jpg",
-  winter: "/art/scene-moon.jpg",
-};
+/** 通用章节形象：一套 10 张，第 N 章取 ((N-1) mod 10)+1 */
+export const CHAPTER_ART_COUNT = 10;
 
-export function poetPortrait(poetId: string): string {
-  return `/sprites/poets/${poetId}.png`;
+export function chapterArt(chapterIndex: number): string {
+  const n = (((chapterIndex - 1) % CHAPTER_ART_COUNT) + CHAPTER_ART_COUNT) % CHAPTER_ART_COUNT + 1;
+  return `/art/avatars/chapter-${n}.png`;
 }
 
-export function poetBustPath(poetId: string): string {
-  if (poetId === "libai") return "/sprites/libai-bust.png";
-  return `/sprites/poets/${poetId}.png`;
+export function collectionArt(collectionId: string): string {
+  return `/art/avatars/collection-${collectionId}.png`;
 }
+
+export function dynastyArt(dynastyId: string): string {
+  return `/art/avatars/dynasty-${dynastyId}.png`;
+}
+
+/** 作者立绘：一人一张，全页面复用 */
+export function poetPortrait(authorId: string): string {
+  return `/sprites/poets/${authorId}.png`;
+}
+
+/** 主角唐小诗三形态（透明背景） */
+export const HERO = {
+  idle: "/sprites/hero.png",
+  happy: "/sprites/hero-happy.png",
+  sad: "/sprites/hero-sad.png",
+} as const;

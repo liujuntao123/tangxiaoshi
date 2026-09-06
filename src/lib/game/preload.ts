@@ -3,8 +3,9 @@ const seen = new Set<string>();
 export const CORE_IMAGES = [
   "/ui/speech-panel.png",
   "/ui/choice-slip.png",
-  "/ui/choice-on.png",
   "/ui/choice-miss.png",
+  "/ui/check-on.png",
+  "/ui/btn-settings.png",
   "/ui/back-btn.png",
   "/ui/lantern.png",
   "/ui/jade-btn.png",
@@ -13,13 +14,11 @@ export const CORE_IMAGES = [
   "/ui/icon-story.png",
   "/ui/icon-practice.png",
   "/ui/icon-achieve.png",
+  "/ui/icon-endless.png",
   "/sprites/hero.png",
-  "/sprites/hero-bust.png",
-  "/sprites/hero-attack-2.png",
-  "/sprites/hero-hurt-2.png",
-  "/sprites/key.png",
-  "/art/scene-moon.jpg",
-  "/art/map.jpg",
+  "/sprites/hero-happy.png",
+  "/sprites/hero-sad.png",
+  "/art/bg/home.png",
 ];
 
 export function preloadImages(urls: readonly string[]) {

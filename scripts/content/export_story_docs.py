@@ -1,97 +1,57 @@
 #!/usr/bin/env python3
-"""Write a human-readable story index from compiled JSON + source modules."""
-
-from __future__ import annotations
+# -*- coding: utf-8 -*-
+"""从 bank.json 生成 docs/story/（新结构总表）。"""
 
 import json
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTENT = ROOT / "src/lib/game/content"
-DOCS = ROOT / "docs/story"
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from story import WORLD  # noqa: E402
+BANK = ROOT / "src" / "lib" / "game" / "content" / "bank.json"
+DOCS = ROOT / "docs" / "story"
 
 
 def main() -> None:
-    story = json.loads((CONTENT / "story.json").read_text())
-    bank = json.loads((CONTENT / "bank.json").read_text())
-    poems = {p["id"]: p for p in bank}
+    bank = json.loads(BANK.read_text(encoding="utf-8"))
     DOCS.mkdir(parents=True, exist_ok=True)
-    chapters_dir = DOCS / "chapters"
-    chapters_dir.mkdir(exist_ok=True)
+    chapters = {c["id"]: c for c in bank["chapters"]}
+    authors = {a["id"]: a for a in bank["authors"]}
+    collections = {c["id"]: c for c in bank["collections"]}
 
-    lines = [
-        "# 剧情索引",
+    lines = ["# 内容总表", "", "> 本文件由 `scripts/content/export_story_docs.py` 从 bank.json 生成，不要手改。", ""]
+    q_total = sum(len(p["questions"]) for p in bank["poems"])
+    lines += [
+        f"- 开放文集：{sum(1 for c in bank['collections'] if c['playable'])} / {len(bank['collections'])}",
+        f"- 章节 {len(bank['chapters'])} · 作者 {len(bank['authors'])} · 诗卡 {len(bank['poems'])} · 题目 {q_total} · 成就 {len(bank['achievements'])}",
         "",
-        WORLD["logline"],
-        "",
-        f"练习库 {len(bank)} 首。历险 {len(story['chapters'])} 章 / {sum(len(c['levels']) for c in story['chapters'])} 关。",
-        "",
-        "改剧情请改 `scripts/content/story/`，再跑 `python3 scripts/content/build-bank.py`。",
-        "",
-        "## 总表",
-        "",
-        "| 朝 | 章 | 诗人 | 关数 | 钩子 | 详情 |",
-        "| --- | --- | --- | --- | --- | --- |",
     ]
-    for dynasty in story["dynasties"]:
-        for ch in story["chapters"]:
-            if ch["dynastyId"] != dynasty["id"]:
-                continue
-            slug = ch["id"]
-            lines.append(
-                f"| {dynasty['name']} | {ch['title']} | {ch['poetName']} | {len(ch['levels'])} | {ch.get('hook','')} | [{slug}](chapters/{slug}.md) |"
-            )
 
-    lines += ["", "## 朝代", ""]
-    for dynasty in story["dynasties"]:
-        n = sum(1 for c in story["chapters"] if c["dynastyId"] == dynasty["id"])
-        lines.append(f"- **{dynasty['name']}**　{dynasty.get('tagline','')}　{n} 章")
+    for cid, col in collections.items():
+        if not col["playable"]:
+            lines += [f"## {col['title']}（待开放）", ""]
+            continue
+        lines += [f"## {col['title']}", ""]
+        for ch_id in col["chapterIds"]:
+            ch = chapters[ch_id]
+            lines += [f"### 第{ch['index']}章 {ch['title']}（{ch['poemCount']} 首）", ""]
+            for aid in ch["authorIds"]:
+                a = authors[aid]
+                lines += [f"**{a['name']}** — {a['poemCount']} 首", ""]
+                for g in a["guide"]:
+                    lines += [f"> 引导语：{g['text']}", ""]
+                lines += ["| 诗卡 | 背景 | 题数 |", "| --- | --- | --- |"]
+                for p in bank["poems"]:
+                    if p["authorId"] == aid and p["collectionId"] == cid and p["chapterIndex"] == ch["index"]:
+                        lines += [f"| {p['title']} | {p['background'].rsplit('/', 1)[-1]} | {len(p['questions'])} |"]
+                lines += [""]
+        lines += [""]
 
-    (DOCS / "INDEX.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    lines += ["", "## 成就", "", "| 成就 | 类型 | 达成条件 |", "| --- | --- | --- |"]
+    for x in bank["achievements"]:
+        lines += [f"| {x['title']}·{x['subtitle']} | {x['kind']} | {x['hint']} |"]
+    lines += [""]
 
-    for ch in story["chapters"]:
-        body = [
-            f"# {ch['title']}",
-            "",
-            f"- 诗人：{ch['poetName']}",
-            f"- 朝代：{ch['dynastyId']}",
-            f"- 钩子：{ch.get('hook','')}",
-            f"- 时代：{ch.get('era','')}",
-            f"- 标签：{', '.join(ch.get('tags') or [])}",
-            f"- 钥匙：{ch['keysToBoss']}",
-            "",
-            "## 开场",
-            "",
-        ]
-        for line in ch.get("opening") or []:
-            who = line.get("name") or "旁白"
-            body.append(f"- {who}：{line['text']}")
-        body += ["", "## 关卡", ""]
-        for lv in ch["levels"]:
-            poem = poems.get(lv["poemId"], {})
-            flag = "（Boss）" if lv.get("boss") else ""
-            body.append(f"### {lv['order']}. {lv['place']}{flag}")
-            body.append("")
-            body.append(f"- 诗：《{poem.get('title','?')}》")
-            body.append(f"- 怪：{lv['monsterName']}")
-            body.append(f"- id：`{lv['id']}`")
-            body.append("")
-            body.append("开场：")
-            for line in lv.get("intro") or []:
-                who = line.get("name") or "旁白"
-                body.append(f"- {who}：{line['text']}")
-            body.append("")
-            body.append("过关：")
-            for line in lv.get("outro") or []:
-                who = line.get("name") or "旁白"
-                body.append(f"- {who}：{line['text']}")
-            body.append("")
-        (chapters_dir / f"{ch['id']}.md").write_text("\n".join(body), encoding="utf-8")
-
-    print(f"wrote {DOCS / 'INDEX.md'} and {len(story['chapters'])} chapter files")
+    (DOCS / "INDEX.md").write_text("\n".join(lines), encoding="utf-8")
+    print(f"✔ docs/story/INDEX.md 已重建（{len(bank['poems'])} 诗卡）")
 
 
 if __name__ == "__main__":

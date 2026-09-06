@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""质检门：bank.json 必须全绿（docs/content-rules.md 第四节）。"""
+
+import json
+import re
+import sys
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BANK = ROOT / "src" / "lib" / "game" / "content" / "bank.json"
+FORBIDDEN = ["妖怪", "大魔王", "血条", "攻击", "点一下", "boss", "Boss"]
+EXPECT_TYPES = ["complete-next", "complete-next", "complete-prev", "title", "title"]
+
+errors: list[str] = []
+
+
+def err(msg: str) -> None:
+    errors.append(msg)
+
+
+def main() -> None:
+    bank = json.loads(BANK.read_text(encoding="utf-8"))
+    poems = bank["poems"]
+    authors = {a["id"]: a for a in bank["authors"]}
+    collections = {c["id"]: c for c in bank["collections"]}
+
+    author_text: dict[str, str] = {}
+    for p in poems:
+        author_text.setdefault(p["authorId"], "")
+        author_text[p["authorId"]] += p["text"]
+
+    # 1) 每诗 5 题、配比正确、四选一、答案唯一且在选项内
+    for p in poems:
+        qs = p["questions"]
+        if len(qs) != 5:
+            err(f"{p['id']}「{p['title']}」题数 {len(qs)} ≠ 5")
+        if [q["type"] for q in qs] != EXPECT_TYPES:
+            err(f"{p['id']} 题型配比错误: {[q['type'] for q in qs]}")
+        for q in qs:
+            if len(set(q["choices"])) != 4:
+                err(f"{q['id']} 选项有重复")
+            ai = q["answerIndex"]
+            if ai not in (0, 1, 2, 3):
+                err(f"{q['id']} answerIndex 越界")
+            ans = q["choices"][ai]
+            if q["type"] in ("complete-next", "complete-prev"):
+                if ans not in p["lines"]:
+                    err(f"{q['id']} 补全答案「{ans}」不在该诗半句序列中")
+            else:
+                if ans != p["title"]:
+                    err(f"{q['id']} 诗名答案 ≠ 诗题")
+            # 半句长度
+            if q["type"] in ("complete-next", "complete-prev"):
+                for part in (q["quote"], ans):
+                    if len(part) > 14:
+                        err(f"{q['id']} 半句超 14 字: {part}")
+        if not (p["background"] in collections[p["collectionId"]]["backgrounds"]):
+            err(f"{p['id']} 背景不在文集背景清单内")
+
+    # 2) 引导语规范
+    for aid, a in authors.items():
+        guide = a["guide"]
+        if not guide:
+            err(f"作者 {aid} 缺引导语")
+            continue
+        full = "".join(line["text"] for line in guide)
+        for word in FORBIDDEN:
+            if word in full:
+                err(f"作者 {aid} 引导语含禁词「{word}」")
+        first = guide[0]["text"]
+        first_sentence = re.split(r"[。？！]", first)[0]
+        if first_sentence and first_sentence not in author_text.get(aid, ""):
+            err(f"作者 {aid} 引导语首句原句未在该作者诗文中逐字找到: {first_sentence}")
+        if len(full) > 90:
+            err(f"作者 {aid} 引导语超 90 字（{len(full)}）")
+        if len(guide) > 3:
+            err(f"作者 {aid} 引导语超 3 段")
+
+    # 3) 成就覆盖
+    kinds = Counter(x["kind"] for x in bank["achievements"])
+    if kinds["author"] != len(authors):
+        err(f"作者成就数 {kinds['author']} ≠ 作者数 {len(authors)}")
+    playable = [c for c in bank["collections"] if c["playable"]]
+    if kinds["collection"] != len(playable):
+        err(f"文集成就数 {kinds['collection']} ≠ 开放文集数 {len(playable)}")
+    if kinds["dynasty"] != len({p["dynastyId"] for p in poems}):
+        err("朝代成就数与已编译朝代数不符")
+    for x in bank["achievements"]:
+        if x["title"] == x["subtitle"]:
+            err(f"成就 {x['id']} 主副标相同")
+
+    # 4) 引用完整性：诗 id 唯一、章节/作者引用存在
+    ids = [p["id"] for p in poems]
+    if len(set(ids)) != len(ids):
+        err("诗 id 有重复")
+    for p in poems:
+        if p["authorId"] not in authors:
+            err(f"{p['id']} 引用不存在的作者 {p['authorId']}")
+        if p["collectionId"] not in collections:
+            err(f"{p['id']} 引用不存在的文集 {p['collectionId']}")
+
+    if errors:
+        print(f"✘ validate_content：{len(errors)} 处问题")
+        for e in errors:
+            print("  -", e)
+        sys.exit(1)
+    q_total = sum(len(p["questions"]) for p in poems)
+    print(f"✔ validate_content：{len(poems)} 诗卡 {q_total} 题、{len(authors)} 作者、"
+          f"{len(bank['achievements'])} 成就，全部通过")
+
+
+if __name__ == "__main__":
+    main()

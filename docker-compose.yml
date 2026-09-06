@@ -1,0 +1,58 @@
+# 唐小诗环游记 — Docker Compose 一键部署
+#
+#   首次部署：cp .env.example .env && docker compose up -d
+#   更新版本：git pull && docker compose up -d --build
+#
+# 服务器上用 GitHub Actions 推到 GHCR 的镜像（不在本机构建）：
+#   在 .env 里设置 APP_IMAGE=ghcr.io/liujuntao123/tangxiaoshi:latest
+#   然后 docker compose pull && docker compose up -d
+#
+# 数据库状态放在 named volume（pgdata），不 bind 到宿主文件系统。
+
+name: tangxiaoshi
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tangxiaoshi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tangxiaoshi}
+      POSTGRES_DB: tangxiaoshi
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tangxiaoshi -d tangxiaoshi"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  app:
+    # 默认本地构建；设置 APP_IMAGE 则直接用远端镜像（compose pull 后 up）。
+    image: ${APP_IMAGE:-tangxiaoshi:local}
+    build:
+      context: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      DATABASE_URL: postgres://tangxiaoshi:${POSTGRES_PASSWORD:-tangxiaoshi}@db:5432/tangxiaoshi
+      # 对外访问地址（有域名/走反代时必填，例如 https://tangxiaoshi.example.com）
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-}
+      # 会话签名密钥；不设置则每次重启后所有登录态失效。生成：
+      #   docker compose exec app node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
+      # 额外信任的来源（逗号分隔），挂自定义域名时加上它，否则登录报 Invalid origin
+      BETTER_AUTH_TRUSTED_ORIGINS: ${BETTER_AUTH_TRUSTED_ORIGINS:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  pgdata:

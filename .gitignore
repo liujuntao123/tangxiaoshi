@@ -23,3 +23,7 @@ __pycache__/
 *.pyc
 deploy/image/.output/
 deploy/data/
+
+# 一次性排障产物
+/scripts/debug/
+/scripts/diag*.mjs
