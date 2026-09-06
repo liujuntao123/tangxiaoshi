@@ -1,6 +1,6 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { PlaqueButton } from "@/components/game/choice-slip";
-import { ArtPanel, JadeEnter } from "@/components/game/stage";
+import { ArtPanel } from "@/components/game/stage";
 import { authClient, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { CORE_IMAGES, preloadImages } from "@/lib/game/preload";
@@ -21,6 +21,13 @@ function Login() {
   useEffect(() => {
     preloadImages(CORE_IMAGES);
   }, []);
+
+  // 题库预热：诗库数据 chunk 是全部游戏页面的公共依赖（性能走查 2026-09）。
+  // 在用户提交登录/注册时后台动态 import，下载解析正好与鉴权请求、跳转并行；
+  // 动态 import 不阻塞水合，也不会拖慢登录页本身。
+  const warmContentBank = () => {
+    void import("@/lib/game/content");
+  };
 
   // 背景就绪兜底：预载可能先于 React onLoad 完成，此时 onLoad 不再触发，
   // 必须用 Image() 检查 complete，否则背景永远透明（看起来没背景）。
@@ -55,6 +62,7 @@ function Login() {
       return;
     }
     setBusy(true);
+    warmContentBank();
     setError(null);
     try {
       if (registering) {
@@ -94,7 +102,8 @@ function Login() {
           onSubmit={onSubmit}
           className="absolute inset-x-3 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-20 flex flex-col"
         >
-          <div className="mb-1 flex justify-center">
+          {/* hero 容器 mb-3：消除小诗脚部与下方卡片边线的穿插挤压 */}
+          <div className="mb-3 flex justify-center">
             <div className="relative flex h-28 w-28 items-end justify-center">
               <span className="sprite-shadow" />
               <img
@@ -114,7 +123,7 @@ function Login() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-0.5 h-8 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
+                className="paper-input mt-0.5 block w-full px-3 py-1.5 text-base text-ink outline-none"
               />
             </label>
             <label className="mt-1.5 block text-[11px] tracking-widest text-ink-soft">
@@ -126,7 +135,7 @@ function Login() {
                 autoComplete={registering ? "new-password" : "current-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-0.5 h-8 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
+                className="paper-input mt-0.5 block w-full px-3 py-1.5 text-base text-ink outline-none"
               />
             </label>
             {registering ? (
@@ -139,20 +148,26 @@ function Login() {
                   autoComplete="new-password"
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
-                  className="mt-0.5 h-8 w-full border-x-0 border-t-0 border-b border-ink/25 bg-transparent text-base text-ink outline-none"
+                  className="paper-input mt-0.5 block w-full px-3 py-1.5 text-base text-ink outline-none"
                 />
               </label>
             ) : null}
             {error ? <p className="mt-1.5 text-sm text-seal">{error}</p> : null}
-            <div className="mt-2">
-              <JadeEnter
-                type="submit"
-                label={busy ? "稍候" : registering ? "注册" : "进入"}
-                disabled={busy || !authEnabled}
-              />
-            </div>
-            <div className="mt-2 flex justify-center">
+            {/* 主提交按钮：改用 PlaqueButton 牌匾，树立正确的视觉重量 */}
+            <div className="mt-3 flex justify-center">
               <PlaqueButton
+                type="submit"
+                disabled={busy || !authEnabled}
+                className="tap-deep flex w-full justify-center"
+              >
+                {busy ? "稍候" : registering ? "注册" : "进入"}
+              </PlaqueButton>
+            </div>
+            {/* 去注册/去登录：降级为轻量文字链接按钮 */}
+            <div className="mt-2 flex justify-center">
+              <button
+                type="button"
+                className="tap text-xs tracking-widest text-ink-soft underline-offset-4 hover:underline"
                 onClick={() => {
                   setMode(registering ? "in" : "up");
                   setConfirm("");
@@ -160,7 +175,7 @@ function Login() {
                 }}
               >
                 {registering ? "去登录" : "去注册"}
-              </PlaqueButton>
+              </button>
             </div>
           </ArtPanel>
         </form>

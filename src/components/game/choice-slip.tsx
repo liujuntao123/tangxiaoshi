@@ -31,7 +31,8 @@ export function SlipShell({
       </span>
       {state === "on" ? (
         <span className="pointer-events-none absolute inset-y-0 right-11 z-20 flex items-center">
-          <img src="/ui/check-on.png" alt="" className="pop-in h-7 w-7 drop-shadow-md" />
+          {/* 玉印对勾落章：升级为 stamp-in 顿章反馈 */}
+          <img src="/ui/check-on.png" alt="" className="stamp-in h-7 w-7 drop-shadow-md" />
         </span>
       ) : null}
     </span>
@@ -53,8 +54,9 @@ export function WoodSlip({
   onClick?: () => void;
   className?: string;
 }) {
+  // 木简按压采用 tap-deep 重按动效，营造木质古简的下沉厚重手感
   return (
-    <button type="button" disabled={disabled} onClick={onClick} className={`tap block w-full ${className}`}>
+    <button type="button" disabled={disabled} onClick={onClick} className={`tap-deep block w-full ${className}`}>
       <SlipShell state={state} size={size}>
         {children}
       </SlipShell>

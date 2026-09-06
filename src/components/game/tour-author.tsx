@@ -52,7 +52,7 @@ export function TourAuthor({
     await patchSave((current) => markAuthorMet(current, authorId));
   }
 
-  const backTo = `/tour/${collectionId}/${chapterId}`;
+  const backTo = `/library/${collectionId}/${chapterId}`;
 
   return (
     <Stage bg={GAME_BACKGROUNDS.tourAuthor}>
@@ -62,16 +62,16 @@ export function TourAuthor({
         <div className="flex items-end justify-center gap-2">
           <PoetImg
             src={author.portrait}
-            className="h-28 w-auto object-contain object-bottom drop-shadow-lg"
+            className="h-24 w-auto object-contain object-bottom drop-shadow-lg"
           />
         </div>
         <p className="title-art paper-glow mt-1 text-center text-xl text-paper">{author.name}</p>
-        <p className="paper-glow mt-0.5 text-center text-[11px] tracking-[0.25em] text-paper/90">
-          {`《${collection.title}》 · ${poems.length} 首`}
+        <p className="flex justify-center">
+          <span className="caption-pill mt-1">{`《${collection.title}》 · ${poems.length} 首`}</span>
         </p>
       </div>
 
-      <div className="absolute inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] top-[max(11.5rem,calc(env(safe-area-inset-top)+11rem))] z-10">
+      <div className="absolute inset-x-5 bottom-[max(1.5rem,env(safe-area-inset-bottom))] top-[max(14rem,calc(env(safe-area-inset-top)+13.6rem))] z-10">
         <PagedList pageSize={9} count={poems.length} className="h-full">
           {(from, to) => (
             <div className="grid grid-cols-3 gap-2">
@@ -93,7 +93,7 @@ export function TourAuthor({
                       }}
                       className="absolute inset-0 h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-transparent to-ink/60" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-ink/15 via-transparent to-ink/70" />
                     {cleared ? (
                       <img
                         src="/ui/check-on.png"
@@ -101,7 +101,7 @@ export function TourAuthor({
                         className="absolute right-1 top-1 h-5 w-5 object-contain drop-shadow"
                       />
                     ) : null}
-                    {/* 诗印 0-3（历史最佳，玩法重做口径 ADR-0015） */}
+                    {/* 诗印 0-3（历史最佳，玩法重做口径 ADR-0015）；空印加深墨底保证可见 */}
                     <span className="absolute left-1 top-1 flex gap-0.5" aria-label={`诗印 ${stars}/3`}>
                       {[1, 2, 3].map((n) => (
                         <span
@@ -109,15 +109,15 @@ export function TourAuthor({
                           aria-hidden
                           className={`grid h-3 w-3 place-items-center rounded-full border font-display text-[6px] leading-none ${
                             n <= stars
-                              ? "border-seal bg-seal text-paper"
-                              : "border-paper/50 text-paper/35"
+                              ? "border-seal bg-seal text-paper shadow-sm"
+                              : "border-paper/30 bg-ink/45 text-paper/50"
                           }`}
                         >
                           印
                         </span>
                       ))}
                     </span>
-                    <p className="absolute inset-x-1 bottom-1 line-clamp-2 text-[11px] leading-tight text-paper drop-shadow">
+                    <p className="absolute inset-x-1 bottom-1 line-clamp-2 text-[11px] leading-tight text-paper [text-shadow:0_1px_3px_rgb(28_23_18/90%)]">
                       {poem.title}
                     </p>
                   </button>

@@ -17,7 +17,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
         <div className="relative z-10 px-6 text-center">
           <img src="/sprites/hero.png" alt="" className="mx-auto h-28 w-auto object-contain idle-bob" />
           <p className="title-art mt-3 text-3xl text-paper">唐小诗环游记</p>
-          <p className="mt-2 text-xs tracking-widest text-paper/70">正在打开书卷</p>
+          <p className="paper-glow mt-2 text-xs tracking-widest text-paper/85">正在打开书卷</p>
         </div>
       </div>
     );

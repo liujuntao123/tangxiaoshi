@@ -31,7 +31,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="pop-in fixed inset-0 z-40 flex items-center justify-center bg-ink/60 px-6"
+      className="pop-in pointer-events-auto fixed inset-0 z-40 flex items-center justify-center bg-ink/60 px-6"
       onClick={onClose}
       role="presentation"
     >

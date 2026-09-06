@@ -1,24 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { findAuthor, findChapter, findCollection } from "@/lib/game/content";
-import { MissingCard } from "@/components/game/missing-card";
-import { TourAuthor } from "@/components/game/tour-author";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
+/**
+ * 旧路径重定向（入口拆分 2026-09，ADR-0017）：
+ * /tour/$collectionId/$chapterId/$authorId → /library 下的同名作者页。
+ */
 export const Route = createFileRoute("/_app/tour/$collectionId/$chapterId/$authorId")({
-  component: RouteComponent,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: "/library/$collectionId/$chapterId/$authorId",
+      params: {
+        collectionId: params.collectionId,
+        chapterId: params.chapterId,
+        authorId: params.authorId,
+      },
+    });
+  },
 });
-
-function RouteComponent() {
-  const { collectionId, chapterId, authorId } = Route.useParams();
-  const chapter = findChapter(chapterId);
-  const author = findAuthor(authorId);
-  if (
-    !findCollection(collectionId) ||
-    !chapter ||
-    chapter.collectionId !== collectionId ||
-    !author ||
-    !chapter.authorIds.includes(authorId)
-  ) {
-    return <MissingCard title="作者未找到" hint="这一页不存在，或已随内容编排更新搬了家。" />;
-  }
-  return <TourAuthor collectionId={collectionId} chapterId={chapterId} authorId={authorId} />;
-}

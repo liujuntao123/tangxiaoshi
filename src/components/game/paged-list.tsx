@@ -10,7 +10,7 @@ export function PagedList({
   count,
   children,
   className = "",
-  pageButtonClass = "h-11 w-11",
+  pageButtonClass = "h-10 w-10",
   showCounter = true,
 }: {
   pageSize: number;
@@ -40,15 +40,16 @@ export function PagedList({
   return (
     <div className={`flex flex-col ${className}`}>
       <div className="min-h-0 flex-1">{children(from, to)}</div>
-      <div className="flex items-center justify-center gap-4 pb-3 pt-2">
+      {/* 翻页圆钮：CSS 玉环样式替代 back-btn.png 翻转，消除阴影反向与返回键语义混淆 */}
+      <div className="flex items-center justify-center gap-4 pb-4 pt-2">
         <button
           type="button"
           aria-label="上一页"
           disabled={page <= 0}
           onClick={() => go(-1)}
-          className={`tap grid place-items-center disabled:grayscale ${pageButtonClass}`}
+          className={`tap grid place-items-center rounded-full border border-ink/20 bg-paper/85 font-display text-xl leading-none text-ink-soft disabled:opacity-40 ${pageButtonClass}`}
         >
-          <img src="/ui/back-btn.png" alt="" className="h-10 w-10 object-contain drop-shadow-md" />
+          ‹
         </button>
         {showCounter ? (
           <span className="ink-chip paper-glow px-3.5 py-1 text-[11px] tracking-[0.3em] text-paper/95">
@@ -60,9 +61,9 @@ export function PagedList({
           aria-label="下一页"
           disabled={page >= total - 1}
           onClick={() => go(1)}
-          className={`tap grid place-items-center disabled:grayscale ${pageButtonClass}`}
+          className={`tap grid place-items-center rounded-full border border-ink/20 bg-paper/85 font-display text-xl leading-none text-ink-soft disabled:opacity-40 ${pageButtonClass}`}
         >
-          <img src="/ui/back-btn.png" alt="" className="h-10 w-10 -scale-x-100 object-contain drop-shadow-md" />
+          ›
         </button>
       </div>
     </div>

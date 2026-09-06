@@ -5,7 +5,7 @@ import { totalStars } from "@/lib/game/progress";
 import type { AchievementDef, AchievementKind } from "@/lib/game/types";
 import { useSave } from "@/lib/game/save-context";
 import { PagedList } from "./paged-list";
-import { ArtPanel, Stage, StageHud } from "./stage";
+import { ArtPanel, ArtSlot, Stage, StageHud } from "./stage";
 
 type KindFilter = AchievementKind | "all";
 
@@ -16,31 +16,47 @@ const GROUPS: { kind: KindFilter; title: string }[] = [
   { kind: "dynasty", title: "朝代" },
 ];
 
-function AchievementRow({ def }: { def: AchievementDef }) {
+function AchievementRow({ def, index }: { def: AchievementDef; index: number }) {
   const { save } = useSave();
   const progress = achievementProgress(def, save);
   const done = progress.done;
+  const pct = progress.total > 0 ? Math.round((progress.have / progress.total) * 100) : 0;
   return (
-    <ArtPanel className="flex items-center gap-3 text-left">
-      <img
+    <ArtPanel
+      className={`rise-in flex items-center gap-3 text-left ${done ? "picked" : ""}`}
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      <ArtSlot
+        className={`h-14 w-14 rounded-full ${done ? "" : "grayscale"}`}
+        imgClassName="h-12"
         src={def.art}
-        alt=""
-        onError={(e) => {
-          e.currentTarget.style.visibility = "hidden";
-        }}
-        className={`h-14 w-auto shrink-0 object-contain ${done ? "" : "opacity-60 grayscale"}`}
       />
-      <div className="min-w-0 flex-1 px-1">
-        <p className="title-ink text-lg leading-tight">{def.title}</p>
-        <p className="mt-0.5 text-sm text-ink-soft">{def.subtitle}</p>
-        <p className="mt-1 text-xs text-ink-soft">
-          {`${progress.have} / ${progress.total} 首`}
-          {done ? " · 已达成" : ""}
+      <div className="min-w-0 flex-1">
+        <p className="title-ink truncate text-lg leading-tight">{def.title}</p>
+        <p className="mt-0.5 truncate text-xs text-ink-soft">{def.subtitle}</p>
+        <p className="mt-1.5 flex items-center gap-2">
+          <span className="meter w-full max-w-28">
+            <i
+              className={`meter-fill block ${done ? "" : "meter-fill-pine"}`}
+              style={{ width: `${pct}%` }}
+            />
+          </span>
+          <span className="shrink-0 text-[11px] tabular-nums text-ink-soft">
+            {`${progress.have}/${progress.total} 首`}
+            {done ? " · 已达成" : ""}
+          </span>
         </p>
       </div>
       {done ? (
         <img src="/ui/check-on.png" alt="" className="pop-in h-7 w-7 shrink-0 drop-shadow-md" />
-      ) : null}
+      ) : (
+        <span
+          aria-hidden
+          className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-ink/20 bg-ink/5 font-display text-[11px] leading-none text-ink/40"
+        >
+          未
+        </span>
+      )}
     </ArtPanel>
   );
 }
@@ -57,8 +73,8 @@ export function AchievementsView() {
 
   return (
     <Stage bg={GAME_BACKGROUNDS.achievements}>
-      <StageHud title="成就" backTo="/" />
-      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 overflow-y-auto px-4 pb-[max(1.2rem,env(safe-area-inset-bottom))]">
+      <StageHud title="诗册" backTo="/" />
+      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 overflow-y-auto px-5 pb-[max(1.6rem,env(safe-area-inset-bottom))]">
         <div className="sticky top-0 z-10 mb-2 flex justify-center gap-1.5 bg-gradient-to-b from-ink/40 to-transparent pb-1 pt-1">
           {GROUPS.map((g) => {
             const on = g.kind === kind;
@@ -66,8 +82,10 @@ export function AchievementsView() {
               <button
                 key={g.kind}
                 type="button"
-                className={`tap rounded-full border px-4 py-1 text-xs tracking-[0.25em] ${
-                  on ? "border-paper bg-paper/90 text-ink" : "border-paper/50 text-paper/90"
+                className={`tap rounded-full border px-4 py-1 text-xs tracking-[0.25em] transition-colors ${
+                  on
+                    ? "border-paper bg-paper text-ink shadow-md"
+                    : "border-paper/40 bg-ink/45 text-paper/90"
                 }`}
                 onClick={() => setKind(g.kind)}
               >
@@ -77,36 +95,40 @@ export function AchievementsView() {
           })}
         </div>
 
-        {/* 全局统计（玩法重做口径，ADR-0015）：诗印 / 总分 / 无尽最高连对 */}
-        <div className="mb-4 grid grid-cols-3 gap-2 text-center">
-          <div>
-            <p className="hud-title flex items-center justify-center gap-1 text-paper">
-              <span
-                aria-hidden
-                className="grid h-4 w-4 place-items-center rounded-full border border-seal bg-seal font-display text-[9px] leading-none text-paper"
-              >
-                印
-              </span>
-              {totalStars(save)}
-            </p>
-            <p className="paper-glow text-[11px] tracking-widest text-paper/70">诗印总数</p>
-          </div>
-          <div>
-            <p className="hud-title text-paper">{save.totalScore}</p>
-            <p className="paper-glow text-[11px] tracking-widest text-paper/70">环游总分</p>
-          </div>
-          <div>
-            <p className="hud-title text-paper">{save.endlessBestStreak}</p>
-            <p className="paper-glow text-[11px] tracking-widest text-paper/70">无尽最高连对</p>
-          </div>
+        {/* 全局统计：改为方角小座（bg-ink/45 rounded-lg border border-paper/15），
+            与上方圆 Tab 形成方圆对比，不再与 ink-chip 混杂 */}
+        <div className="mb-4 grid grid-cols-3 gap-2">
+          {[
+            { icon: "印", value: totalStars(save), label: "诗印总数" },
+            { value: save.totalScore, label: "环游总分" },
+            { value: save.endlessBestStreak, label: "无尽最高连对" },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="flex flex-col items-center rounded-lg border border-paper/15 bg-ink/45 px-1 py-1.5 text-center backdrop-blur-xs"
+            >
+              <p className="hud-title flex items-center justify-center gap-1 text-[15px] text-paper">
+                {s.icon ? (
+                  <span
+                    aria-hidden
+                    className="grid h-4 w-4 place-items-center rounded-full border border-seal bg-seal font-display text-[9px] leading-none text-paper"
+                  >
+                    {s.icon}
+                  </span>
+                ) : null}
+                {s.value}
+              </p>
+              <p className="mt-0.5 text-[10px] tracking-widest text-paper/75">{s.label}</p>
+            </div>
+          ))}
         </div>
 
         {list.length > 0 ? (
           <PagedList pageSize={4} count={list.length}>
             {(from, to) => (
               <div className="flex flex-col gap-3">
-                {list.slice(from, to).map((a) => (
-                  <AchievementRow key={a.id} def={a} />
+                {list.slice(from, to).map((a, i) => (
+                  <AchievementRow key={a.id} def={a} index={i} />
                 ))}
               </div>
             )}

@@ -14,7 +14,8 @@ dist/
 !.env.example
 .project_id
 .node_modules.lock
-AGENTS.md
+# 项目协作规范需要随仓库交付
+!AGENTS.md
 startup.sh
 .DS_Store
 *.local
@@ -23,6 +24,7 @@ __pycache__/
 *.pyc
 deploy/image/.output/
 deploy/data/
+deploy/data.bak-*/
 
 # 一次性排障产物
 /scripts/debug/

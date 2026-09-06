@@ -1,16 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { findCollection } from "@/lib/game/content";
-import { MissingCard } from "@/components/game/missing-card";
-import { TourChapters } from "@/components/game/tour-chapters";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
+/**
+ * 旧路径重定向（入口拆分 2026-09，ADR-0017）：
+ * 文集层级已整体迁到 /library，/tour 只保留墨潮远征。
+ * 旧书签/旧 PWA 深链 /tour/$collectionId → /library/$collectionId。
+ */
 export const Route = createFileRoute("/_app/tour/$collectionId/")({
-  component: RouteComponent,
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: "/library/$collectionId", params: { collectionId: params.collectionId } });
+  },
 });
-
-function RouteComponent() {
-  const { collectionId } = Route.useParams();
-  if (!findCollection(collectionId)) {
-    return <MissingCard title="文集未找到" hint="这部文集不存在，或已随内容编排更新搬了家。" />;
-  }
-  return <TourChapters collectionId={collectionId} />;
-}

@@ -210,6 +210,9 @@ export default defineConfig(({ command, isPreview }) => ({
       ? [
           nitro({
             preset: nitroPreset,
+            // 预生成 .gz/.br：题库 JS（~4.6MB）压到 ~1.1MB 再上线，
+            // 直连（不经 CF）的慢网用户也拿到压缩传输（性能走查 2026-09）。
+            compressPublicAssets: true,
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.

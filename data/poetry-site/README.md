@@ -158,6 +158,6 @@ python3 scripts/content/validate-poetry-site.py data/poetry-site
 的手写引导语与命名），编译出 `src/lib/game/content/bank.json`。诗文入题库前须遵守 `AGENTS.md`
 与 `docs/content-rules.md`（每诗 5 题、半句 ≤14 字、介绍章过滤等）。
 
-层级对应：文集→章节→作者→诗卡，即游戏环游入口的层级（ADR-0011）。
+层级对应：文集→章节→作者→诗卡，是游戏诗集资料库的内容层级（ADR-0011）。当前主线 `/tour` 先做三条墨路选择，资料库仍按这一层级浏览；见 `docs/adr/0016-ink-tide-expedition.md`。
 
 当前数据规模：**11 个文集、98 个章节、2372 条诗文引用（去重后 2155 首）、282 位作者、10 个朝代**，约 2.2 MB。

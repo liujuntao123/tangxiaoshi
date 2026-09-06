@@ -108,6 +108,14 @@ export function EndlessView() {
     if (busyRef.current) return;
     if (phase !== "battle" || !question || !item || picked !== null || resolution) return;
     busyRef.current = true;
+
+    // 微触觉（克制）：作答确认轻微振动 12ms
+    try {
+      navigator.vibrate?.(12);
+    } catch {
+      // 忽略不支持
+    }
+
     const correct = choiceIndex === question.answerIndex;
     const answerText = question.choices[question.answerIndex] ?? "";
 
@@ -176,6 +184,14 @@ export function EndlessView() {
   function enterEnd(res: Resolution) {
     if (savedRef.current) return;
     savedRef.current = true;
+
+    // 微触觉：终局进入时振动反馈 35ms
+    try {
+      navigator.vibrate?.(35);
+    } catch {
+      // 忽略不支持
+    }
+
     setResultView({
       streak: res.streakBefore,
       score,
@@ -192,7 +208,7 @@ export function EndlessView() {
   if (deck.length === 0 || (inRun && !question)) {
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
-        <StageHud title="无尽" backTo="/" />
+        <StageHud title="墨潮试炼" backTo="/" />
         <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
           <ArtPanel className="text-center">
             <p className="title-ink mt-2 text-2xl">这一局没有可出的题</p>
@@ -211,9 +227,23 @@ export function EndlessView() {
   if (phase === "idle") {
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
-        <StageHud title="无尽" backTo="/" />
-        <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
+        <StageHud title="墨潮试炼" backTo="/" />
+        <div className="absolute inset-x-3 inset-y-0 z-10 flex flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
+          {/* 开局仪式感：唐小诗立绘跃然卷上（审查 P1-13） */}
+          <div className="relative mx-auto mb-2 flex h-28 items-end justify-center">
+            <span className="sprite-shadow" />
+            <img
+              src="/sprites/hero.png"
+              alt=""
+              className="idle-bob relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg"
+            />
+          </div>
           <ArtPanel className="text-center">
+            <img
+              src="/ui/lantern.png"
+              alt=""
+              className="idle-bob mx-auto mb-1 h-12 w-auto object-contain drop-shadow"
+            />
             <p className="title-ink text-2xl">一题错，本局结束</p>
             <p className="mt-2 text-sm tracking-widest text-ink-soft">
               {`历史最高连对 ${save.endlessBestStreak} · 历史最高分 ${best}`}
@@ -247,8 +277,8 @@ export function EndlessView() {
     const newRecord = view.streak > view.prevStreak && view.streak > 0;
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
-        <StageHud title="无尽" backTo="/" />
-        <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
+        <StageHud title="墨潮试炼" backTo="/" />
+        <div className="absolute inset-x-3 inset-y-0 z-10 flex flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
           <ArtPanel className="text-center">
             <p className="title-ink text-2xl">本局结束</p>
             <p className="title-ink mt-1 text-5xl">{view.streak}</p>
@@ -257,7 +287,7 @@ export function EndlessView() {
               <span className="text-xs tracking-widest text-ink-soft">本局得分</span>
               <span className="title-ink text-3xl">{view.score}</span>
               {newRecord ? (
-                <span className="rounded bg-seal px-1.5 py-0.5 text-[10px] tracking-wider text-paper">刷新纪录</span>
+                <span className="stamp-in rounded bg-seal px-1.5 py-0.5 text-[10px] tracking-wider text-paper">刷新纪录</span>
               ) : null}
             </p>
             <p className="mt-1 text-[11px] tracking-wider text-ink/60">
@@ -277,7 +307,7 @@ export function EndlessView() {
 
   return (
     <Stage bg={GAME_BACKGROUNDS.endless}>
-      <StageHud title="无尽" backTo="/" />
+      <StageHud title="墨潮试炼" backTo="/" />
       <div className="absolute inset-x-0 top-[max(3.8rem,calc(env(safe-area-inset-top)+3.4rem))] z-10 flex items-center justify-center gap-2">
         <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-[0.3em] text-paper/95">
           连对 <span key={streak} className="combo-bump inline-block">{streak}</span>
@@ -292,9 +322,9 @@ export function EndlessView() {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={qi}
-        className="absolute inset-x-8 top-[max(6.4rem,calc(env(safe-area-inset-top)+6rem))] z-10 h-1.5 overflow-hidden rounded-full bg-paper/20"
+        className="absolute inset-x-8 top-[max(6.4rem,calc(env(safe-area-inset-top)+6rem))] z-10 h-2 overflow-hidden rounded-full bg-paper/25 shadow-[inset_0_1px_2px_rgb(28_23_18/30%)]"
       >
-        <div className="qi-fill h-full rounded-full bg-seal" style={{ width: `${qi}%` }} />
+        <div className="qi-fill qi-flow h-full rounded-full bg-seal" style={{ width: `${qi}%` }} />
       </div>
 
       {/* 唐小诗情绪位：答对欢呼、答错沮丧，与环游答题同款反馈 */}
@@ -318,44 +348,67 @@ export function EndlessView() {
       {floatText && phase === "report" ? (
         <p
           aria-hidden
-          className={`glyph-burst pointer-events-none absolute bottom-[46%] left-1/2 z-30 -translate-x-1/2 font-display text-2xl ${
+          className={`float-glyph pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 font-display text-2xl ${
             resolution?.correct ? "text-pine" : "text-seal"
           }`}
+          style={{
+            bottom: picked !== null
+              ? `calc(max(0.5rem, env(safe-area-inset-bottom)) + ${(3 - picked) * 3.3 + 4.2}rem)`
+              : "46%",
+          }}
         >
           {floatText}
         </p>
       ) : null}
 
-      {question && phase === "battle" ? (
+      {question && (phase === "battle" || phase === "report") ? (
         <section
-          className="pop-in absolute inset-x-0 bottom-0 z-20 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
-          key={index}
+          className={`absolute inset-x-0 bottom-0 z-20 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 ${
+            phase === "report" ? "slip-fade-back pointer-events-none" : "pop-in"
+          }`}
+          key={question.id ?? index}
         >
-          <p className="title-art paper-glow mb-1 px-3 text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-paper">
-            {question.quote || question.prompt}
-          </p>
-          <p className="mb-1 px-3 text-center text-sm tracking-wider text-paper/90">
-            {question.type === "title"
-              ? "出自哪一首？"
-              : question.type === "complete-next"
-                ? "的下一句是？"
-                : "的上一句是？"}
-          </p>
-          <div className="flex flex-col gap-0">
+          {/* 题干信笺：与环游答题同款墨纱托底，任何场景插花上都保持可读 */}
+          <div
+            className="ink-in mx-auto mb-1 w-fit max-w-full rounded-2xl border border-paper/15 bg-gradient-to-b from-ink/55 to-ink/35 px-4 py-1.5 text-center backdrop-blur-[2px]"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(243 235 224 / 12%)" }}
+          >
+            <p className="title-art paper-glow text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-paper">
+              {question.quote || question.prompt}
+            </p>
+            <p className="paper-glow mt-0.5 text-center text-sm tracking-wider text-paper/90">
+              {question.type === "title"
+                ? "出自哪一首？"
+                : question.type === "complete-next"
+                  ? "的下一句是？"
+                  : "的上一句是？"}
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
             {question.choices.map((choice, i) => {
               const selected = picked === i;
               const right = i === question.answerIndex;
               let state: "idle" | "on" | "miss" = "idle";
               if (picked !== null && right) state = "on";
               else if (selected && !right) state = "miss";
+
+              const isSelectedWrong = resolution !== null && selected && !right;
+              const isCorrectChoice = resolution !== null && right;
+              const feedbackClass = isSelectedWrong ? "slip-tremble" : isCorrectChoice ? "slip-reveal" : "";
+
               return (
-                <ChoiceSlip
+                <div
                   key={`${question.id}-${choice}`}
-                  text={choice}
-                  state={state}
-                  disabled={picked !== null}
-                  onClick={() => choose(i)}
-                />
+                  className={`slip-in ${feedbackClass}`}
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <ChoiceSlip
+                    text={choice}
+                    state={state}
+                    disabled={picked !== null}
+                    onClick={() => choose(i)}
+                  />
+                </div>
               );
             })}
           </div>
@@ -363,7 +416,7 @@ export function EndlessView() {
       ) : null}
 
       {phase === "report" && resolution ? (
-        <section className="pop-in absolute inset-x-2 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-20">
+        <section className="sheet-up absolute inset-x-2 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-30">
           <ArtPanel className="text-center">
             {resolution.correct ? (
               <>
@@ -375,11 +428,11 @@ export function EndlessView() {
             ) : (
               <>
                 <p className="title-ink text-2xl">答错</p>
-                <p className="poem-line mt-1 text-sm leading-snug text-ink">
+                <p className="poem-line mt-1 text-sm font-medium leading-snug text-pine">
                   {`正确是「${resolution.answerText}」`}
                 </p>
                 {resolution.context.map((line) => (
-                  <p key={line} className="poem-line text-xs leading-snug text-ink-soft">
+                  <p key={line} className="poem-line text-xs leading-snug text-ink-soft/70">
                     {line}
                   </p>
                 ))}

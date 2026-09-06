@@ -1,16 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { preloadImages } from "@/lib/game/preload";
-import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { useEffect, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import { SettingsButton } from "./settings-modal";
 
 export function Stage({
   bg,
-  shake,
   dim,
   children,
 }: {
   bg: string;
-  shake?: boolean;
   dim?: boolean;
   children: ReactNode;
 }) {
@@ -33,9 +31,7 @@ export function Stage({
 
   return (
     <div className="min-h-dvh bg-ink">
-      <div
-        className={`relative mx-auto h-dvh w-full max-w-[430px] overflow-hidden ${shake ? "stage-shake" : ""}`}
-      >
+      <div className="relative mx-auto h-dvh w-full max-w-[430px] overflow-hidden">
         <img
           src={bg}
           alt=""
@@ -66,11 +62,78 @@ export function BackButton({ to }: { to: string }) {
   );
 }
 
-export function ArtPanel({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function ArtPanel({
+  children,
+  className = "",
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  // className 落在内容层而不是 border-image 外壳上：调用方写的 flex/text-center
+  // 描述的是「卡片内容怎么排」，此前落在外壳上会导致 flex 失效、内容竖排
+  // （头像下面才是一行字，右侧整片留白）。style 同样给内容层（入场错峰延迟等）。
   return (
-    <div className={`ui-speech ${className}`}>
-      <div className="relative z-10 px-3 pt-4 pb-4">{children}</div>
+    <div className="ui-speech">
+      <div className={`relative z-10 px-4 pt-4 pb-4 ${className}`} style={style}>
+        {children}
+      </div>
     </div>
+  );
+}
+
+/** 场景上的分节说明：深墨胶囊，浅色背景上依然可读（替代裸 text-paper）。 */
+export function PanelCaption({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <p className={`flex justify-center ${className}`}>
+      <span className="caption-pill">{children}</span>
+    </p>
+  );
+}
+
+/** 右端「可进入」的呼吸箭头：列表行的游戏化 CTA 语言。 */
+export function RowChevron() {
+  return (
+    <span
+      aria-hidden
+      className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-ink/20 bg-ink/5 font-display text-base leading-none text-ink-soft"
+    >
+      ›
+    </span>
+  );
+}
+
+/** 圆形玉环头像：立绘顶部裁切（露出脸），小图不再发飘。 */
+export function PortraitMedal({ src, size = 64 }: { src: string; size?: number }) {
+  return (
+    <span className="medal" style={{ width: size, height: size }}>
+      <PoetImg src={src} className="h-full w-full object-cover object-top" />
+    </span>
+  );
+}
+
+/** 图槽：给透明小图（书签/文集形象/成就图）一个承托底，压住卡片空白。 */
+export function ArtSlot({
+  src,
+  className = "",
+  imgClassName = "",
+}: {
+  src: string;
+  className?: string;
+  imgClassName?: string;
+}) {
+  return (
+    <span className={`art-slot ${className}`}>
+      <img
+        src={src}
+        alt=""
+        onError={(e) => {
+          e.currentTarget.style.visibility = "hidden";
+        }}
+        className={`max-h-full max-w-full object-contain ${imgClassName}`}
+      />
+    </span>
   );
 }
 
@@ -120,7 +183,8 @@ export function StageHud({ title, backTo }: { title?: string; backTo?: string })
       {backTo ? (
         <BackButton to={backTo} />
       ) : (
-        <img src="/ui/lantern.png" alt="" className="h-9 w-6 shrink-0 object-contain drop-shadow" />
+        /* 审查 P1-03：移除无交互的悬挂孤立小灯笼，保留占位以对齐右侧设置入口 */
+        <span className="h-11 w-11 shrink-0" aria-hidden />
       )}
       {title ? <p className="hud-title min-w-0 flex-1 truncate text-paper">{title}</p> : <span className="flex-1" />}
       <SettingsButton />

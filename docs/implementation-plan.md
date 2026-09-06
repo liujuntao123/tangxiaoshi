@@ -1,152 +1,70 @@
-# 唐小诗历险记：工程实施计划
+# 墨潮远征：工程实施与维护计划
 
-> **适配说明（ADR-0015）**：本文成稿于旧「朝代→诗人→关卡」体系。该体系已被卡片式环游重构（ADR-0011..0014）取代：地图/关卡/钥匙/妖怪战斗不复存在，主线为 文集→章节→作者→诗卡。文中的设计意图与数值口径仍然有效，落地方式为——关卡→诗卡、血量→机会灯笼、妖怪→出题作者、地图节点诗印→作者页诗卡诗印；诗签/连击/诗气/收句/结算评级均已在诗卡答题与无尽模式实现。
+> 状态：P0/P1 核心已落地。本文记录当前架构、验收方式和后续计划，不再描述旧关卡/地图实现。
 
-## 1. 实施原则
+## 1. 当前架构
 
-1. 先稳定数据契约，再改战斗状态机，最后改入口和展示层。
-2. 复用现有内容、素材、路由和存档 API，避免无必要的架构重写。
-3. 每个阶段都能单独运行和类型检查，避免所有改动堆到最后才发现回归。
-4. 新增存档字段必须向后兼容；新客户端能读取旧记录，旧字段语义不改变。
+- 技术栈：Vite 8、TanStack Start/Router、React 19、Tailwind CSS 4。
+- 内容：11 个文集、89 章、281 位作者、2147 张诗卡、10735 题。
+- 主入口：`home-screen.tsx` → `/tour` → `tour-routes.tsx` → `/play/$poemId`。
+- 资料库入口：`/library`（`library-view.tsx`）→ `tour-collections.tsx` → 章节/作者/诗卡；旧 `/tour/$collectionId…` 深链由重定向壳路由转到 `/library`。
+- 永久数据：`PlayerSave` 与 `migrations/0001–0004`。
+- 远征数据：`src/lib/game/expedition.ts`，浏览器 `localStorage` 单局状态。
 
-## 2. 现状基线
+## 2. 文件职责
 
-- 技术栈：Vite 8、TanStack Start/Router、React 19、Tailwind 4。
-- 内容：41 个诗人章节、162 个关卡，每关绑定一首诗。
-- 主要入口：`src/components/game/home-screen.tsx`、`play-level.tsx`、`story-map.tsx`、`endless-view.tsx`。
-- 数据：`PlayerSave` 只有通关、钥匙、成就和无尽最高分。
-- 数据库：`migrations/0002_player_saves.sql`，Neon 与 PGLite 共用顶层 migration。
-- 当前风险：战斗使用多个延迟回调，容易出现重复点击、结果串线和退出后更新状态。
+### 远征与答题
 
-## 3. 文件责任分工
+- `src/lib/game/expedition.ts`：路线定义、候选池、normalize、localStorage、节点转移、奖励、结局摘要。
+- `src/components/game/home-screen.tsx`：远征台和三节点进度。
+- `src/components/game/tour-routes.tsx`：三条墨路选择。
+- `src/routes/_app/play.$poemId.tsx`：解析 `route/node`，锁定远征节点，保存结算 session。
+- `src/components/game/poem-quiz.tsx`：诗签、答题状态机、反馈、诗火和结算。
+- `src/lib/game/rules.ts`：永久诗卡评分、诗印、成绩合并和 PlayerSave 规则。
 
-### 数据与规则
+### 内容与存档
 
-- `src/lib/game/types.ts`：增加 `LevelRecord`、`levelRecords`、`totalScore`，并定义诗签/本局结果类型。
-- `src/lib/game/progress.ts`：集中实现评级、分数、历史最佳合并、当前继续关卡、诗印统计。
-- `src/lib/game/save.ts`：扩展 Zod validator、数据库行转换、默认值和写入字段。
-- `migrations/0003_game_records.sql`：增加 `level_records` JSON 文本和 `total_score` 整数。
-- `src/lib/game/content/index.ts`：保持题库读取；需要时增加题目上下文辅助函数。
+- `src/lib/game/content/bank.json`：脚本生成，禁止手改。
+- `src/lib/game/save.ts`：PlayerSave schema、数据库读写和 normalize。
+- `src/lib/game/save-context.tsx`：登录用户的永久存档上下文。
+- `migrations/0001–0004`：永久存档 migration；当前没有远征数据库字段。
 
-### 战斗与页面
+## 3. 状态约束
 
-- `src/components/game/play-level.tsx`：改成显式状态机，承担诗签、连击、诗气、反馈和结算。
-- `src/components/game/endless-view.tsx`：复用可共享的战斗反馈/题目组件或同样的状态规则。
-- `src/components/game/home-screen.tsx`：计算并跳转继续历险目标，显示真实进度。
-- `src/components/game/story-map.tsx`：节点显示诗印、当前节点状态，保留行走。
-- `src/components/game/chapter-list.tsx`：章节显示诗印统计。
-- `src/components/game/practice-view.tsx`：增加题目进度/轻量完成状态。
-- `src/components/game/achievements-view.tsx`：增加全局统计。
-- `src/styles.css`：添加连击、诗气、结果和节点状态的少量动画。
+- 远征每局最多 3 节点，诗火初始 3、上限 4。
+- 节点路线必须从真实题库生成确定性候选；刷新不会偷偷换当前候选。
+- 远征失败后可以重走当前节点或返回路线选择，不能把整个远征永久锁死。
+- 远征中产生的诗卡通关、诗印、最佳分和总分继续写入 PlayerSave。
+- 不要把 localStorage 远征状态称为账号级存档；若改为云端同步，必须增加 migration、validator、读写和 ADR。
 
-## 4. 分阶段任务
-
-### 阶段 A：存档契约和纯规则
-
-**目标：**新增字段不影响现有登录、读取和通关逻辑。
-
-任务：
-
-- 定义 `LevelRecord` 与 `LevelRunResult`。
-- 为 `PlayerSave` 增加 `levelRecords`、`totalScore`。
-- 增加 `normalizeSave`/迁移逻辑：未知/缺失/非法字段回退默认值。
-- 更新 SQL migration、validator、`toSave` 和 write handler。
-- 让 `applyLevelWin` 支持本局表现参数并兼容旧调用。
-- 提取并测试 `starsForRun`、`mergeLevelRecord`、`applyEndlessRun`。
-
-完成标准：旧格式对象能正常读取；新字段能保存；测试和 typecheck 通过。
-
-### 阶段 B：主线战斗状态机
-
-**目标：**一关从连续点题变成有准备、反馈和结算的短局。
-
-任务：
-
-- 引入 `Phase` 联合类型：`intro/loadout/battle/resolving/outro/result/lose`。
-- 将一次答题拆成 `chooseAnswer` 和 `continueAfterResolution`。
-- 使用 ref 或统一 cleanup 管理延迟动画；任何过渡只允许当前回合生效。
-- 实现三枚诗签及一次性使用规则。
-- 实现连击、诗气、连携和分数。
-- 在 outro 后显示 result；result 中写入历史最佳。
-- 结果按钮支持回地图和再战；再战清理本局所有临时状态。
-
-完成标准：正确和错误都需要玩家点击收句；连续快速点击不会跳题或重复扣血；胜利只写一次存档。
-
-### 阶段 C：入口、地图和无尽
-
-**目标：**玩家始终知道目标，并且重玩有价值。
-
-任务：
-
-- 增加 `nextPlayableLevel`/`nextReplayLevel` 规则。
-- 首页主按钮跳转当前目标，显示诗印/总分/连击。
-- 地图节点显示 0-3 星和当前可挑战提示，章节页显示总诗印。
-- 无尽加入战斗式反馈、连击奖励、错题确认和刷新纪录。
-
-完成标准：新存档可以从首页一键进入第一关；已有进度从首页继续；重战不会破坏解锁。
-
-### 阶段 D：练习、成就和视觉打磨
-
-**目标：**三个模式体验统一但定位清楚。
-
-任务：
-
-- 练习显示 `n / total` 和当前诗文的答题完成状态。
-- 成就页显示全局诗印、总分、最高连对。
-- 添加紧凑动画和 reduced-motion 处理。
-- 检查 360x800、430x932、桌面宽屏布局。
-
-完成标准：文字不溢出、选项不遮挡角色、按钮可用状态清楚。
-
-## 5. 测试计划
-
-### 纯函数测试
-
-至少覆盖：
-
-- 缺失新字段的旧存档默认值。
-- 1/2/3 星计算边界。
-- 历史最佳星级、分数、连击和次数合并。
-- 已通关关卡重战不重复钥匙。
-- 无尽纪录刷新和成就触发。
-- 继续历险目标选择。
-
-### 手动流程
-
-1. 新用户登录后进入首页，点“继续历险”。
-2. 选择三枚诗签中的每一枚，确认一次性能力可用且只能用一次。
-3. 答对一题：攻击、连击、诗气和收句按钮正确。
-4. 答错一题：正确项、诗句上下文、扣血/护卷和收句正确。
-5. 全胜进入结尾对白，再进入结算页；检查星级和历史最佳。
-6. 再战提分，确认成绩取最高、钥匙不重复。
-7. 无尽答错，先看反馈再进入结束页；刷新纪录提示准确。
-8. 刷新页面或重新进入路由，确认存档可读。
+## 4. 当前验收
 
 ### 命令
 
 ```bash
 npm run typecheck
-npm test
 npm run lint
+npm test
 npm run build
 ```
 
-## 6. 风险与处理
+### 手动流程
 
-| 风险 | 处理 |
-| --- | --- |
-| PGLite 与 Neon 字段类型不同 | 使用 JSON 文本和统一 `toSave` 规范化，migration 只放顶层 |
-| 旧存档缺少字段 | 所有读取入口使用默认值，不直接访问可选字段 |
-| 动画延迟造成状态串线 | 回合 token/ref + effect cleanup；结果由显式按钮推进 |
-| 题干和选项在小屏被遮挡 | 固定战斗 HUD 区域，选项使用紧凑尺寸，实测两种窄屏 |
-| 首页目标无关卡 | 提供无关卡兜底，回到历险入口或最近关卡 |
-| 无尽和主线逻辑漂移 | 共用纯规则函数，视觉组件可复用 |
+1. 新用户进入首页，确认主按钮是“点亮第一盏诗火”。
+2. 进入 `/tour`，确认三条路线各显示真实诗卡、风险和收益。
+3. 进入诗卡，确认节点/路线/诗火 HUD、三枚诗签和“收句”流程。
+4. 答错后检查诗火反馈、正确项、相邻诗句和主动收句。
+5. 完成节点，选择修页奖励并返回 `/tour`，确认奖励出现在下一节点。
+6. 完成三节点或失败，确认结局/重试/另选墨路按钮正确。
+7. 刷新远征页面，确认 localStorage 状态恢复；切换资料库、诗库、墨潮试炼和诗册，确认旧入口仍可用。
+8. 在 360x800、430x932 和桌面宽屏检查不溢出、不遮挡。
 
-## 7. 交付顺序
+## 5. 后续计划
 
-1. 先提交设计文档和验收清单。
-2. 完成数据契约、migration、纯函数测试。
-3. 完成主线战斗状态机并手动跑通一关。
-4. 完成首页、地图、章节、无尽。
-5. 完成练习/成就和视觉调整。
-6. 跑完整命令，检查 diff，只保留与游戏重做有关的文件。
+### P1/P2 计划
+
+- 增加 `expedition.ts` 的纯函数测试。
+- 评估按用户 ID 的远征同步，解决同一浏览器多账号共享 localStorage 的边界。
+- 视试玩结果增加远征结局历史、墨潮试炼里程碑或首幕专属对白。
+
+未实现内容必须先更新设计文档和 changelog，再进入代码。
