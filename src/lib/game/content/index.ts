@@ -94,6 +94,23 @@ export function dynastyById(id: string): Dynasty {
   return found;
 }
 
+/** 路由边界的容错查找：旧书签/旧 PWA 深链可能带着已下线的 id（如旧关卡 id）。 */
+export function findCollection(id: string): Collection | null {
+  return collectionByIdMap.get(id) ?? null;
+}
+
+export function findChapter(id: string): Chapter | null {
+  return chapterByIdMap.get(id) ?? null;
+}
+
+export function findAuthor(id: string): Author | null {
+  return authorByIdMap.get(id) ?? null;
+}
+
+export function findPoem(id: string): Poem | null {
+  return poemByIdMap.get(id) ?? null;
+}
+
 export function chaptersIn(collectionId: string): Chapter[] {
   return CHAPTERS.filter((chapter) => chapter.collectionId === collectionId);
 }
