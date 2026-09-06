@@ -30,8 +30,8 @@ export function HomeScreen() {
   const allCleared = nextLevel === null;
 
   const mainLabel = allCleared ? "挑战满星" : "继续闯关";
-  const mainTo = allCleared ? "/levels" : "/levels/$levelId";
-  const mainParams = allCleared ? undefined : { levelId: String(nextLevel) };
+  // 主按钮统一进关卡列表：列表里自带「可挑战」指向与星级目标，不再直达单关
+  const mainTo = "/levels";
 
   return (
     <Stage bg={GAME_BACKGROUNDS.home}>
@@ -54,7 +54,7 @@ export function HomeScreen() {
       </div>
 
       {/* 关卡进度条：下一关提示并入同一座纸面，读作一条「远征路线」 */}
-      <div className="absolute inset-x-0 top-[28%] z-10 flex justify-center px-6">
+      <div className="absolute inset-x-0 top-[31%] z-10 flex justify-center px-6">
         <div className="paper-plate paper-plate-ink w-full max-w-sm px-3 py-2">
           <p className="mb-1.5 text-center text-[10.5px] tracking-[0.3em] text-ink-soft">
             {allCleared ? "50 关全部通关！" : `下一关 · 第 ${nextLevel} 关`}
@@ -63,7 +63,7 @@ export function HomeScreen() {
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-[27%] z-10 flex justify-center">
+      <div className="absolute inset-x-0 bottom-[26%] z-10 flex justify-center">
         <div className="relative flex h-40 w-32 items-end justify-center">
           <span className="sprite-shadow" />
           <img
@@ -78,18 +78,12 @@ export function HomeScreen() {
       </div>
 
       <div className="absolute inset-x-0 bottom-[15%] z-20 flex flex-col items-center gap-1 px-4">
-        <Link to={mainTo} params={mainParams} className="tap tap-deep" aria-label={mainLabel}>
+        <Link to={mainTo} className="tap tap-deep" aria-label={mainLabel}>
           <PlaqueFace className="scale-110">{mainLabel}</PlaqueFace>
         </Link>
         <p className="paper-glow text-center text-[11px] tracking-widest text-paper/80">
           {`每关 ${QUESTIONS_PER_LEVEL} 题 · 答对 ${LEVEL_PASS} 题过关`}
         </p>
-        <Link
-          to="/levels"
-          className="tap paper-glow mt-0.5 text-[11px] tracking-widest text-paper/80 underline underline-offset-4"
-        >
-          全部关卡
-        </Link>
       </div>
 
       <nav className="dock-fade absolute inset-x-0 bottom-0 z-20 grid grid-cols-4 px-2 pb-[max(1rem,env(safe-area-inset-bottom))] pt-10 opacity-85">

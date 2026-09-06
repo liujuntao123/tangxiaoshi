@@ -93,6 +93,6 @@ await page.waitForTimeout(1200);
 await page.screenshot({ path: "screenshots/levels-home-after-win.png" });
 const home = await page.locator("body").innerText();
 console.log("HOME 已通关 1/50:", home.includes("1"));
-console.log("HOME 下一关是第 2 关:", home.includes("下一关是第 2 关"));
+console.log("HOME 下一关是第 2 关:", home.includes("下一关 · 第 2 关"));
 
 await browser.close();

@@ -10,14 +10,12 @@ export function PagedList({
   count,
   children,
   className = "",
-  pageButtonClass = "h-10 w-10",
   showCounter = true,
 }: {
   pageSize: number;
   count: number;
   children: (from: number, to: number) => ReactNode;
   className?: string;
-  pageButtonClass?: string;
   showCounter?: boolean;
 }) {
   const [page, setPage] = useState(0);
@@ -40,32 +38,50 @@ export function PagedList({
   return (
     <div className={`flex flex-col ${className}`}>
       <div className="min-h-0 flex-1">{children(from, to)}</div>
-      {/* 翻页圆钮：CSS 玉环样式替代 back-btn.png 翻转，消除阴影反向与返回键语义混淆 */}
+      {/* 翻页玉钮：page-prev/next.png 玉盘箭头（缺图回退字衬 ‹ ›），游戏 UI 风格 */}
       <div className="flex items-center justify-center gap-4 pb-4 pt-2">
-        <button
-          type="button"
-          aria-label="上一页"
-          disabled={page <= 0}
-          onClick={() => go(-1)}
-          className={`tap grid place-items-center rounded-full border border-ink/20 bg-paper/85 font-display text-xl leading-none text-ink-soft disabled:opacity-40 ${pageButtonClass}`}
-        >
-          ‹
-        </button>
+        <PageArrow dir="prev" disabled={page <= 0} onClick={() => go(-1)} />
         {showCounter ? (
           <span className="ink-chip paper-glow px-3.5 py-1 text-[11px] tracking-[0.3em] text-paper/95">
             {safePage + 1} / {total}
           </span>
         ) : null}
-        <button
-          type="button"
-          aria-label="下一页"
-          disabled={page >= total - 1}
-          onClick={() => go(1)}
-          className={`tap grid place-items-center rounded-full border border-ink/20 bg-paper/85 font-display text-xl leading-none text-ink-soft disabled:opacity-40 ${pageButtonClass}`}
-        >
-          ›
-        </button>
+        <PageArrow dir="next" disabled={page >= total - 1} onClick={() => go(1)} />
       </div>
     </div>
+  );
+}
+
+/** 翻页玉钮：玉盘箭头贴图 + 字衬兜底；禁用态整钮置灰失去按压反馈。 */
+function PageArrow({
+  dir,
+  disabled,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={dir === "prev" ? "上一页" : "下一页"}
+      disabled={disabled}
+      onClick={onClick}
+      className="tap relative grid h-11 w-11 place-items-center disabled:opacity-45"
+    >
+      {/* 字衬兜底：贴图缺失时露出（生成图正常时被完全盖住） */}
+      <span className="absolute inset-0 grid place-items-center rounded-full border border-paper/30 bg-paper/85 font-display text-xl leading-none text-ink-soft">
+        {dir === "prev" ? "‹" : "›"}
+      </span>
+      <img
+        src={`/ui/page-${dir}.png`}
+        alt=""
+        className={`relative h-11 w-11 object-contain drop-shadow-md ${disabled ? "grayscale" : ""}`}
+        onError={(e) => {
+          e.currentTarget.style.visibility = "hidden";
+        }}
+      />
+    </button>
   );
 }

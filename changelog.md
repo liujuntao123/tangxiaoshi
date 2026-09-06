@@ -6,7 +6,7 @@
 
 ### Added
 
-- 新增 UI 素材四枚（`scripts/art/ui2.py`，透明背景，走 `docs/art.md` 生图管线）：`title-banner.png` 卷轴横匾、`lock.png` 铜锁、`seal-blank.png` 空白朱砂印框、`branch-plum.png` 梅枝角饰。
+- 新增 UI 素材四枚（`scripts/art/ui2.py`，透明背景，走 `docs/art.md` 生图管线）：`title-banner.png` 卷轴横匾、`lock.png` 铜锁、`seal-blank.png` 空白朱砂印框、`branch-plum.png` 梅枝角饰；另加翻页玉钮 `page-prev.png` / `page-next.png`（同日第二批）。
 - 新增 UI 走查截图脚本 `scripts/capture-ui-round.mjs`：注册新玩家后按路由与交互状态（答题/报告/结算/引导语/设置弹窗）一次性采集 20 张竖屏截图，供子代理评审与回归对照。
 - 设计系统新令牌（`src/styles.css`）：`hud-banner`（页题横匾，缺图回退纸纹底）、`question-plate`（题干宣纸笺）、`paper-plate`/`paper-plate-ink`（场景页数据纸座）、`ink-divider`（渐隐墨线分隔）、`pip-current`（纸座进度条当前关呼吸）、`stat-grid`（碑刻数据格列间细分隔）。
 
@@ -43,6 +43,11 @@
 
 ### Changed
 
+- 首页主按钮「继续闯关」改为进入 `/levels` 关卡列表选关（不再直达单关）；移除点击无反馈的「全部关卡」文字链。同步 `CONTEXT.md`、`README.md`、`docs/game-design.md` 与 ADR-0018。
+- 关卡列表瘦身：每页 12 → 9 张卡（3×3），移除「每关 10 道题…」「过关开下一关…」两处说明文案（规则由关卡开场面板承载），顶部只留已通关数与星星数两枚数据签。
+- 分页控件升级为游戏 UI 玉钮（`page-prev/next.png` 玉盘箭头，缺图回退字衬 ‹ ›），禁用态置灰，`PagedList` 全站生效。
+- 首页关卡进度条下移（top 28% → 31%），与数据座、主角的纵向节奏更均衡。
+- `ui2.py` 素材校验兼容 compress.py 量化后的 P 模式 PNG，避免重复生图。
 - 存档契约扩展：`PlayerSave` 新增 `levelStars`（每关历史最佳星级）与 `items`（道具库存），`normalizeSave`/validator/读写 SQL 同步；旧存档缺字段按空值兜底。
 - 诗卡答题（资料库 `/play/$poemId`）与练习（`/practice/$poemId`）拆分为独立路由，`poem-quiz.tsx` 收敛为两种模式；练习的「先看答案」与诗卡的灯笼/诗印规则不变。
 

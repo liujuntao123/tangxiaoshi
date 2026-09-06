@@ -1,17 +1,10 @@
 import { useNavigate } from "@tanstack/react-router";
-import {
-  LEVEL_COUNT,
-  LEVEL_PASS,
-  QUESTIONS_PER_LEVEL,
-  isLevelUnlocked,
-  levelProgress,
-  levelStars,
-} from "@/lib/game/levels";
+import { LEVEL_COUNT, isLevelUnlocked, levelProgress, levelStars } from "@/lib/game/levels";
 import { useSave } from "@/lib/game/save-context";
 import { sfxTap } from "@/lib/game/sfx";
 import { GAME_BACKGROUNDS } from "@/lib/game/content/meta";
 import { PagedList } from "./paged-list";
-import { ArtPanel, PanelCaption, Stage, StageHud } from "./stage";
+import { ArtPanel, Stage, StageHud } from "./stage";
 
 /** 关卡卡上的星星：金色星标，未得的星压灰。 */
 function StarRow({ stars }: { stars: number }) {
@@ -48,19 +41,15 @@ export function LevelList() {
     <Stage bg={GAME_BACKGROUNDS.levels}>
       <StageHud title="关卡" backTo="/" />
       <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 flex flex-col px-4 pb-[max(0.8rem,env(safe-area-inset-bottom))]">
-        <div className="mb-2 flex flex-col items-center gap-1.5">
-          <div className="flex items-center gap-2">
-            <span className="caption-pill">{`已通关 ${progress.cleared} / ${LEVEL_COUNT} 关`}</span>
-            <span className="caption-pill flex items-center gap-1">
-              <img src="/ui/icon-star.png" alt="" className="h-3.5 w-3.5 object-contain" />
-              {`${progress.stars} / ${LEVEL_COUNT * 3}`}
-            </span>
-          </div>
-          <span className="caption-pill text-[10.5px]">
-            {`每关 ${QUESTIONS_PER_LEVEL} 道题 · 答对 ${LEVEL_PASS} 题过关 · 过关开下一关`}
+        {/* 顶部只留数据：进度与星星；规则说明交给关卡开场面板，不在这里堆文案 */}
+        <div className="mb-2 flex justify-center gap-2">
+          <span className="caption-pill">{`已通关 ${progress.cleared} / ${LEVEL_COUNT} 关`}</span>
+          <span className="caption-pill flex items-center gap-1">
+            <img src="/ui/icon-star.png" alt="" className="h-3.5 w-3.5 object-contain" />
+            {`${progress.stars} / ${LEVEL_COUNT * 3}`}
           </span>
         </div>
-        <PagedList pageSize={12} count={LEVEL_COUNT} className="min-h-0 flex-1">
+        <PagedList pageSize={9} count={LEVEL_COUNT} className="min-h-0 flex-1">
           {(from, to) => (
             <div className="grid grid-cols-3 gap-2">
               {Array.from({ length: to - from }, (_, i) => from + i + 1).map((level) => {
@@ -131,7 +120,6 @@ export function LevelList() {
             </div>
           )}
         </PagedList>
-        <PanelCaption className="mt-1">过关开下一关，星星越高奖励越多</PanelCaption>
       </div>
     </Stage>
   );

@@ -90,6 +90,28 @@ ITEMS = [
         "size": "1024x1024",
         "path": lib.ROOT / "public/ui/branch-plum.png",
     },
+    {
+        "name": "page-prev",
+        "prompt": (
+            "一枚古风圆形翻页按钮，青绿色玉圆盘，外圈金色回纹细描边，"
+            "盘面中央一枚米白色粗壮V形箭头指向左侧，箭头干净醒目。"
+            f"{lib.STYLE}。纯透明背景，四周留白，正面视角，避免塑料质感高光。{lib.NO_TEXT}。"
+        ),
+        "transparent": True,
+        "size": "1024x1024",
+        "path": lib.ROOT / "public/ui/page-prev.png",
+    },
+    {
+        "name": "page-next",
+        "prompt": (
+            "一枚古风圆形翻页按钮，青绿色玉圆盘，外圈金色回纹细描边，"
+            "盘面中央一枚米白色粗壮V形箭头指向右侧，箭头干净醒目。"
+            f"{lib.STYLE}。纯透明背景，四周留白，正面视角，避免塑料质感高光。{lib.NO_TEXT}。"
+        ),
+        "transparent": True,
+        "size": "1024x1024",
+        "path": lib.ROOT / "public/ui/page-next.png",
+    },
 ]
 
 
@@ -99,9 +121,10 @@ def local_valid(item: dict) -> bool:
         return False
     try:
         im = Image.open(path)
-        if im.mode != "RGBA":
+        # compress.py 会把 PNG 量化成 P 模式（带 transparency），同样视为有效透明素材
+        if im.mode != "RGBA" and "transparency" not in im.info:
             return False
-        lo, _ = im.getchannel("A").getextrema()
+        lo, _ = im.convert("RGBA").getchannel("A").getextrema()
         return lo <= 250
     except Exception:  # noqa: BLE001
         return False
