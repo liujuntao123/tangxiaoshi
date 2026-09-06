@@ -54,6 +54,11 @@ export function ChapterList({ dynastyId }: { dynastyId: string }) {
           {chapters.map((chapter) => {
             const open = isChapterUnlocked(chapter.id, save);
             const done = isChapterCleared(chapter.id, save);
+            const stars = chapter.levels.reduce(
+              (sum, level) => sum + (save.levelRecords[level.id]?.bestStars ?? 0),
+              0,
+            );
+            const starMax = chapter.levels.length * 3;
             const inner = (
               <>
                 <PoetImg src={poetArt(chapter.poetId)} className="h-11 w-9 object-contain object-bottom" />
@@ -61,8 +66,9 @@ export function ChapterList({ dynastyId }: { dynastyId: string }) {
                   <span className="title-ink block text-xl leading-tight">{chapter.poetName}</span>
                   <span className="block truncate text-[11px] tracking-widest text-ink-soft">{chapter.hook}</span>
                 </span>
-                <span className="shrink-0 text-[11px] tracking-widest text-ink-soft">
-                  {done ? "已救出" : open ? `${chapter.levels.length} 关` : "锁"}
+                <span className="shrink-0 text-right text-[11px] tracking-widest text-ink-soft">
+                  <span className="block">{done ? "已救出" : open ? "可进入" : "锁"}</span>
+                  <span className={`block ${done ? "text-seal" : ""}`}>诗印 {stars}/{starMax}</span>
                 </span>
               </>
             );

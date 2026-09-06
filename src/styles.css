@@ -223,6 +223,31 @@
     opacity: 0;
   }
 }
+@keyframes combo-bump {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes seal-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.18) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
 
 .idle-bob {
   animation: idle-bob 2.2s ease-in-out infinite;
@@ -253,6 +278,16 @@
 }
 .caret {
   animation: caret-blink 0.9s steps(1) infinite;
+}
+.combo-bump {
+  display: inline-block;
+  animation: combo-bump 0.32s ease-out;
+}
+.qi-fill {
+  transition: width 0.4s ease;
+}
+.seal-pop {
+  animation: seal-pop 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .sprite-shadow {

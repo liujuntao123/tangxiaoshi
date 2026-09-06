@@ -1,4 +1,5 @@
 import { ACHIEVEMENTS } from "@/lib/game/content";
+import { totalStars } from "@/lib/game/progress";
 import { useSave } from "@/lib/game/save-context";
 import { PoetImg, Stage, StageHud } from "./stage";
 
@@ -30,6 +31,28 @@ export function AchievementsView() {
       ) : null}
 
       <div className="dock-fade absolute inset-x-0 bottom-0 top-[48%] z-10 overflow-y-auto px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-6">
+        <div className="mb-5 grid grid-cols-3 gap-2 text-center">
+          <div>
+            <p className="hud-title flex items-center justify-center gap-1 text-paper">
+              <span
+                aria-hidden
+                className="grid h-4 w-4 place-items-center rounded-full border border-seal bg-seal font-display text-[9px] leading-none text-paper"
+              >
+                印
+              </span>
+              {totalStars(save)}
+            </p>
+            <p className="paper-glow text-[11px] tracking-widest text-paper/70">诗印总数</p>
+          </div>
+          <div>
+            <p className="hud-title text-paper">{save.totalScore}</p>
+            <p className="paper-glow text-[11px] tracking-widest text-paper/70">主线总分</p>
+          </div>
+          <div>
+            <p className="hud-title text-paper">{save.endlessBestStreak}</p>
+            <p className="paper-glow text-[11px] tracking-widest text-paper/70">无尽最高连对</p>
+          </div>
+        </div>
         <div className="grid grid-cols-3 gap-y-4">
           {poets.map((item) => {
             const owned = save.achievements.includes(item.id);

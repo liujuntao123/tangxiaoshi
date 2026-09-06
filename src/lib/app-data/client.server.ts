@@ -211,7 +211,9 @@ function tokenIdentityKey(token: string): string {
             .digest("base64url");
         }
       }
-    } catch {}
+    } catch {
+      // claims 无法解析时忽略，退回对原始 token 做整体哈希。
+    }
   }
   return createHash("sha256").update(token).digest("base64url");
 }

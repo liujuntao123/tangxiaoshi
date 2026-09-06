@@ -21,3 +21,5 @@ startup.sh
 
 __pycache__/
 *.pyc
+deploy/image/.output/
+deploy/data/

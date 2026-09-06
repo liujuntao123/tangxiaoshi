@@ -95,7 +95,7 @@ export function PlaqueButton({
   ...props
 }: { children: ReactNode } & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button type="button" {...props} className={`tap ${className}`}>
+    <button type="button" {...props} className={`tap disabled:opacity-50 disabled:saturate-50 ${className}`}>
       <PlaqueFace>{children}</PlaqueFace>
     </button>
   );

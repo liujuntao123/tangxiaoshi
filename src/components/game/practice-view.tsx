@@ -11,11 +11,24 @@ export function PracticeView() {
   const [qIndex, setQIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [showPoem, setShowPoem] = useState(false);
+  // 会话内完成记录：poemId -> 已完成题号。切诗文不丢记录，退出练习即清，不写存档。
+  const [done, setDone] = useState<Record<string, number[]>>({});
 
   const poets = useMemo(() => (dynastyId ? poetsInDynasty(dynastyId) : []), [dynastyId]);
   const poetPoems = useMemo(() => (poetId ? poemsByPoet(poetId) : []), [poetId]);
   const poem = POEMS.find((item) => item.id === poemId);
   const question = poem?.questions[qIndex];
+  const doneForPoem = (id: string | null) => (id && done[id] ? done[id].length : 0);
+  const isDone = poemId !== null && !!done[poemId]?.includes(qIndex);
+
+  function markDone(id: string | null, index: number) {
+    if (!id) return;
+    setDone((prev) => {
+      const list = prev[id] ?? [];
+      if (list.includes(index)) return prev;
+      return { ...prev, [id]: [...list, index] };
+    });
+  }
 
   function resetQuestion() {
     setPicked(null);
@@ -84,20 +97,29 @@ export function PracticeView() {
           <div className="mb-2 flex justify-center">
             <PlaqueButton onClick={() => setPoetId(null)}>回诗人</PlaqueButton>
           </div>
-          {poetPoems.map((item) => (
-            <WoodSlip
-              key={item.id}
-              className="my-1 w-full"
-              onClick={() => {
-                sfxTap();
-                setPoemId(item.id);
-                setQIndex(0);
-                resetQuestion();
-              }}
-            >
-              <span className="title-ink truncate text-lg">《{item.title}》</span>
-            </WoodSlip>
-          ))}
+          {poetPoems.map((item) => {
+            const doneCount = doneForPoem(item.id);
+            const total = item.questions.length;
+            return (
+              <WoodSlip
+                key={item.id}
+                className="my-1 w-full"
+                onClick={() => {
+                  sfxTap();
+                  setPoemId(item.id);
+                  setQIndex(0);
+                  resetQuestion();
+                }}
+              >
+                <span className="title-ink truncate text-lg">《{item.title}》</span>
+                <span
+                  className={`text-[11px] tracking-widest ${doneCount >= total ? "text-ink" : "text-ink-soft"}`}
+                >
+                  {doneCount >= total ? "已完成" : `${doneCount}/${total}`}
+                </span>
+              </WoodSlip>
+            );
+          })}
         </div>
       </Stage>
     );
@@ -142,13 +164,14 @@ export function PracticeView() {
         <section className="absolute inset-x-0 bottom-0 z-10 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
           <div className="flex items-center justify-between px-4 text-[11px] tracking-widest text-paper/85">
             <span className="paper-glow">
-              {qIndex + 1} / {poem.questions.length}
+              第 {qIndex + 1}/{poem.questions.length} 题 · 已完成 {doneForPoem(poemId)}/{poem.questions.length}
             </span>
             <PlaqueButton
               onClick={() => {
                 sfxTap();
                 setShowPoem(true);
                 setPicked(question.answerIndex);
+                markDone(poemId, qIndex);
               }}
             >
               查看答案
@@ -172,6 +195,7 @@ export function PracticeView() {
                   disabled={picked !== null}
                   onClick={() => {
                     setPicked(index);
+                    markDone(poemId, qIndex);
                     if (index === question.answerIndex) sfxHit();
                     else sfxHurt();
                   }}
@@ -179,6 +203,18 @@ export function PracticeView() {
               );
             })}
           </div>
+          {picked !== null ? (
+            <p className="paper-glow mt-1.5 text-center text-[12px] tracking-widest text-paper">
+              {picked === question.answerIndex ? (
+                <span className="text-ink">✓ 答对了</span>
+              ) : (
+                <>
+                  正确答案：<span className="text-ink">{question.choices[question.answerIndex]}</span>
+                </>
+              )}
+              {isDone && doneForPoem(poemId) >= poem.questions.length ? " · 本篇已完成" : ""}
+            </p>
+          ) : null}
           <div className="mt-2 flex justify-between gap-3 px-2">
             <PlaqueButton
               disabled={qIndex === 0}

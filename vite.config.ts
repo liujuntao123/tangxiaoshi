@@ -170,7 +170,8 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === "build" || isPreview
       ? [
           nitro({
-            preset: "vercel",
+            // 默认 vercel（托管部署）；Docker 等自托管用 `NITRO_PRESET=node npm run build`。
+            preset: process.env.NITRO_PRESET ?? "vercel",
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.

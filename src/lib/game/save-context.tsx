@@ -55,6 +55,7 @@ export function SaveProvider({ children }: { children: ReactNode }) {
   return <SaveContext.Provider value={value}>{children}</SaveContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- context hook 与 Provider 共置一处，拆文件会增加所有调用方改动
 export function useSave() {
   const ctx = useContext(SaveContext);
   if (!ctx) throw new Error("useSave must be used within SaveProvider");
