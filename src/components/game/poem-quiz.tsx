@@ -21,6 +21,9 @@ const LINK_COMBO = 3;
 /** 出招反馈时长（毫秒）：只影响报告出现节奏，不推进题目。 */
 const SETTLE_MS = 500;
 
+/** 选项序号印：甲乙丙丁，作答仪式感。 */
+const SLIP_MARKS = ["甲", "乙", "丙", "丁"] as const;
+
 /**
  * 一题的结算快照：报告层只读它，不再重算规则（玩法重做的 Resolution 模式）。
  * 回响诗签已随墨路远征移除（ADR-0018），这里只保留连携口径。
@@ -438,17 +441,14 @@ export function PoemQuiz({
             phase === "resolving" && reportReady ? "slip-fade-back pointer-events-none" : "pop-in"
           }`}
         >
-          {/* 题干信笺：柔和墨纱托底，保证任何场景上题干都 ≥4.5:1 可读 */}
-          <div
-            className="ink-in mx-auto mb-1 w-fit max-w-full rounded-2xl border border-paper/15 bg-gradient-to-b from-ink/55 to-ink/35 px-4 py-1.5 text-center backdrop-blur-[2px]"
-            style={{ boxShadow: "inset 0 0 0 1px rgb(243 235 224 / 12%)" }}
-          >
+          {/* 题干宣纸笺：与关卡答题同款纸面语言，任何场景上都稳定可读 */}
+          <div className="question-plate ink-in mx-auto mb-2 w-full max-w-[26rem] px-4 py-2 text-center">
             {bigLine ? (
-              <p className="title-art paper-glow text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-paper">
+              <p className="title-art text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-ink">
                 {bigLine}
               </p>
             ) : null}
-            <p className="paper-glow mt-0.5 text-center text-sm tracking-wider text-paper/90">{ask}</p>
+            <p className="mt-0.5 text-center text-sm tracking-wider text-ink-soft">{ask}</p>
           </div>
           <div className="flex flex-col gap-2">
             {question.choices.map((choice, index) => {
@@ -472,6 +472,7 @@ export function PoemQuiz({
                     text={choice}
                     state={state}
                     disabled={picked !== null}
+                    mark={SLIP_MARKS[index]}
                     onClick={() => choose(index)}
                   />
                 </div>
@@ -516,16 +517,18 @@ export function PoemQuiz({
 
 /** 答题 HUD：连击与连携就绪提示（一行）。 */
 function QuizHud({ combo, linkReady }: { combo: number; linkReady: boolean }) {
+  // 连击为 0 且连携未就绪时不占位：把左上角还给灯笼行，画面更干净
+  if (combo <= 0 && !linkReady) return null;
   return (
-    <div className="scenery-plate absolute inset-x-2 top-[max(5.6rem,calc(env(safe-area-inset-top)+5.2rem))] z-10 flex items-center gap-2 px-2.5 py-1">
-      <p className="shrink-0 text-[11px] tracking-wider text-paper/90" aria-label={`连击 ${combo}`}>
+    <div className="absolute left-3 top-[max(5.6rem,calc(env(safe-area-inset-top)+5.2rem))] z-10 flex max-w-[75%] items-center gap-2">
+      <span className="ink-chip paper-glow shrink-0 px-2.5 py-1 text-[11px] tracking-wider text-paper/95" aria-label={`连击 ${combo}`}>
         连击{" "}
         <span key={combo} className="combo-ripple inline-block">
           <span className="combo-bump inline-block">×{combo}</span>
         </span>
-      </p>
+      </span>
       {linkReady ? (
-        <span className="shrink-0 text-[10px] tracking-wider text-paper/90">连携已就绪 · 下次答对额外加分</span>
+        <span className="ink-chip paper-glow px-2.5 py-1 text-[10px] tracking-wider text-paper/90">连携已就绪 · 下次答对额外加分</span>
       ) : null}
     </div>
   );
@@ -664,7 +667,10 @@ function ResultPanel({
                   {view.firstClear ? "首次通关" : ""}
                 </p>
               ) : null}
-              <p className="mt-1 flex items-baseline justify-center gap-2">
+              <div className="ink-divider mx-auto mt-2.5 max-w-[13rem]" aria-hidden>
+                <span className="font-display text-[9px]">◈</span>
+              </div>
+              <p className="mt-2 flex items-baseline justify-center gap-2">
                 <span className="text-xs tracking-widest text-ink-soft">本轮得分</span>
                 <span className="title-ink text-4xl">{view.score}</span>
                 {scoreRecord ? (
@@ -676,6 +682,9 @@ function ResultPanel({
               </p>
             </>
           ) : null}
+          <div className="ink-divider mx-auto mt-2.5 max-w-[13rem]" aria-hidden>
+            <span className="font-display text-[9px]">诗</span>
+          </div>
           <p className="mx-auto mt-2 max-w-[26em] whitespace-pre-wrap text-left text-[13px] leading-relaxed text-ink-soft">
             {poemText}
           </p>

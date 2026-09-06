@@ -68,16 +68,29 @@ export function ChoiceSlip({
   text,
   state = "idle",
   disabled,
+  mark,
   onClick,
 }: {
   text: string;
   state?: SlipState;
   disabled?: boolean;
+  /** 选项序号印（甲乙丙丁）：小朱砂印，加强「作答」的仪式感。 */
+  mark?: string;
   onClick?: () => void;
 }) {
   return (
     <WoodSlip state={state} size="choice" disabled={disabled} onClick={onClick} className="my-0">
-      <span className="w-full text-center text-[12.5px] leading-snug text-ink">{text}</span>
+      <span className="flex w-full items-center justify-center gap-2 text-center">
+        {mark ? (
+          <span
+            aria-hidden
+            className="grid h-4.5 w-4.5 shrink-0 place-items-center rounded-[4px] border border-seal/60 font-display text-[10px] leading-none text-seal/85"
+          >
+            {mark}
+          </span>
+        ) : null}
+        <span className="text-[12.5px] leading-snug text-ink">{text}</span>
+      </span>
     </WoodSlip>
   );
 }
@@ -86,7 +99,10 @@ export function PlaqueFace({ children, className = "" }: { children: ReactNode; 
   return (
     <span className={`relative inline-flex min-h-[3.5rem] min-w-[7.2rem] items-center justify-center ${className}`}>
       <img src="/ui/plaque.png" alt="" className="absolute inset-0 h-full w-full object-cover object-[center_42%]" />
-      <span className="relative z-10 title-ink px-7 pt-1.5 pb-2.5 text-lg leading-none">{children}</span>
+      {/* 暖白字 + 墨影：深松绿匾面上的高对比主按钮字（走查：墨字压墨匾发闷） */}
+      <span className="relative z-10 px-7 pt-1.5 pb-2.5 font-display text-lg leading-none tracking-[0.08em] text-[#f8f0dc] [text-shadow:0_1px_1px_rgb(28_23_18/55%),0_2px_6px_rgb(28_23_18/35%)]">
+        {children}
+      </span>
     </span>
   );
 }

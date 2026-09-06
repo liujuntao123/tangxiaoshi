@@ -95,19 +95,15 @@ export function AchievementsView() {
           })}
         </div>
 
-        {/* 全局统计：改为方角小座（bg-ink/45 rounded-lg border border-paper/15），
-            与上方圆 Tab 形成方圆对比，不再与 ink-chip 混杂 */}
-        <div className="mb-4 grid grid-cols-3 gap-2">
+        {/* 全局统计：与首页数据座同语言（纸座 + 墨字 + 列间细分隔），跨屏读作同一套「碑刻」 */}
+        <div className="paper-plate paper-plate-ink stat-grid mb-4 px-2 py-2">
           {[
             { icon: "印", value: totalStars(save), label: "诗印总数" },
             { value: save.totalScore, label: "环游总分" },
             { value: save.endlessBestStreak, label: "无尽最高连对" },
           ].map((s) => (
-            <div
-              key={s.label}
-              className="flex flex-col items-center rounded-lg border border-paper/15 bg-ink/45 px-1 py-1.5 text-center backdrop-blur-xs"
-            >
-              <p className="hud-title flex items-center justify-center gap-1 text-[15px] text-paper">
+            <div key={s.label} className="flex flex-col items-center px-1 py-0.5 text-center">
+              <p className="title-ink flex items-center justify-center gap-1 text-[15px]">
                 {s.icon ? (
                   <span
                     aria-hidden
@@ -118,7 +114,7 @@ export function AchievementsView() {
                 ) : null}
                 {s.value}
               </p>
-              <p className="mt-0.5 text-[10px] tracking-widest text-paper/75">{s.label}</p>
+              <p className="mt-0.5 text-[10px] tracking-widest text-ink-soft">{s.label}</p>
             </div>
           ))}
         </div>

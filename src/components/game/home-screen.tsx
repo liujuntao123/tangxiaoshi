@@ -5,16 +5,16 @@ import { useSave } from "@/lib/game/save-context";
 import { PlaqueFace } from "./choice-slip";
 import { Stage, StageHud } from "./stage";
 
-/** 首页数据格：图标 + 数字 + 标签，借助游戏 UI 而不是纯文字堆砌。 */
+/** 首页数据格：图标 + 数字 + 标签，纸座上的碑刻三格，列间细分隔线。 */
 function StatCell({ icon, value, suffix, label }: { icon: string; value: number; suffix?: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-0.5">
       <img src={icon} alt="" className="h-7 w-7 object-contain drop-shadow-md" />
-      <p className="hud-title text-paper">
+      <p className="title-ink text-lg leading-tight">
         {value}
-        {suffix ? <span className="text-sm text-paper/75">{suffix}</span> : null}
+        {suffix ? <span className="text-sm text-ink-soft/80">{suffix}</span> : null}
       </p>
-      <p className="paper-glow text-[10.5px] tracking-widest text-paper/80">{label}</p>
+      <p className="text-[10.5px] tracking-widest text-ink-soft">{label}</p>
     </div>
   );
 }
@@ -44,21 +44,23 @@ export function HomeScreen() {
         </p>
       </div>
 
-      {/* 数据格：卷轴=已通关，星=关卡星星，铜钱=环游总分 */}
+      {/* 数据座：卷轴=已通关，星=关卡星星，铜钱=环游总分（纸座 + 墨字） */}
       <div className="absolute inset-x-0 top-[17.5%] z-10 flex justify-center px-4">
-        <div className="scenery-plate grid w-full max-w-sm grid-cols-3 gap-1 px-3 py-2.5">
+        <div className="paper-plate paper-plate-ink stat-grid w-full max-w-sm px-3 py-2.5">
           <StatCell icon="/ui/icon-scroll.png" value={progress.cleared} suffix={`/${LEVEL_COUNT}`} label="已通关" />
           <StatCell icon="/ui/icon-star.png" value={progress.stars} label="星星" />
           <StatCell icon="/ui/icon-coin.png" value={save.totalScore} label="总分" />
         </div>
       </div>
 
-      {/* 关卡进度条 */}
-      <div className="absolute inset-x-0 top-[28%] z-10 flex flex-col items-center gap-2 px-6">
-        <LevelProgressBar cleared={progress.cleared} />
-        <p className="caption-pill">
-          {allCleared ? "50 关全部通关！" : `下一关 · 第 ${nextLevel} 关`}
-        </p>
+      {/* 关卡进度条：下一关提示并入同一座纸面，读作一条「远征路线」 */}
+      <div className="absolute inset-x-0 top-[28%] z-10 flex justify-center px-6">
+        <div className="paper-plate paper-plate-ink w-full max-w-sm px-3 py-2">
+          <p className="mb-1.5 text-center text-[10.5px] tracking-[0.3em] text-ink-soft">
+            {allCleared ? "50 关全部通关！" : `下一关 · 第 ${nextLevel} 关`}
+          </p>
+          <LevelProgressBar cleared={progress.cleared} />
+        </div>
       </div>
 
       <div className="absolute inset-x-0 bottom-[27%] z-10 flex justify-center">
@@ -116,7 +118,7 @@ export function HomeScreen() {
 function LevelProgressBar({ cleared }: { cleared: number }) {
   return (
     <div
-      className="scenery-plate flex w-full max-w-sm items-center gap-1 rounded-full px-3 py-2"
+      className="flex w-full items-center gap-[2px]"
       aria-label={`已通关 ${cleared} 关`}
     >
       {Array.from({ length: LEVEL_COUNT }, (_, i) => {
@@ -127,7 +129,11 @@ function LevelProgressBar({ cleared }: { cleared: number }) {
           <span
             key={level}
             className={`h-1.5 flex-1 rounded-full ${
-              done ? "bg-seal" : current ? "jdot-current bg-paper/70" : "bg-paper/20"
+              done
+                ? "bg-seal shadow-[0_0_4px_rgb(143_61_50/45%)]"
+                : current
+                  ? "pip-current"
+                  : "bg-ink/15"
             }`}
           />
         );

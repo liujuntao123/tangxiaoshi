@@ -16,10 +16,14 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = "gpt-image-2"
+# Provider 链（2026-09-05 实测口径，与机器级运维约定一致）：
+# 0 image.mlgb7.com 只认 response_format:"url"，返回限时直链要立刻下载；
+# 1 qkmss.com 兜底（2026-09 换新 Key）；
+# 2 chat2api.smarttoken.top 返回 b64_json（也带 url）。
 PROVIDERS = [
+    ("https://image.mlgb7.com", "lupi_arvlnwg64Vh9kEvGTh39E60iQZsNQEXErzgUtuOjwSA"),
     ("https://qkmss.com", "sk-0WzkItJkVxATv4QiWCvy8rNaZssTXNbh79FWC2uRIgLlPDl2"),
-    ("http://38.76.215.125:13001", "sk-5LrPxbz-SJT5PtLFfWg164_2FLrGBdbA"),
-    ("https://img.hezubus.cc", "sk-ni28HxjqgMJOa5MFbUapf1UIoZPoX7IHEsIAHpEMpkOMHPt2"),
+    ("https://chat2api.smarttoken.top", "sk-GuLp0UF-qEHzt-V2Vcmg2Y1wXmhQc2tC"),
 ]
 STYLE = "古风儿童绘本插画，Q版可爱，圆脸大眼，线条干净简洁，青绿色与米白色为主的淡雅配色，柔和上色，画面干净"
 # 背景专用风格：不带任何人物偏置词（Q版/圆脸大眼会诱导模型画人）
@@ -93,6 +97,9 @@ def generations(prompt: str, size: str, transparent: bool, attempts: int = 8) ->
             payload: dict = {"model": MODEL, "prompt": prompt, "size": size, "n": 1, "output_format": "png"}
             if transparent:
                 payload["background"] = "transparent"
+            # provider 0 只认 url（b64 会 400）；provider 1 同走 url；provider 2 缺省即 b64_json
+            if p in (0, 1):
+                payload["response_format"] = "url"
             r = requests.post(
                 f"{base}/v1/images/generations",
                 json=payload,
@@ -123,7 +130,8 @@ def generations(prompt: str, size: str, transparent: bool, attempts: int = 8) ->
 
 
 def edits(prompt: str, ref_path: Path, size: str, attempts: int = 6) -> bytes:
-    """参考图变体：仅备用 provider 支持 edits；120s 快速重试，不拉长超时。"""
+    """参考图变体：当前 provider 链里只有 qkmss 曾支持 edits；120s 快速重试，不拉长超时。
+    全链不支持时上层脚本按既定阶梯降级（如 heroes.py 的 PIL 派生）。"""
     ref = Path(ref_path).read_bytes()
     base, key = PROVIDERS[1]
     last: Exception | None = None

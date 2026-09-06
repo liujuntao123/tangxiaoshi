@@ -60,33 +60,69 @@ export function LevelList() {
             {`每关 ${QUESTIONS_PER_LEVEL} 道题 · 答对 ${LEVEL_PASS} 题过关 · 过关开下一关`}
           </span>
         </div>
-        <PagedList pageSize={15} count={LEVEL_COUNT} className="min-h-0 flex-1">
+        <PagedList pageSize={12} count={LEVEL_COUNT} className="min-h-0 flex-1">
           {(from, to) => (
             <div className="grid grid-cols-3 gap-2">
               {Array.from({ length: to - from }, (_, i) => from + i + 1).map((level) => {
                 const stars = levelStars(save, level);
                 const unlocked = isLevelUnlocked(save, level);
+                const isNext = level === progress.cleared + 1;
                 return (
                   <button
                     key={level}
                     type="button"
                     disabled={!unlocked}
                     onClick={() => enter(level)}
-                    className={`tap block ${unlocked ? "" : "opacity-55 grayscale"}`}
+                    className={`tap block ${unlocked ? "" : "opacity-85"}`}
                     aria-label={
                       unlocked ? `进入第 ${level} 关` : `第 ${level} 关未解锁，先通过第 ${level - 1} 关`
                     }
                   >
-                    <ArtPanel className="rise-in px-1 pt-2.5 pb-2 text-center">
-                      <p className="title-ink whitespace-nowrap text-[15px] leading-none">{`第 ${level} 关`}</p>
-                      {stars > 0 ? (
-                        <span className="mt-1.5 block">
-                          <StarRow stars={stars} />
-                        </span>
+                    <ArtPanel
+                      className={`rise-in px-1 pt-2 pb-1.5 text-center ${unlocked ? "" : "saturate-[0.35]"}`}
+                      style={{ animationDelay: `${(level - from - 1) * 35}ms` }}
+                    >
+                      <p
+                        className={`title-ink whitespace-nowrap text-[15px] leading-none ${
+                          unlocked ? "" : "text-ink/55"
+                        }`}
+                      >
+                        {`第 ${level} 关`}
+                      </p>
+                      {unlocked ? (
+                        <>
+                          {/* 星级槽：亮星=已得，空心暗星=可冲，未打也有「期待感」 */}
+                          <span className="mt-1 block">
+                            <StarRow stars={stars} />
+                          </span>
+                          <p className="mt-0.5 flex h-3.5 items-center justify-center gap-1 whitespace-nowrap text-[9.5px] leading-none text-seal">
+                            {isNext ? (
+                              <>
+                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-seal" />
+                                可挑战
+                              </>
+                            ) : (
+                              "可挑战"
+                            )}
+                          </p>
+                        </>
                       ) : (
-                        <p className="mt-2 text-[10.5px] leading-none text-ink/45">
-                          {unlocked ? "可挑战" : "未解锁"}
-                        </p>
+                        <>
+                          {/* 与星槽同高的锁印位 + 状态行：网格里行高对齐不跳动 */}
+                          <span className="mt-1 flex h-4 items-center justify-center opacity-45">
+                            <img
+                              src="/ui/lock.png"
+                              alt=""
+                              className="h-4 w-4 object-contain"
+                              onError={(e) => {
+                                e.currentTarget.style.visibility = "hidden";
+                              }}
+                            />
+                          </span>
+                          <p className="mt-0.5 flex h-3.5 items-center justify-center whitespace-nowrap text-[9.5px] leading-none text-ink/45">
+                            未解锁
+                          </p>
+                        </>
                       )}
                     </ArtPanel>
                   </button>

@@ -95,6 +95,15 @@ function Login() {
           className={`absolute inset-0 h-full w-full object-cover object-[center_48%] stage-photo ${bgReady ? "is-in" : ""}`}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-transparent to-ink/25" />
+        {/* 梅枝角饰：自左上垂下的一枝，给纯场景登录页一点「庭院」细节 */}
+        <img
+          src="/ui/branch-plum.png"
+          alt=""
+          className="pointer-events-none absolute left-0 top-0 z-0 w-24 opacity-90 drop-shadow-md"
+          onError={(e) => {
+            e.currentTarget.style.visibility = "hidden";
+          }}
+        />
         <p className="title-art paper-glow absolute inset-x-0 top-[24%] z-10 px-4 text-center text-[clamp(1.8rem,8vw,2.4rem)] text-paper">
           唐小诗环游记
         </p>
@@ -115,7 +124,10 @@ function Login() {
           </div>
           <ArtPanel>
             <p className="title-ink text-xl">{registering ? "注册" : "登录"}</p>
-            <label className="mt-1.5 block text-[11px] tracking-widest text-ink-soft">
+            <div className="ink-divider mx-auto mt-2 max-w-[10rem]" aria-hidden>
+              <span className="font-display text-[9px]">◈</span>
+            </div>
+            <label className="mt-2.5 block text-[11px] tracking-widest text-ink-soft">
               邮箱
               <input
                 type="email"

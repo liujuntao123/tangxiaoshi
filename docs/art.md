@@ -6,14 +6,17 @@
 
 | 优先级 | base | key | 支持端点 | 备注 |
 | --- | --- | --- | --- | --- |
-| 主 | `https://qkmss.com` | `sk-0WzkItJkVxATv4QiWCvy8rNaZssTXNbh79FWC2uRIgLlPDl2` | generations | 2026-08-29 额度已恢复 |
-| 备 | `http://38.76.215.125:13001` | `sk-5LrPxbz-SJT5PtLFfWg164_2FLrGBdbA` | generations + edits | 有限流（曾实测 ~2 张/分钟并伴长周期 429），429 走指数退避 |
-| 备 | `https://img.hezubus.cc` | `sk-ni28HxjqgMJOa5MFbUapf1UIoZPoX7IHEsIAHpEMpkOMHPt2` | generations | 偶发连接超时，重试即可；返回 url 需二次下载；该线路禁止 /v1/models 等查询 |
+| 主 | `https://image.mlgb7.com` | `lupi_arvlnwg64Vh9kEvGTh39E60iQZsNQEXErzgUtuOjwSA` | generations | 2026-09-05 实测可用；**只认 `response_format:"url"`**（传 b64 会 400），返回限时直链要立刻下载 |
+| 备 | `https://qkmss.com` | `sk-0WzkItJkVxATv4QiWCvy8rNaZssTXNbh79FWC2uRIgLlPDl2` | generations | 2026-09-05 换新 Key；曾出现中转通道 502，失败自动轮换 |
+| 备 | `https://chat2api.smarttoken.top` | `sk-GuLp0UF-qEHzt-V2Vcmg2Y1wXmhQc2tC` | generations | 返回 `data[0].b64_json`（也带 url） |
+
+> 2026-09-06 起按机器级运维约定切换为上表链路（旧 `38.76.215.125` / `img.hezubus.cc` 线路弃用）。
+> `lib.py` 内置轮换/拉黑/退避，并对 provider 0/1 追加 `response_format:"url"`。
+> edits 参考图变体在新链路上无已验证端点，`heroes.py` 沿用「edits → PIL 派生」降级阶梯。
 
 - **无参考图** → `POST {base}/v1/images/generations`，JSON：`model/prompt/size/n/background/output_format`。**不要塞 `image` 字段**（该端点不支持，400 或被忽略）。
-- **有参考图**（角色一致性变体）→ 仅 `38.76.215.125` 支持：`POST {base}/v1/images/edits`，multipart/form-data：`image` 为文件 part（`filename="ref.png"`、`Content-Type: image/png`），`prompt/model/size/n/quality` 为表单字段。
 - **edits 超时一律 120s**：超时即判失败、快速重试（可多轮），不要拉长超时傻等。
-- generations 超时 180s；lib.py 运行期自动拉黑「额度耗尽」的 provider，429 按指数退避并做请求间隔节流。
+- generations 超时 300s；lib.py 运行期自动拉黑「额度耗尽」的 provider，429 按指数退避并做请求间隔节流。
 - 网络失败可临时走本地代理 `http://127.0.0.1:7897`（仅单次命令内 export，用完即清，不写入任何配置）。
 
 ## 二、统一风格（写死在脚本常量里）
@@ -69,12 +72,15 @@ public/art/avatars/dynasty-{dynastyId}.png
 public/art/avatars/chapter-{1..10}.png
 public/sprites/hero.png / hero-happy.png / hero-sad.png
 public/sprites/poets/{authorId}.png
+public/ui/*.png（按 api 名落盘：ui.py / ui2.py，见第六节）
 ```
 
 ## 六、批量与重跑
 
 - 一类一脚本，共享 `scripts/art/lib.py`（provider 轮换/重试/落盘/校验）：
-  `backgrounds.py`（7 全局 + 各文集 5 张）、`avatars.py`（文集 + 朝代 + 章节）、`heroes.py`（主角三形态）、`poets.py`（作者立绘）。
+  `backgrounds.py`（7 全局 + 各文集 5 张）、`avatars.py`（文集 + 朝代 + 章节）、`heroes.py`（主角三形态）、`poets.py`（作者立绘）、
+  `ui.py`（jade-btn / back-btn）、`ui2.py`（2026-09 精致化轮新增：title-banner 卷轴横匾、lock 铜锁、seal-blank 空白印框、branch-plum 梅枝角饰）。
+- `ui2.py` 的 title-banner 走「alpha 包围盒裁剪 + 水平带提取」后处理（上游可能忽略 size 返回方图），不适用精确尺寸校验。
 - 幂等：已存在且校验通过的文件跳过；`--force` 强制重生成；`--only <name>` 单独重跑。
-- 批次顺序：① 背景（7+5）→ ② 文集 11 + 朝代 10 → ③ 章节 10 + 主角 3 + 作者（试点：lijing、liyu）。
+- 批次顺序：① 背景（7+5）→ ② 文集 11 + 朝代 10 → ③ 章节 10 + 主角 3 + 作者（试点：lijing、liyu）→ ④ UI 组件（ui.py / ui2.py）。
 - 只生成**已编译内容**涉及的素材（文集形象/背景 11 张文集形象除外——锁定文集卡片也要展示形象）。

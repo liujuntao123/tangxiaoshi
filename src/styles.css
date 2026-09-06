@@ -141,6 +141,67 @@
   overflow: hidden;
 }
 
+/* 页题横匾：二级页 StageHud 的统一标题语言。title-banner.png 以 object-fill
+ * 铺满（匾中段留白可拉伸），缺图时回退为纸纹渐变底，依旧是同一块「匾」。 */
+.hud-banner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 9.5rem;
+  max-width: 62vw;
+  height: 2.5rem;
+  padding: 0 2.1rem;
+  overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #efe4d2, #e0cfb4);
+  box-shadow:
+    inset 0 0 0 1px rgb(146 108 58 / 40%),
+    inset 0 1px 0 rgb(243 235 224 / 65%),
+    0 3px 9px rgb(28 23 18 / 38%);
+}
+.hud-banner > img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+}
+.hud-banner > span {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 墨线分隔：两端渐隐 + 中央菱形结，从 ArtPanel 内部语言里长出来的分隔符 */
+.ink-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgb(28 23 18 / 28%);
+}
+.ink-divider::before,
+.ink-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgb(28 23 18 / 26%), transparent);
+}
+
+/* 数据座：深墨半透明座面（scenery-plate）的列间细分隔，让三格数据读起来像一块碑 */
+.stat-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+.stat-grid > * + * {
+  border-left: 1px solid rgb(243 235 224 / 14%);
+}
+
 /* 书签/小立绘的「图槽」：淡松绿圆角底 + 内阴影，让透明小图有承托、不显空 */
 .art-slot {
   position: relative;
@@ -230,6 +291,23 @@
       inset 0 0 0 1px rgb(28 23 18 / 35%),
       0 0 0 6px rgb(243 235 224 / 22%),
       0 2px 12px rgb(28 23 18 / 35%);
+  }
+}
+
+/* 纸座进度条上的「当前关」：松绿底 + 朱金呼吸光晕（jdot-current 是纸色底，
+ * 在纸座上会隐形，这里单独给一段）。 */
+.pip-current {
+  background: var(--color-pine);
+  animation: pip-breath 1.8s ease-in-out infinite;
+}
+
+@keyframes pip-breath {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(143 61 50 / 0%);
+  }
+  50% {
+    box-shadow: 0 0 6px 2px rgb(143 61 50 / 45%);
   }
 }
 
@@ -721,12 +799,46 @@
   box-shadow: inset 0 0 0 1px rgb(243 235 224 / 20%);
 }
 
-/* 宣纸凹槽输入框：内阴影模拟生宣压痕，聚焦时展现温润松绿纸晕 */
+/* 题干宣纸笺：答题场景里的题干托底。米纸渐变 + 细金线描边 + 墨字，
+ * 替代旧的墨玻璃药丸（走查：现代 Web 感、浅背景上对比度不足），
+ * 与下方宣纸报告面板读作同一套「纸面语言」。 */
+.question-plate {
+  border-radius: 12px;
+  border: 1px solid rgb(148 112 58 / 38%);
+  background: linear-gradient(180deg, rgb(247 240 223 / 96%), rgb(236 223 198 / 92%));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    0 4px 14px rgb(28 23 18 / 28%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* 数据纸座：场景页上的大块信息托底（首页数据格/进度、诗册统计）。
+ * 与题干笺同一纸面语言：米纸渐变 + 金线描边，深墨文字。 */
+.paper-plate {
+  border-radius: 14px;
+  border: 1px solid rgb(148 112 58 / 40%);
+  background: linear-gradient(180deg, rgb(247 240 223 / 94%), rgb(234 220 194 / 88%));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    0 4px 14px rgb(28 23 18 / 30%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.paper-plate-ink {
+  color: var(--color-ink);
+}
+.paper-plate .stat-grid > * + *,
+.paper-plate.stat-grid > * + * {
+  border-left: 1px solid rgb(28 23 18 / 14%);
+}
+
+/* 宣纸凹槽输入框：暖米底内阴影模拟生宣压痕，聚焦时展现温润松绿纸晕 */
 .paper-input {
   border-radius: 8px;
-  border: 1px solid rgb(28 23 18 / 18%);
-  background: rgb(28 23 18 / 5%);
-  box-shadow: inset 0 1px 3px rgb(28 23 18 / 10%);
+  border: 1px solid rgb(120 92 56 / 26%);
+  background: rgb(141 112 74 / 9%);
+  box-shadow: inset 0 1px 3px rgb(120 92 56 / 18%);
   outline: none;
   transition:
     border-color 0.2s var(--ease-wood),
@@ -735,7 +847,7 @@
 .paper-input:focus {
   border-color: var(--color-pine, #3d5a4c);
   box-shadow:
-    inset 0 1px 3px rgb(28 23 18 / 10%),
+    inset 0 1px 3px rgb(120 92 56 / 18%),
     0 0 0 3px rgba(61, 90, 76, 0.15);
   outline: none;
 }

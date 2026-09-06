@@ -174,6 +174,22 @@ export function PoetImg({ src, className = "" }: { src: string; className?: stri
   );
 }
 
+/** 页题横匾：二级页统一的标题语言（title-banner.png 铺底，缺图回退纸纹底）。 */
+export function HudTitle({ title }: { title: string }) {
+  return (
+    <span className="hud-banner" aria-label={title}>
+      <img
+        src="/ui/title-banner.png"
+        alt=""
+        onError={(e) => {
+          e.currentTarget.style.visibility = "hidden";
+        }}
+      />
+      <span className="title-ink text-[17px] leading-none tracking-[0.14em]">{title}</span>
+    </span>
+  );
+}
+
 /** 极简顶栏：返回 + 标题 + 设置入口。退出登录收进设置弹窗。
  *  header 本体不拦截事件（pointer-events-none），只有按钮可点：
  *  头部有 pb-8 的透明区，会把下方列表/成就分类 tab 的首行盖住，吃掉点击。 */
@@ -186,7 +202,13 @@ export function StageHud({ title, backTo }: { title?: string; backTo?: string })
         /* 审查 P1-03：移除无交互的悬挂孤立小灯笼，保留占位以对齐右侧设置入口 */
         <span className="h-11 w-11 shrink-0" aria-hidden />
       )}
-      {title ? <p className="hud-title min-w-0 flex-1 truncate text-paper">{title}</p> : <span className="flex-1" />}
+      {title ? (
+        <span className="min-w-0 flex-1 text-center">
+          <HudTitle title={title} />
+        </span>
+      ) : (
+        <span className="flex-1" />
+      )}
       <SettingsButton />
     </header>
   );

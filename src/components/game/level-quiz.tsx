@@ -25,6 +25,9 @@ import { ArtPanel, Stage, StageHud } from "./stage";
 
 const SETTLE_MS = 450;
 
+/** 选项序号印：甲乙丙丁，作答仪式感。 */
+const SLIP_MARKS = ["甲", "乙", "丙", "丁"] as const;
+
 type Phase = "intro" | "battle" | "resolving" | "result";
 
 /** 一题的结算快照：报告层只读它，不重算规则。 */
@@ -373,14 +376,15 @@ export function LevelQuiz({
 
       {(phase === "battle" || phase === "resolving") && question ? (
         <>
-          {/* 顶部：题号 + 对错进度点 + 连击 */}
+          {/* 顶部：题号 + 对错进度点 + 连击（答对/答错数字用松绿/朱砂淡色计读） */}
           <div className="absolute inset-x-0 top-[max(3.6rem,calc(env(safe-area-inset-top)+3.2rem))] z-10 flex flex-col items-center gap-1.5 px-4">
             <div className="flex items-center gap-2">
               <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-[0.25em] text-paper/95">
                 第 {questionNo} / 10 题
               </span>
               <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-wider text-paper/95">
-                答对 {correct} · 答错 {wrong}
+                答对 <span className="text-[#b9e2d2]">{correct}</span> · 答错{" "}
+                <span className="text-[#f0b3a8]">{wrong}</span>
               </span>
               {combo > 1 ? (
                 <span className="ink-chip paper-glow px-2.5 py-1 text-[11px] tracking-wider text-paper/95">
@@ -444,19 +448,19 @@ export function LevelQuiz({
               phase === "resolving" && reportReady ? "slip-fade-back pointer-events-none" : "pop-in"
             }`}
           >
-            {/* 来源标注：只给补全题；诗名题标注会直接泄露答案，改到报告层展示 */}
-            {question.type !== "title" ? (
-              <p className="paper-glow mb-1 text-center text-[11px] tracking-wider text-paper/80">
-                「{poem.title}」·{poem.authorName}
-              </p>
-            ) : null}
-            <div className="ink-in mx-auto mb-1 w-fit max-w-full rounded-2xl border border-paper/15 bg-gradient-to-b from-ink/55 to-ink/35 px-4 py-1.5 text-center backdrop-blur-[2px]">
+            {/* 题干宣纸笺：米纸底 + 墨字，出处一并入笺，任何场景上都稳定可读 */}
+            <div className="question-plate ink-in mx-auto mb-2 w-full max-w-[26rem] px-4 py-2 text-center">
               {bigLine ? (
-                <p className="title-art paper-glow text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-paper">
+                <p className="title-art text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-ink">
                   {bigLine}
                 </p>
               ) : null}
-              <p className="paper-glow mt-0.5 text-center text-sm tracking-wider text-paper/90">{ask}</p>
+              <p className="mt-0.5 text-center text-sm tracking-wider text-ink-soft">{ask}</p>
+              {question.type !== "title" ? (
+                <p className="poem-line mt-0.5 text-center text-[11px] text-ink-soft/75">
+                  「{poem.title}」·{poem.authorName}
+                </p>
+              ) : null}
             </div>
             <div className="flex flex-col gap-2">
               {question.choices.map((choice, index) => {
@@ -474,7 +478,7 @@ export function LevelQuiz({
                 else if (selected && !right) state = "miss";
                 return (
                   <div key={`${question.id}-${choice}`} className="slip-in" style={{ animationDelay: `${index * 50}ms` }}>
-                    <ChoiceSlip text={choice} state={state} disabled={picked !== null} onClick={() => choose(index)} />
+                    <ChoiceSlip text={choice} state={state} disabled={picked !== null} mark={SLIP_MARKS[index]} onClick={() => choose(index)} />
                   </div>
                 );
               })}
@@ -578,7 +582,21 @@ function IntroPanel({
     <section className="pop-in absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-20">
       <ArtPanel className="text-center">
         <p className="title-ink text-3xl">{`第 ${level} 关`}</p>
-        <p className="mt-1 text-sm text-ink-soft">10 道题，答对 6 题过关。</p>
+        {/* 三星预览：实心=可冲星档，给「开打前」一个具体目标 */}
+        <div className="mt-1.5 flex justify-center gap-1.5" aria-label="星档：最高三星">
+          {[1, 2, 3].map((n) => (
+            <img
+              key={n}
+              src="/ui/icon-star.png"
+              alt=""
+              className="h-6 w-6 object-contain opacity-90 drop-shadow"
+            />
+          ))}
+        </div>
+        <div className="ink-divider mx-auto mt-2 max-w-[13rem]" aria-hidden>
+          <span className="font-display text-[9px]">◈</span>
+        </div>
+        <p className="mt-2 text-sm text-ink-soft">10 道题，答对 6 题过关。</p>
         <p className="mt-0.5 text-xs tracking-wider text-ink/60">
           一道不错 = 三星 · 错 1–2 题 = 两星 · 过关 = 一星
         </p>
@@ -687,7 +705,18 @@ function ResultPanel({
     : `答对 ${result.correct}/10，差 ${LEVEL_PASS - result.correct} 题过关`;
   return (
     <section className="pop-in absolute inset-x-2 bottom-[max(1rem,env(safe-area-inset-bottom))] z-20">
-      <ArtPanel className="text-center">
+      <ArtPanel className="relative text-center">
+        {result.won ? (
+          /* 过关朱砂印：右上角斜盖一枚「通」，与诗印、落印动效同一仪式语言 */
+          <span className="stamp-in pointer-events-none absolute right-3 top-2 z-20" aria-hidden>
+            <span className="relative block h-14 w-14">
+              <img src="/ui/seal-blank.png" alt="" className="absolute inset-0 h-full w-full object-contain opacity-85" />
+              <span className="absolute inset-0 grid place-items-center pb-0.5 font-display text-xl leading-none text-seal/90">
+                通
+              </span>
+            </span>
+          </span>
+        ) : null}
         <div className="max-h-[64dvh] overflow-y-auto">
           <p className="title-ink text-3xl">{result.won ? "过关" : "差一点"}</p>
           <p className="mt-1 text-sm text-ink-soft">{starText}</p>
@@ -717,7 +746,10 @@ function ResultPanel({
           {result.won && result.granted.length === 0 ? (
             <p className="mt-2 text-[11px] tracking-wider text-ink/60">再冲更高星有新奖励</p>
           ) : null}
-          <p className="mt-1 flex items-baseline justify-center gap-2">
+          <div className="ink-divider mx-auto mt-2.5 max-w-[13rem]" aria-hidden>
+            <span className="font-display text-[9px]">◈</span>
+          </div>
+          <p className="mt-2 flex items-baseline justify-center gap-2">
             <span className="text-xs tracking-widest text-ink-soft">本关得分</span>
             <span className="title-ink text-4xl">{result.score}</span>
           </p>

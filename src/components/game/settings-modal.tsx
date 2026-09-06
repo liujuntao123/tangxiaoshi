@@ -41,12 +41,24 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-label="设置"
       >
-        <div className="px-2 py-5 text-center">
-          <p className="title-ink text-2xl">设置</p>
-          <p className="mt-2 truncate px-4 text-[11px] tracking-widest text-ink-soft">
+        <div className="relative px-2 py-5 text-center">
+          {/* 梅枝角饰：面板左上角的一枝，柔化弹窗的「表单感」 */}
+          <img
+            src="/ui/branch-plum.png"
+            alt=""
+            className="pointer-events-none absolute -left-1.5 -top-1.5 z-0 w-14 opacity-80"
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+          <p className="title-ink relative z-10 text-2xl">设置</p>
+          <p className="relative z-10 mt-2 truncate px-4 text-[11px] tracking-widest text-ink-soft">
             {user?.primaryEmail ?? user?.displayName ?? "旅人"}
           </p>
-          <div className="mt-5 flex flex-col items-center gap-3">
+          <div className="ink-divider mx-auto mt-3.5 max-w-[11rem]" aria-hidden>
+            <span className="font-display text-[9px]">◈</span>
+          </div>
+          <div className="relative z-10 mt-3.5 flex flex-col items-center gap-3">
             <PlaqueButton
               disabled={signingOut}
               onClick={() => {

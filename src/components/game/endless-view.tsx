@@ -17,6 +17,9 @@ import { ArtPanel, Stage, StageHud } from "./stage";
 type Phase = "idle" | "battle" | "report" | "ended";
 type Pose = "idle" | "happy" | "sad";
 
+/** 选项序号印：甲乙丙丁，作答仪式感。 */
+const SLIP_MARKS = ["甲", "乙", "丙", "丁"] as const;
+
 /** 每题诗气回报（与环游答题同口径），只做即时节奏反馈，不写入存档。 */
 const QI_PER_CORRECT = 30;
 
@@ -245,6 +248,9 @@ export function EndlessView() {
               className="idle-bob mx-auto mb-1 h-12 w-auto object-contain drop-shadow"
             />
             <p className="title-ink text-2xl">一题错，本局结束</p>
+            <div className="ink-divider mx-auto mt-2.5 max-w-[15rem]" aria-hidden>
+              <span className="font-display text-[9px]">◈</span>
+            </div>
             <p className="mt-2 text-sm tracking-widest text-ink-soft">
               {`历史最高连对 ${save.endlessBestStreak} · 历史最高分 ${best}`}
             </p>
@@ -259,6 +265,9 @@ export function EndlessView() {
               </PlaqueButton>
             </div>
           </ArtPanel>
+          <p className="caption-pill mx-auto mt-3">
+            每答对一题涨诗气 · 诗气满额外加分
+          </p>
         </div>
       </Stage>
     );
@@ -310,10 +319,10 @@ export function EndlessView() {
       <StageHud title="墨潮试炼" backTo="/" />
       <div className="absolute inset-x-0 top-[max(3.8rem,calc(env(safe-area-inset-top)+3.4rem))] z-10 flex items-center justify-center gap-2">
         <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-[0.3em] text-paper/95">
-          连对 <span key={streak} className="combo-bump inline-block">{streak}</span>
+          连对 <span key={streak} className="combo-bump inline-block text-[#b9e2d2]">{streak}</span>
         </span>
         <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-[0.3em] text-paper/95">
-          {score} 分
+          <span className="text-[#e6c98a]">{score}</span> 分
         </span>
       </div>
       <div
@@ -328,8 +337,8 @@ export function EndlessView() {
       </div>
 
       {/* 唐小诗情绪位：答对欢呼、答错沮丧，与环游答题同款反馈 */}
-      <div className="absolute inset-x-0 bottom-[30%] z-10 flex justify-center">
-        <div className="relative flex h-32 items-end justify-center">
+      <div className="absolute inset-x-0 bottom-[33%] z-10 flex justify-center">
+        <div className="relative flex h-28 items-end justify-center">
           <span className="sprite-shadow" />
           <img
             src={pose === "happy" ? HERO.happy : pose === "sad" ? HERO.sad : HERO.idle}
@@ -338,7 +347,7 @@ export function EndlessView() {
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";
             }}
-            className={`relative z-10 h-32 w-auto object-contain object-bottom drop-shadow-lg ${
+            className={`relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg ${
               pose === "happy" ? "mood-happy" : pose === "sad" ? "mood-sad" : "idle-bob"
             }`}
           />
@@ -368,15 +377,12 @@ export function EndlessView() {
           }`}
           key={question.id ?? index}
         >
-          {/* 题干信笺：与环游答题同款墨纱托底，任何场景插花上都保持可读 */}
-          <div
-            className="ink-in mx-auto mb-1 w-fit max-w-full rounded-2xl border border-paper/15 bg-gradient-to-b from-ink/55 to-ink/35 px-4 py-1.5 text-center backdrop-blur-[2px]"
-            style={{ boxShadow: "inset 0 0 0 1px rgb(243 235 224 / 12%)" }}
-          >
-            <p className="title-art paper-glow text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-paper">
+          {/* 题干宣纸笺：与关卡答题同款纸面语言 */}
+          <div className="question-plate ink-in mx-auto mb-2 w-full max-w-[26rem] px-4 py-2 text-center">
+            <p className="title-art text-center text-[clamp(1.15rem,5vw,1.5rem)] leading-snug text-ink">
               {question.quote || question.prompt}
             </p>
-            <p className="paper-glow mt-0.5 text-center text-sm tracking-wider text-paper/90">
+            <p className="mt-0.5 text-center text-sm tracking-wider text-ink-soft">
               {question.type === "title"
                 ? "出自哪一首？"
                 : question.type === "complete-next"
@@ -406,6 +412,7 @@ export function EndlessView() {
                     text={choice}
                     state={state}
                     disabled={picked !== null}
+                    mark={SLIP_MARKS[i]}
                     onClick={() => choose(i)}
                   />
                 </div>
