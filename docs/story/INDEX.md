@@ -800,7 +800,7 @@
 | --- | --- | --- |
 | 感遇·江南有丹橘 | tangshi-sanbaishou-1.png | 5 |
 | 感遇十二首·其二 | tangshi-sanbaishou-3.png | 5 |
-| 望月怀远 / 望月怀古 | tangshi-sanbaishou-4.png | 5 |
+| 望月怀远 | tangshi-sanbaishou-4.png | 5 |
 | 感遇十二首·其一 | tangshi-sanbaishou-4.png | 5 |
 | 感遇十二首·其四 | tangshi-sanbaishou-4.png | 5 |
 
@@ -820,11 +820,11 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 下终南山过斛斯山人宿置酒 | tangshi-sanbaishou-3.png | 5 |
-| 梦游天姥吟留别 / 梦游天姥山别东鲁诸公 | tangshi-sanbaishou-4.png | 5 |
-| 早发白帝城 / 白帝下江陵 | tangshi-sanbaishou-1.png | 5 |
+| 梦游天姥吟留别 | tangshi-sanbaishou-4.png | 5 |
+| 早发白帝城 | tangshi-sanbaishou-1.png | 5 |
 | 金陵酒肆留别 | tangshi-sanbaishou-3.png | 5 |
 | 清平调·其一 | tangshi-sanbaishou-5.png | 5 |
-| 听蜀僧濬弹琴 / 听蜀僧浚弹琴 | tangshi-sanbaishou-3.png | 5 |
+| 听蜀僧濬弹琴 | tangshi-sanbaishou-3.png | 5 |
 | 子夜吴歌·春歌 | tangshi-sanbaishou-5.png | 5 |
 | 清平调·名花倾国两相欢 | tangshi-sanbaishou-2.png | 5 |
 | 庐山谣寄卢侍御虚舟 | tangshi-sanbaishou-4.png | 5 |
@@ -871,11 +871,11 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 琵琶行 / 琵琶引 | tangshi-sanbaishou-3.png | 5 |
+| 琵琶行 | tangshi-sanbaishou-3.png | 5 |
 | 长恨歌 | tangshi-sanbaishou-4.png | 5 |
 | 望月有感 | tangshi-sanbaishou-4.png | 5 |
 | 后宫词 | tangshi-sanbaishou-5.png | 5 |
-| 草 / 赋得古原草送别 | tangshi-sanbaishou-2.png | 5 |
+| 草 | tangshi-sanbaishou-2.png | 5 |
 | 问刘十九 | tangshi-sanbaishou-1.png | 5 |
 
 **李商隐** — 52 首
@@ -904,7 +904,7 @@
 | 凉思 | tangshi-sanbaishou-2.png | 5 |
 | 夜雨寄北 | tangshi-sanbaishou-1.png | 5 |
 | 无题·飒飒东风细雨来 | tangshi-sanbaishou-3.png | 5 |
-| 乐游原 / 登乐游原 | tangshi-sanbaishou-2.png | 5 |
+| 乐游原 | tangshi-sanbaishou-2.png | 5 |
 | 无题·来是空言去绝踪 | tangshi-sanbaishou-5.png | 5 |
 | 瑶池 | tangshi-sanbaishou-5.png | 5 |
 
@@ -916,16 +916,16 @@
 | --- | --- | --- |
 | 老将行 | tangshi-sanbaishou-5.png | 5 |
 | 送梓州李使君 | tangshi-sanbaishou-4.png | 5 |
-| 送元二使安西 / 渭城曲 | tangshi-sanbaishou-5.png | 5 |
+| 送元二使安西 | tangshi-sanbaishou-5.png | 5 |
 | 桃源行 | tangshi-sanbaishou-3.png | 5 |
-| 青溪 / 过青溪水作 | tangshi-sanbaishou-3.png | 5 |
+| 青溪 | tangshi-sanbaishou-3.png | 5 |
 | 过香积寺 | tangshi-sanbaishou-3.png | 5 |
 | 山居秋暝 | tangshi-sanbaishou-4.png | 5 |
 | 秋夜曲 | tangshi-sanbaishou-4.png | 5 |
 | 酬郭给事 | tangshi-sanbaishou-2.png | 5 |
 | 竹里馆 | tangshi-sanbaishou-1.png | 5 |
-| 积雨辋川庄作 / 秋归辋川庄作 | tangshi-sanbaishou-1.png | 5 |
-| 送别 / 山中送别 | tangshi-sanbaishou-5.png | 5 |
+| 积雨辋川庄作 | tangshi-sanbaishou-1.png | 5 |
+| 送别 | tangshi-sanbaishou-5.png | 5 |
 | 辋川闲居赠裴秀才迪 | tangshi-sanbaishou-5.png | 5 |
 | 渭川田家 | tangshi-sanbaishou-5.png | 5 |
 | 杂诗三首·其二 | tangshi-sanbaishou-4.png | 5 |
@@ -934,7 +934,7 @@
 | 酬张少府 | tangshi-sanbaishou-2.png | 5 |
 | 终南山 | tangshi-sanbaishou-2.png | 5 |
 | 终南别业 | tangshi-sanbaishou-3.png | 5 |
-| 汉江临泛 / 汉江临眺 | tangshi-sanbaishou-2.png | 5 |
+| 汉江临泛 | tangshi-sanbaishou-2.png | 5 |
 | 九月九日忆山东兄弟 | tangshi-sanbaishou-1.png | 5 |
 | 送别 | tangshi-sanbaishou-3.png | 5 |
 | 送綦毋潜落第还乡 | tangshi-sanbaishou-4.png | 5 |
@@ -951,7 +951,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 杂诗三首·其三 | tangshi-sanbaishou-3.png | 5 |
-| 古意呈补阙乔知之 / 独不见 | tangshi-sanbaishou-1.png | 5 |
+| 古意呈补阙乔知之 | tangshi-sanbaishou-1.png | 5 |
 
 **刘长卿** — 22 首
 
@@ -962,9 +962,9 @@
 | 新年作 | tangshi-sanbaishou-2.png | 5 |
 | 送灵澈上人 | tangshi-sanbaishou-1.png | 5 |
 | 秋日登吴公台上寺远眺 | tangshi-sanbaishou-2.png | 5 |
-| 寻南溪常山道人隐居 / 寻南溪常道士 | tangshi-sanbaishou-3.png | 5 |
+| 寻南溪常山道人隐居 | tangshi-sanbaishou-3.png | 5 |
 | 听弹琴 | tangshi-sanbaishou-3.png | 5 |
-| 送方外上人 / 送上人 | tangshi-sanbaishou-1.png | 5 |
+| 送方外上人 | tangshi-sanbaishou-1.png | 5 |
 | 长沙过贾谊宅 | tangshi-sanbaishou-3.png | 5 |
 | 饯别王十一南游 | tangshi-sanbaishou-5.png | 5 |
 | 江州重别薛六柳八二员外 | tangshi-sanbaishou-4.png | 5 |
@@ -1032,7 +1032,7 @@
 | --- | --- | --- |
 | 行经华阴 | tangshi-sanbaishou-2.png | 5 |
 | 长干行·家临九江水 | tangshi-sanbaishou-1.png | 5 |
-| 黄鹤楼 / 登黄鹤楼 | tangshi-sanbaishou-1.png | 5 |
+| 黄鹤楼 | tangshi-sanbaishou-1.png | 5 |
 | 长干行·君家何处住 | tangshi-sanbaishou-5.png | 5 |
 
 **杜牧** — 25 首
@@ -1058,9 +1058,9 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 秋夜寄邱员外 / 秋夜寄丘二十二员外 | tangshi-sanbaishou-1.png | 5 |
-| 赋得暮雨送李胄 / 赋得暮雨送李曹 | tangshi-sanbaishou-5.png | 5 |
-| 淮上喜会梁川故人 / 淮上喜会梁州故人 | tangshi-sanbaishou-2.png | 5 |
+| 秋夜寄邱员外 | tangshi-sanbaishou-1.png | 5 |
+| 赋得暮雨送李胄 | tangshi-sanbaishou-5.png | 5 |
+| 淮上喜会梁川故人 | tangshi-sanbaishou-2.png | 5 |
 | 东郊 | tangshi-sanbaishou-5.png | 5 |
 | 郡斋雨中与诸文士燕集 | tangshi-sanbaishou-1.png | 5 |
 | 送杨氏女 | tangshi-sanbaishou-4.png | 5 |
@@ -1082,7 +1082,7 @@
 | 白雪歌送武判官归京 | tangshi-sanbaishou-5.png | 5 |
 | 寄左省杜拾遗 | tangshi-sanbaishou-3.png | 5 |
 | 轮台歌奉送封大夫出师西征 | tangshi-sanbaishou-2.png | 5 |
-| 走马川行奉送出师西征 / 走马川行奉送封大夫出师西征 | tangshi-sanbaishou-1.png | 5 |
+| 走马川行奉送出师西征 | tangshi-sanbaishou-1.png | 5 |
 | 奉和中书舍人贾至早朝大明宫 | tangshi-sanbaishou-5.png | 5 |
 
 **金昌绪** — 2 首
@@ -1091,7 +1091,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 春怨 / 伊州歌 | tangshi-sanbaishou-2.png | 5 |
+| 春怨 | tangshi-sanbaishou-2.png | 5 |
 
 **孟郊** — 6 首
 
@@ -1153,20 +1153,20 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 早寒江上有怀 / 早寒有怀 | tangshi-sanbaishou-3.png | 5 |
+| 早寒江上有怀 | tangshi-sanbaishou-3.png | 5 |
 | 宿桐庐江寄广陵旧游 | tangshi-sanbaishou-3.png | 5 |
-| 宿业师山房期丁大不至 / 宿业师山房待丁大不至 | tangshi-sanbaishou-3.png | 5 |
+| 宿业师山房期丁大不至 | tangshi-sanbaishou-3.png | 5 |
 | 清明日宴梅道士房 | tangshi-sanbaishou-2.png | 5 |
 | 过故人庄 | tangshi-sanbaishou-3.png | 5 |
-| 夜归鹿门山歌 / 夜归鹿门歌 | tangshi-sanbaishou-5.png | 5 |
-| 秋登兰山寄张五 / 九月九日岘山寄张子容 | tangshi-sanbaishou-3.png | 5 |
+| 夜归鹿门山歌 | tangshi-sanbaishou-5.png | 5 |
+| 秋登兰山寄张五 | tangshi-sanbaishou-3.png | 5 |
 | 与诸子登岘山 | tangshi-sanbaishou-1.png | 5 |
-| 留别王侍御维 / 留别王维 | tangshi-sanbaishou-3.png | 5 |
+| 留别王侍御维 | tangshi-sanbaishou-3.png | 5 |
 | 宿建德江 | tangshi-sanbaishou-3.png | 5 |
-| 岁暮归南山 / 归故园作 / 归终南山 | tangshi-sanbaishou-4.png | 5 |
+| 岁暮归南山 | tangshi-sanbaishou-4.png | 5 |
 | 夏日南亭怀辛大 | tangshi-sanbaishou-3.png | 5 |
-| 秦中感秋寄远上人 / 秦中寄远上人 | tangshi-sanbaishou-1.png | 5 |
-| 望洞庭湖赠张丞相 / 临洞庭湖赠张丞相 | tangshi-sanbaishou-2.png | 5 |
+| 秦中感秋寄远上人 | tangshi-sanbaishou-1.png | 5 |
+| 望洞庭湖赠张丞相 | tangshi-sanbaishou-2.png | 5 |
 | 春晓 | tangshi-sanbaishou-2.png | 5 |
 
 **丘为** — 2 首
@@ -1264,7 +1264,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 寻隐者不遇 / 孙革访羊尊师诗 | tangshi-sanbaishou-5.png | 5 |
+| 寻隐者不遇 | tangshi-sanbaishou-5.png | 5 |
 
 **陈陶** — 2 首
 
@@ -1352,7 +1352,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 送杜少府之任蜀州 / 送杜少府之任蜀川 | tangshi-sanbaishou-5.png | 5 |
+| 送杜少府之任蜀州 | tangshi-sanbaishou-5.png | 5 |
 
 **王建** — 3 首
 
@@ -1451,7 +1451,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 征人怨 / 征怨 | tangshi-sanbaishou-1.png | 5 |
+| 征人怨 | tangshi-sanbaishou-1.png | 5 |
 
 **卢纶** — 12 首
 
@@ -1464,7 +1464,7 @@
 | 晚次鄂州 | tangshi-sanbaishou-3.png | 5 |
 | 和张仆射塞下曲·其四 | tangshi-sanbaishou-3.png | 5 |
 | 和张仆射塞下曲·其一 | tangshi-sanbaishou-4.png | 5 |
-| 李端公 / 送李端 | tangshi-sanbaishou-2.png | 5 |
+| 李端公 | tangshi-sanbaishou-2.png | 5 |
 
 **西鄙人** — 2 首
 
@@ -1489,7 +1489,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 早秋三首·其一 | tangshi-sanbaishou-4.png | 5 |
-| 秋日赴阙题潼关驿楼 / 行次潼关逢魏扶东归 | tangshi-sanbaishou-4.png | 5 |
+| 秋日赴阙题潼关驿楼 | tangshi-sanbaishou-4.png | 5 |
 
 **王昌龄** — 18 首
 
@@ -1521,7 +1521,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 孤雁二首·其二 | tangshi-sanbaishou-5.png | 5 |
-| 除夜 / 巴山道中除夜书怀 | tangshi-sanbaishou-3.png | 5 |
+| 除夜 | tangshi-sanbaishou-3.png | 5 |
 
 **朱庆馀** — 4 首
 
@@ -1529,8 +1529,8 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 近试上张籍水部 / 近试上张水部 / 闺意献张水部 | tangshi-sanbaishou-3.png | 5 |
-| 宫词 / 宫中词 | tangshi-sanbaishou-5.png | 5 |
+| 近试上张籍水部 | tangshi-sanbaishou-3.png | 5 |
+| 宫词 | tangshi-sanbaishou-5.png | 5 |
 
 **钱起** — 6 首
 
@@ -1564,7 +1564,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 咏蝉 / 在狱咏蝉 | tangshi-sanbaishou-5.png | 5 |
+| 咏蝉 | tangshi-sanbaishou-5.png | 5 |
 
 **戴叔伦** — 3 首
 
@@ -1572,7 +1572,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 客夜与故人偶集 / 江乡故人偶集客舍 | tangshi-sanbaishou-3.png | 5 |
+| 客夜与故人偶集 | tangshi-sanbaishou-3.png | 5 |
 
 **裴迪** — 2 首
 
@@ -1580,7 +1580,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 崔九欲往南山马上口号与别 / 留别王维 / 送崔九 | tangshi-sanbaishou-2.png | 5 |
+| 崔九欲往南山马上口号与别 | tangshi-sanbaishou-2.png | 5 |
 
 **张泌** — 29 首
 
@@ -1848,7 +1848,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 三五七言 / 秋风词 | songci-sanbaishou-2.png | 5 |
+| 三五七言 | songci-sanbaishou-2.png | 5 |
 | 忆秦娥·箫声咽 | songci-sanbaishou-5.png | 5 |
 | 菩萨蛮·平林漠漠烟如织 | songci-sanbaishou-2.png | 5 |
 
@@ -2743,7 +2743,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 范雎说秦王 | jiaokeshu-xuanshi-5.png | 5 |
-| 孔雀东南飞 / 古诗为焦仲卿妻作 | jiaokeshu-xuanshi-4.png | 5 |
+| 孔雀东南飞 | jiaokeshu-xuanshi-4.png | 5 |
 | 召公谏厉王弭谤 | jiaokeshu-xuanshi-2.png | 5 |
 | 唐雎说信陵君 | jiaokeshu-xuanshi-2.png | 5 |
 | 赵威后问齐使 | jiaokeshu-xuanshi-4.png | 5 |
@@ -2878,7 +2878,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 兰亭集序 / 兰亭序 | jiaokeshu-xuanshi-5.png | 5 |
+| 兰亭集序 | jiaokeshu-xuanshi-5.png | 5 |
 
 **刘向 编** — 2 首
 
@@ -3152,7 +3152,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 木兰诗 / 木兰辞 | jiaokeshu-xuanshi-3.png | 5 |
+| 木兰诗 | jiaokeshu-xuanshi-3.png | 5 |
 
 ### 第7章 初中古诗·八年级上册(课内)（7 首）
 
@@ -3438,7 +3438,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 春夜洛城闻笛 / 春夜洛阳城闻笛 | jiaokeshu-xuanshi-4.png | 5 |
+| 春夜洛城闻笛 | jiaokeshu-xuanshi-4.png | 5 |
 | 峨眉山月歌 | jiaokeshu-xuanshi-3.png | 5 |
 
 **赵师秀** — 1 首
@@ -3508,7 +3508,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 惠子相梁 | jiaokeshu-xuanshi-5.png | 5 |
-| 木兰诗 / 木兰辞 | jiaokeshu-xuanshi-3.png | 5 |
+| 木兰诗 | jiaokeshu-xuanshi-3.png | 5 |
 | 夸父逐日 | jiaokeshu-xuanshi-3.png | 5 |
 | 二翁登泰山 | jiaokeshu-xuanshi-1.png | 5 |
 | 论语十则 | jiaokeshu-xuanshi-5.png | 5 |
@@ -3552,7 +3552,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 记承天寺夜游 / 记承天夜游 | jiaokeshu-xuanshi-2.png | 5 |
+| 记承天寺夜游 | jiaokeshu-xuanshi-2.png | 5 |
 | 小儿不畏虎 | jiaokeshu-xuanshi-3.png | 5 |
 
 **孟子及其弟子** — 3 首
@@ -3679,8 +3679,8 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 鹦鹉灭火 | jiaokeshu-xuanshi-4.png | 5 |
-| 咏雪 / 咏雪联句 | jiaokeshu-xuanshi-4.png | 5 |
-| 陈太丘与友期 / 期行 | jiaokeshu-xuanshi-2.png | 5 |
+| 咏雪 | jiaokeshu-xuanshi-4.png | 5 |
+| 陈太丘与友期 | jiaokeshu-xuanshi-2.png | 5 |
 
 **司马光 撰** — 1 首
 
@@ -3696,7 +3696,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 出师表 / 前出师表 | jiaokeshu-xuanshi-4.png | 5 |
+| 出师表 | jiaokeshu-xuanshi-4.png | 5 |
 
 **姚鼐** — 1 首
 
@@ -3737,7 +3737,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 愚公移山 | jiaokeshu-xuanshi-5.png | 5 |
-| 两小儿辩日 / 两小儿辩斗 | jiaokeshu-xuanshi-3.png | 5 |
+| 两小儿辩日 | jiaokeshu-xuanshi-3.png | 5 |
 
 **墨子及弟子** — 1 首
 
@@ -4020,7 +4020,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 曾子杀彘 / 曾子烹彘 | jiaokeshu-xuanshi-3.png | 5 |
+| 曾子杀彘 | jiaokeshu-xuanshi-3.png | 5 |
 | 师旷撞晋平公 | jiaokeshu-xuanshi-5.png | 5 |
 | 郑人买履 | jiaokeshu-xuanshi-4.png | 5 |
 | 矛与盾 | jiaokeshu-xuanshi-1.png | 5 |
@@ -4038,7 +4038,7 @@
 | 鹬蚌相争 | jiaokeshu-xuanshi-3.png | 5 |
 | 虎求百兽 | jiaokeshu-xuanshi-1.png | 5 |
 | 画蛇添足 | jiaokeshu-xuanshi-2.png | 5 |
-| 枭逢鸠 / 枭将东徙 | jiaokeshu-xuanshi-2.png | 5 |
+| 枭逢鸠 | jiaokeshu-xuanshi-2.png | 5 |
 | 叶公好龙 | jiaokeshu-xuanshi-4.png | 5 |
 | 孟母三迁 | jiaokeshu-xuanshi-2.png | 5 |
 
@@ -4061,7 +4061,7 @@
 | 二翁登泰山 | jiaokeshu-xuanshi-4.png | 5 |
 | 揠苗助长 | jiaokeshu-xuanshi-2.png | 5 |
 | 寇准读书 | jiaokeshu-xuanshi-5.png | 5 |
-| 刻舟求剑 / 楚人涉江 | jiaokeshu-xuanshi-3.png | 5 |
+| 刻舟求剑 | jiaokeshu-xuanshi-3.png | 5 |
 | 学弈 | jiaokeshu-xuanshi-1.png | 5 |
 | 朝三暮四 | jiaokeshu-xuanshi-2.png | 5 |
 | 承宫樵薪苦学 | jiaokeshu-xuanshi-5.png | 5 |
@@ -4092,7 +4092,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 嫦娥奔月 / 嫦娥飞天 | jiaokeshu-xuanshi-5.png | 5 |
+| 嫦娥奔月 | jiaokeshu-xuanshi-5.png | 5 |
 
 **苏轼** — 29 首
 
@@ -4167,7 +4167,7 @@
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
 | 杨氏之子 | jiaokeshu-xuanshi-1.png | 5 |
-| 荀巨伯探病友 / 荀巨伯探友 | jiaokeshu-xuanshi-4.png | 5 |
+| 荀巨伯探病友 | jiaokeshu-xuanshi-4.png | 5 |
 | 陈元方候袁公 | jiaokeshu-xuanshi-3.png | 5 |
 
 **伽腽肭** — 1 首
@@ -4226,7 +4226,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 梦游天姥吟留别 / 梦游天姥山别东鲁诸公 | jiaokeshu-xuanshi-4.png | 5 |
+| 梦游天姥吟留别 | jiaokeshu-xuanshi-4.png | 5 |
 | 登金陵凤凰台 | jiaokeshu-xuanshi-4.png | 5 |
 | 塞下曲六首·其一 | jiaokeshu-xuanshi-1.png | 5 |
 
@@ -4304,7 +4304,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 琵琶行 / 琵琶引 | jiaokeshu-xuanshi-3.png | 5 |
+| 琵琶行 | jiaokeshu-xuanshi-3.png | 5 |
 
 **王国维** — 1 首
 
@@ -4357,7 +4357,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 咏柳 / 柳枝词 | jiaokeshu-xuanshi-4.png | 5 |
+| 咏柳 | jiaokeshu-xuanshi-4.png | 5 |
 
 **朱熹** — 3 首
 
@@ -4467,7 +4467,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 送元二使安西 / 渭城曲 | jiaokeshu-xuanshi-4.png | 5 |
+| 送元二使安西 | jiaokeshu-xuanshi-4.png | 5 |
 
 **李商隐** — 52 首
 
@@ -4507,7 +4507,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 送杜少府之任蜀州 / 送杜少府之任蜀川 | jiaokeshu-xuanshi-1.png | 5 |
+| 送杜少府之任蜀州 | jiaokeshu-xuanshi-1.png | 5 |
 
 **李白** — 87 首
 
@@ -4523,7 +4523,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 早春呈水部张十八员外 / 初春小雨 | jiaokeshu-xuanshi-5.png | 5 |
+| 早春呈水部张十八员外 | jiaokeshu-xuanshi-5.png | 5 |
 
 **李煜** — 52 首
 
@@ -4581,7 +4581,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 走马川行奉送出师西征 / 走马川行奉送封大夫出师西征 | jiaokeshu-xuanshi-3.png | 5 |
+| 走马川行奉送出师西征 | jiaokeshu-xuanshi-3.png | 5 |
 
 **杜甫** — 90 首
 
@@ -4677,7 +4677,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 送元二使安西 / 渭城曲 | jiaokeshu-xuanshi-2.png | 5 |
+| 送元二使安西 | jiaokeshu-xuanshi-2.png | 5 |
 
 **李白** — 87 首
 
@@ -4727,7 +4727,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 草 / 赋得古原草送别 | jiaokeshu-xuanshi-2.png | 5 |
+| 草 | jiaokeshu-xuanshi-2.png | 5 |
 
 **杨万里** — 6 首
 
@@ -4837,8 +4837,8 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 早寒江上有怀 / 早寒有怀 | jiaokeshu-xuanshi-1.png | 5 |
-| 望洞庭湖赠张丞相 / 临洞庭湖赠张丞相 | jiaokeshu-xuanshi-1.png | 5 |
+| 早寒江上有怀 | jiaokeshu-xuanshi-1.png | 5 |
+| 望洞庭湖赠张丞相 | jiaokeshu-xuanshi-1.png | 5 |
 
 **陆游** — 10 首
 
@@ -4870,7 +4870,7 @@
 
 | 诗卡 | 背景 | 题数 |
 | --- | --- | --- |
-| 黄鹤楼 / 登黄鹤楼 | jiaokeshu-xuanshi-3.png | 5 |
+| 黄鹤楼 | jiaokeshu-xuanshi-3.png | 5 |
 
 **李白** — 87 首
 

@@ -397,7 +397,7 @@ export function LevelQuiz({
               item="reveal"
               count={inventory.reveal}
               disabled={revealUsed}
-              label={revealUsed ? "去伪·已用" : undefined}
+              label={revealUsed ? "排除·已用" : undefined}
               onClick={useReveal}
             />
             <ItemChip
@@ -409,18 +409,21 @@ export function LevelQuiz({
             />
           </div>
 
-          {/* 唐小诗（情绪形态） */}
-          <div className="absolute bottom-[44%] left-2 z-10 w-20 text-center">
-            <img
-              src={pose === "happy" ? HERO.happy : pose === "sad" ? HERO.sad : HERO.idle}
-              alt=""
-              onError={(e) => {
-                e.currentTarget.style.visibility = "hidden";
-              }}
-              className={`mx-auto h-24 w-auto object-contain drop-shadow-lg ${
-                pose === "happy" ? "mood-happy" : pose === "sad" ? "mood-sad" : "idle-bob"
-              }`}
-            />
+          {/* 唐小诗（情绪形态）：靠上居中，与题卡留出呼吸空间 */}
+          <div className="absolute inset-x-0 top-[max(9.2rem,calc(env(safe-area-inset-top)+8.8rem))] z-10 flex justify-center">
+            <div className="relative flex h-28 items-end justify-center">
+              <span className="sprite-shadow" />
+              <img
+                src={pose === "happy" ? HERO.happy : pose === "sad" ? HERO.sad : HERO.idle}
+                alt=""
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+                className={`relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg ${
+                  pose === "happy" ? "mood-happy" : pose === "sad" ? "mood-sad" : "idle-bob"
+                }`}
+              />
+            </div>
           </div>
 
           {floatText && phase === "resolving" ? (
@@ -579,22 +582,12 @@ function IntroPanel({
         <p className="mt-0.5 text-xs tracking-wider text-ink/60">
           一道不错 = 三星 · 错 1–2 题 = 两星 · 过关 = 一星
         </p>
-        <div className="mx-auto mt-2 max-w-[24em] rounded-lg bg-ink/5 px-3 py-2 text-left">
-          <p className="text-[11.5px] leading-relaxed text-ink-soft">
-            题目专为你出，和别人不一样；重打本关还是这 10 题。
+        {ownedItems.length > 0 ? (
+          <p className="mx-auto mt-2 max-w-[24em] rounded-lg bg-ink/5 px-3 py-2 text-[11.5px] leading-relaxed text-ink-soft">
+            本关道具：
+            {ownedItems.map((item) => `${ITEM_DEFS[item].name}×${inventory[item]}（${ITEM_DEFS[item].desc}）`).join("、")}
           </p>
-          {ownedItems.length > 0 ? (
-            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-soft">
-              本关可用道具：
-              {ownedItems.map((item) => `${ITEM_DEFS[item].name}×${inventory[item]}（${ITEM_DEFS[item].desc}）`).join("、")}
-              （答题时点击使用）
-            </p>
-          ) : (
-            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-soft">
-              过关得星星，每多拿一颗星送一个道具：排除、补答、双倍。
-            </p>
-          )}
-        </div>
+        ) : null}
         <div className="mt-3 flex justify-center">
           <PlaqueButton onClick={onStart}>开始答题</PlaqueButton>
         </div>
@@ -665,9 +658,7 @@ function ReportPanel({
           ) : null}
           <PlaqueButton onClick={onContinue}>{res.outcome === "next" ? "下一题" : "看结果"}</PlaqueButton>
         </div>
-        {redoAvailable ? (
-          <p className="mt-1 text-[10.5px] tracking-wider text-ink/55">补答：这道题不算，换一道新题补上</p>
-        ) : null}
+
       </ArtPanel>
     </section>
   );
@@ -703,15 +694,15 @@ function ResultPanel({
           {result.won ? (
             <div className="mt-2 flex justify-center gap-2" aria-label={`${result.stars} 星`}>
               {[1, 2, 3].map((n) => (
-                <span
+                <img
                   key={n}
+                  src="/ui/icon-star.png"
+                  alt=""
                   style={{ animationDelay: `${(n - 1) * 160}ms` }}
-                  className={`seal-pop grid h-9 w-9 place-items-center rounded-full border-2 font-display leading-none ${
-                    n <= result.stars ? "border-seal bg-seal text-paper" : "border-ink/20 text-ink/25"
+                  className={`seal-pop h-10 w-10 object-contain drop-shadow-md ${
+                    n <= result.stars ? "" : "opacity-25 grayscale"
                   }`}
-                >
-                  ★
-                </span>
+                />
               ))}
             </div>
           ) : null}
@@ -724,7 +715,7 @@ function ResultPanel({
             </p>
           ) : null}
           {result.won && result.granted.length === 0 ? (
-            <p className="mt-2 text-[11px] tracking-wider text-ink/60">这个星级已经拿过，再冲更高星有新奖励</p>
+            <p className="mt-2 text-[11px] tracking-wider text-ink/60">再冲更高星有新奖励</p>
           ) : null}
           <p className="mt-1 flex items-baseline justify-center gap-2">
             <span className="text-xs tracking-widest text-ink-soft">本关得分</span>
@@ -738,9 +729,7 @@ function ResultPanel({
             {result.won && hasNext ? <PlaqueButton onClick={onNext}>下一关</PlaqueButton> : null}
             <PlaqueButton onClick={onExit}>{result.won ? "回关卡列表" : "返回"}</PlaqueButton>
           </div>
-          {!result.won ? (
-            <p className="mt-1.5 text-[10.5px] tracking-wider text-ink/55">重打还是这 10 题，把没记牢的诗句补上</p>
-          ) : null}
+
         </div>
       </ArtPanel>
     </section>

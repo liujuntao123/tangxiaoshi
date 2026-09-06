@@ -383,7 +383,7 @@ export function PoemQuiz({
       {poemMode && (phase === "battle" || phase === "resolving") ? <QuizHud combo={combo} linkReady={linkReady} /> : null}
 
       {/* 双人位：左唐小诗（情绪形态），右作者（单一立绘，只出题） */}
-      <div className="absolute inset-x-0 bottom-[38%] z-10 flex items-end justify-between px-2">
+      <div className="absolute inset-x-0 bottom-[42%] z-10 flex items-end justify-between px-2">
         <div className="w-[44%] text-center">
           <p className="hud-title text-paper">唐小诗</p>
           <div className="relative mx-auto mt-1 flex h-36 items-end justify-center">

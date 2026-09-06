@@ -125,6 +125,10 @@ def parse_poems(site: dict[str, dict], name_to_author: dict) -> list[dict]:
                 entry = name_to_author.get(author_name)
                 if entry is None:
                     raise SystemExit(f"authors.json 缺少作者「{author_name}」（诗 {p['id']}）")
+                # 诗名变体归一：数据源用「A / B」记录别名（如「淮上喜会梁川故人 / 淮上喜会梁州故人」），
+                # 游戏内统一取第一段，避免诗名题选项出现歧义双题名
+                raw_title = p["title"]
+                norm_title = raw_title.split("/")[0].strip() or raw_title
                 paragraphs = p["paragraphs"]
                 segs = [s for para in paragraphs for s in split_paragraph(para)]
                 poems.append(
@@ -136,7 +140,7 @@ def parse_poems(site: dict[str, dict], name_to_author: dict) -> list[dict]:
                         "authorId": entry["id"],
                         "authorName": author_name,
                         "dynastyId": p["dynasty"],
-                        "title": p["title"],
+                        "title": norm_title,
                         "paragraphs": paragraphs,
                         "segs": segs,
                         "pairs": qualified_pairs(paragraphs),

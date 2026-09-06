@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { COLLECTIONS } from "@/lib/game/content";
 import { preloadImages } from "@/lib/game/preload";
 import { useEffect } from "react";
-import { ArtSlot, PanelCaption } from "./stage";
+import { PagedList } from "./paged-list";
+import { ArtSlot } from "./stage";
 
 /**
  * 诗集资料库网格（原「环游」文集列表，ADR-0011）。
@@ -16,10 +17,10 @@ export function CollectionGrid() {
   }, [playable]);
 
   return (
-    <div>
-      <PanelCaption className="mb-3">选一部文集出发</PanelCaption>
-      <div className="grid grid-cols-2 gap-4">
-        {COLLECTIONS.map((c, i) => {
+    <PagedList pageSize={6} count={COLLECTIONS.length}>
+      {(from, to) => (
+        <div className="grid grid-cols-2 gap-4">
+          {COLLECTIONS.slice(from, to).map((c, i) => {
           {/* 使用 ui-panel-compact 轻面板外壳 + p-2.5 释放封面与标题宽度 */}
           const card = (
             <div
@@ -47,8 +48,9 @@ export function CollectionGrid() {
               {card}
             </div>
           );
-        })}
-      </div>
-    </div>
+          })}
+        </div>
+      )}
+    </PagedList>
   );
 }

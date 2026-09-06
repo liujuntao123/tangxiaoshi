@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { authorsInChapter, chaptersIn, collectionById, poemsInChapter } from "@/lib/game/content";
 import { GAME_BACKGROUNDS } from "@/lib/game/content/meta";
 import { useSave } from "@/lib/game/save-context";
+import { PagedList } from "./paged-list";
 import { ArtPanel, ArtSlot, PanelCaption, RowChevron, Stage, StageHud } from "./stage";
 
 /** 资料库第二层：文集的章节页（通用章节形象按章序循环，ADR-0012）。
@@ -14,10 +15,12 @@ export function LibraryChapters({ collectionId }: { collectionId: string }) {
   return (
     <Stage bg={GAME_BACKGROUNDS.tourChapters}>
       <StageHud title={collection.title} backTo="/library" />
-      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 overflow-y-auto px-5 pb-[max(1.6rem,env(safe-area-inset-bottom))]">
+      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 flex flex-col px-5 pb-[max(0.8rem,env(safe-area-inset-bottom))]">
         <PanelCaption className="mb-3">选一章开始</PanelCaption>
-        <div className="flex flex-col gap-3">
-          {chapters.map((ch, i) => {
+        <PagedList pageSize={4} count={chapters.length} className="min-h-0 flex-1">
+          {(from, to) => (
+            <div className="flex flex-col gap-3">
+          {chapters.slice(from, to).map((ch, i) => {
             const authors = authorsInChapter(ch.id);
             const poems = poemsInChapter(ch.id);
             const stars = poems.reduce(
@@ -69,7 +72,9 @@ export function LibraryChapters({ collectionId }: { collectionId: string }) {
               </Link>
             );
           })}
-        </div>
+            </div>
+          )}
+        </PagedList>
       </div>
     </Stage>
   );

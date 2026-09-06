@@ -2,7 +2,7 @@ import { COLLECTIONS } from "@/lib/game/content";
 import { GAME_BACKGROUNDS as BG } from "@/lib/game/content/meta";
 import { preloadImages } from "@/lib/game/preload";
 import { useEffect } from "react";
-import { Stage, StageHud } from "./stage";
+import { PanelCaption, Stage, StageHud } from "./stage";
 import { CollectionGrid } from "./library-collections";
 
 /**
@@ -19,11 +19,8 @@ export function LibraryView() {
   return (
     <Stage bg={BG.levels}>
       <StageHud title="诗集资料库" backTo="/" />
-      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 overflow-y-auto px-5 pb-[max(1.6rem,env(safe-area-inset-bottom))]">
-        {/* 长说明改为 scenery-plate 多行安全副文案，消解与下方行动胶囊的双层堆叠 */}
-        <p className="scenery-plate paper-glow mx-auto mb-3 w-fit max-w-full px-3 py-1.5 text-center text-xs leading-relaxed text-paper/85">
-          随手可玩，通关与诗印照常计入诗册；闯关请回首页点「继续闯关」
-        </p>
+      <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 flex flex-col px-5 pb-[max(0.8rem,env(safe-area-inset-bottom))]">
+        <PanelCaption className="mb-3">随手可玩，通关计入诗册</PanelCaption>
         <CollectionGrid />
       </div>
     </Stage>
