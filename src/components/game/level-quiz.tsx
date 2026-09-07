@@ -576,7 +576,7 @@ function IntroPanel({
 }) {
   const ownedItems = (["reveal", "redo", "double"] as ItemId[]).filter((item) => inventory[item] > 0);
   return (
-    <section className="pop-in absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-20">
+    <section className="pop-in absolute inset-x-3 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-20">
       <ArtPanel className="text-center">
         {/* 页头横匾已标「第 N 关」，面板标题改用出发口令，避免重复 */}
         <p className="title-ink text-3xl">整装出发</p>

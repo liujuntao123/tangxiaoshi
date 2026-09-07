@@ -818,7 +818,7 @@
 .paper-plate {
   border-radius: 14px;
   border: 1px solid rgb(148 112 58 / 40%);
-  background: linear-gradient(180deg, rgb(247 240 223 / 94%), rgb(234 220 194 / 88%));
+  background: linear-gradient(180deg, rgb(247 240 223 / 88%), rgb(234 220 194 / 80%));
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 55%),
     0 4px 14px rgb(28 23 18 / 30%);
@@ -888,6 +888,9 @@
 .ui-speech {
   border: 18px solid transparent;
   border-image: url("/ui/speech-panel.png") 130 fill / 16px 22px stretch;
+  /* 面板中幅素材已降 alpha，这里补一层微磨砂，透出场景又不损可读性 */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 .ui-slip {

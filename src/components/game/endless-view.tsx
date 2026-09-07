@@ -231,7 +231,7 @@ export function EndlessView() {
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
         <StageHud title="无尽模式" backTo="/" />
-        <div className="absolute inset-x-3 inset-y-0 z-10 flex flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="absolute inset-x-3 inset-y-0 z-10 flex translate-y-[1.5dvh] flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
           {/* 开局仪式感：唐小诗立绘跃然卷上（审查 P1-13） */}
           <div className="relative mx-auto mb-2 flex h-28 items-end justify-center">
             <span className="sprite-shadow" />
@@ -241,12 +241,15 @@ export function EndlessView() {
               className="idle-bob relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg"
             />
           </div>
-          <ArtPanel className="text-center">
-            <img
-              src="/ui/lantern.png"
-              alt=""
-              className="idle-bob mx-auto mb-1 h-12 w-auto object-contain drop-shadow"
-            />
+          {/* 背景人物恰在面板脚下：本面板局部垫一层柔光纸底防穿模 */}
+          <div className="relative">
+            <span aria-hidden className="absolute -inset-1 -z-10 rounded-2xl bg-[#f7f0df]/60 backdrop-blur-md" />
+            <ArtPanel className="text-center">
+              <img
+                src="/ui/lantern.png"
+                alt=""
+                className="idle-bob mx-auto mb-1 h-12 w-auto object-contain drop-shadow"
+              />
             <p className="title-ink text-2xl">一题错，本局结束</p>
             <div className="ink-divider mx-auto mt-2.5 max-w-[15rem]" aria-hidden>
               <span className="font-display text-[9px]">◈</span>
@@ -254,17 +257,18 @@ export function EndlessView() {
             <p className="mt-2 text-sm tracking-widest text-ink-soft">
               {`历史最高连对 ${save.endlessBestStreak} · 历史最高分 ${best}`}
             </p>
-            <div className="mt-4 flex justify-center">
-              <PlaqueButton
-                onClick={() => {
-                  sfxTap();
-                  resetRun();
-                }}
-              >
-                开始
-              </PlaqueButton>
-            </div>
-          </ArtPanel>
+              <div className="mt-4 flex justify-center">
+                <PlaqueButton
+                  onClick={() => {
+                    sfxTap();
+                    resetRun();
+                  }}
+                >
+                  开始
+                </PlaqueButton>
+              </div>
+            </ArtPanel>
+          </div>
           <p className="caption-pill mx-auto mt-3">
             每答对一题涨诗气 · 诗气满额外加分
           </p>
@@ -287,7 +291,7 @@ export function EndlessView() {
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
         <StageHud title="无尽模式" backTo="/" />
-        <div className="absolute inset-x-3 inset-y-0 z-10 flex flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="absolute inset-x-3 inset-y-0 z-10 flex translate-y-[1.5dvh] flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
           <ArtPanel className="text-center">
             <p className="title-ink text-2xl">本局结束</p>
             <p className="title-ink mt-1 text-5xl">{view.streak}</p>

@@ -37,7 +37,7 @@ export function HomeScreen() {
     <Stage bg={GAME_BACKGROUNDS.home}>
       <StageHud />
 
-      <div className="absolute inset-x-0 top-[7%] z-10 flex flex-col items-center gap-1">
+      <div className="absolute inset-x-0 top-[6%] z-10 flex flex-col items-center gap-1">
         <p className="title-art paper-glow text-center text-[2.5rem] leading-tight text-paper">唐小诗环游记</p>
         <p className="paper-glow text-center text-[11px] tracking-[0.42em] text-paper/85">
           探索中国古诗词之美
@@ -45,7 +45,7 @@ export function HomeScreen() {
       </div>
 
       {/* 远征牌：数据三格 + 墨线 + 下一关进度，归入同一座纸面读作一块「战报」 */}
-      <div className="absolute inset-x-0 top-[15.5%] z-10 flex justify-center px-4">
+      <div className="absolute inset-x-0 top-[18.5%] z-10 flex justify-center px-4">
         <div className="paper-plate paper-plate-ink w-full max-w-sm px-3 py-2.5">
           <div className="stat-grid">
             <StatCell icon="/ui/icon-scroll.png" value={progress.cleared} suffix={`/${LEVEL_COUNT}`} label="已通关" />
