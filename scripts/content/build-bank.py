@@ -312,38 +312,40 @@ def build_questions(poem: dict, pools: dict) -> list[dict]:
         pools["title_all"],
     ]
 
-    pair1 = pairs[0]
-    pair2 = pairs[1] if len(pairs) > 1 else pairs[0]
-    pair3 = pairs[-1]
+    # 点睛联优先（docs/content-rules.md 取材顺序）：名句多落在诗的后半
+    # （「儿童急走追黄蝶」「欲穷千里目」「问君能有几多愁」），首联常是起兴句、最易生僻。
+    # 补全题与诗名题的引句都优先取靠后的句对，次常见句对只作补充考查。
+    pair_famous = pairs[-1]
+    pair_second = pairs[-2] if len(pairs) > 1 else pairs[-1]
     questions = [
         make_question(
             qids[0],
             "complete-next",
-            f"「{pair1[0]}」的下一句是？",
-            pair1[0],
-            pair1[1],
-            completion_distractors(pair1[1], qids[0], seg_pool_order, quote=pair1[0]),
+            f"「{pair_famous[0]}」的下一句是？",
+            pair_famous[0],
+            pair_famous[1],
+            completion_distractors(pair_famous[1], qids[0], seg_pool_order, quote=pair_famous[0]),
         ),
         make_question(
             qids[1],
             "complete-next",
-            f"「{pair2[0]}」的下一句是？",
-            pair2[0],
-            pair2[1],
-            completion_distractors(pair2[1], qids[1], seg_pool_order, quote=pair2[0]),
+            f"「{pair_second[0]}」的下一句是？",
+            pair_second[0],
+            pair_second[1],
+            completion_distractors(pair_second[1], qids[1], seg_pool_order, quote=pair_second[0]),
         ),
         make_question(
             qids[2],
             "complete-prev",
-            f"「{pair3[1]}」的上一句是？",
-            pair3[1],
-            pair3[0],
-            completion_distractors(pair3[0], qids[2], seg_pool_order, quote=pair3[1]),
+            f"「{pair_famous[1]}」的上一句是？",
+            pair_famous[1],
+            pair_famous[0],
+            completion_distractors(pair_famous[0], qids[2], seg_pool_order, quote=pair_famous[1]),
         ),
     ]
 
-    quote_a = clamp_seg(segs[0]) if segs else poem["title"]
-    quote_b = clamp_seg(segs[1]) if len(segs) > 1 else quote_a
+    quote_a = clamp_seg(pair_famous[0]) if segs else poem["title"]
+    quote_b = clamp_seg(pair_famous[1]) if len(segs) > 1 else quote_a
     questions.append(
         make_question(
             qids[3],
