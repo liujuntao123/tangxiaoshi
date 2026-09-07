@@ -340,16 +340,16 @@ export function EndlessView() {
       <Stage bg={GAME_BACKGROUNDS.endless}>
         <StageHud title="无尽模式" backTo="/" />
         <div className="absolute inset-x-3 inset-y-0 z-10 flex translate-y-[1.5dvh] flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
-          {/* 开局仪式感：唐小诗立绘跃然卷上（审查 P1-13） */}
-          <div className="relative mx-auto mb-2 flex h-28 items-end justify-center">
+          {/* 开局仪式感：唐小诗立绘跃然卷上（审查 P1-13），随答题界面一并放大 */}
+          <div className="relative mx-auto mb-2 flex h-36 items-end justify-center">
             <span className="sprite-shadow" />
             <img
               src="/sprites/hero.png"
               alt=""
-              className="idle-bob relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg"
+              className="idle-bob relative z-10 h-36 w-auto object-contain object-bottom drop-shadow-lg"
             />
           </div>
-          {/* 背景人物恰在面板脚下：本面板局部垫一层柔光纸底防穿模 */}
+          {/* 面板脚下垫一层柔光纸底：任何背景上都保持纸面可读 */}
           <div className="relative">
             <span aria-hidden className="absolute -inset-1 -z-10 rounded-2xl bg-[#f7f0df]/60 backdrop-blur-md" />
             <ArtPanel className="text-center">
@@ -560,9 +560,9 @@ export function EndlessView() {
         <div className="qi-fill qi-flow h-full rounded-full bg-seal" style={{ width: `${qi}%` }} />
       </div>
 
-      {/* 唐小诗情绪位：答对欢呼、答错沮丧，与环游答题同款反馈 */}
-      <div className="absolute inset-x-0 bottom-[33%] z-10 flex justify-center">
-        <div className="relative flex h-28 items-end justify-center">
+      {/* 唐小诗情绪位：钉在题卡上沿之上（靠上、加大，矮屏自动收敛），答对欢呼、答错沮丧 */}
+      <div className="absolute inset-x-0 bottom-[calc(23rem_+_env(safe-area-inset-bottom))] z-10 flex justify-center">
+        <div className="relative flex h-[clamp(6rem,calc(100dvh_-_31rem),10rem)] items-end justify-center">
           <span className="sprite-shadow" />
           <img
             src={pose === "happy" ? HERO.happy : pose === "sad" ? HERO.sad : HERO.idle}
@@ -571,7 +571,7 @@ export function EndlessView() {
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";
             }}
-            className={`relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg ${
+            className={`relative z-10 h-[clamp(6rem,calc(100dvh_-_31rem),10rem)] w-auto object-contain object-bottom drop-shadow-lg ${
               pose === "happy" ? "mood-happy" : pose === "sad" ? "mood-sad" : "idle-bob"
             }`}
           />

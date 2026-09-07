@@ -418,9 +418,9 @@ export function LevelQuiz({
             />
           </div>
 
-          {/* 唐小诗（情绪形态）：靠上居中，与题卡留出呼吸空间 */}
+          {/* 唐小诗（情绪形态）：靠上居中放大（矮屏自动收敛），与题卡留出呼吸空间 */}
           <div className="absolute inset-x-0 top-[max(9.2rem,calc(env(safe-area-inset-top)+8.8rem))] z-10 flex justify-center">
-            <div className="relative flex h-28 items-end justify-center">
+            <div className="relative flex h-[clamp(7rem,calc(100dvh_-_32rem),10rem)] items-end justify-center">
               <span className="sprite-shadow" />
               <img
                 src={pose === "happy" ? HERO.happy : pose === "sad" ? HERO.sad : HERO.idle}
@@ -428,7 +428,7 @@ export function LevelQuiz({
                 onError={(e) => {
                   e.currentTarget.style.visibility = "hidden";
                 }}
-                className={`relative z-10 h-28 w-auto object-contain object-bottom drop-shadow-lg ${
+                className={`relative z-10 h-[clamp(7rem,calc(100dvh_-_32rem),10rem)] w-auto object-contain object-bottom drop-shadow-lg ${
                   pose === "happy" ? "mood-happy" : pose === "sad" ? "mood-sad" : "idle-bob"
                 }`}
               />
