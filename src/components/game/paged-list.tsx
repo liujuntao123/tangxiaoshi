@@ -56,7 +56,8 @@ export function PagedList({
   );
 }
 
-/** 翻页玉钮：玉盘箭头贴图 + 字衬兜底；禁用态整钮置灰失去按压反馈。 */
+/** 翻页玉钮：只裸露玉盘箭头贴图本身，不垫衬底容器；
+ *  贴图意外缺失时才回退为字衬圆钮。 */
 function PageArrow({
   dir,
   disabled,
@@ -66,6 +67,7 @@ function PageArrow({
   disabled?: boolean;
   onClick: () => void;
 }) {
+  const [imgFailed, setImgFailed] = useState(false);
   return (
     <button
       type="button"
@@ -74,18 +76,18 @@ function PageArrow({
       onClick={onClick}
       className="tap relative grid h-11 w-11 place-items-center disabled:opacity-60"
     >
-      {/* 字衬兜底：贴图缺失时露出（生成图正常时被完全盖住） */}
-      <span className="absolute inset-0 grid place-items-center rounded-full border border-paper/30 bg-paper/85 font-display text-xl leading-none text-ink-soft">
-        {dir === "prev" ? "‹" : "›"}
-      </span>
-      <img
-        src={`/ui/page-${dir}.png`}
-        alt=""
-        className={`relative h-11 w-11 object-contain drop-shadow-md ${disabled ? "saturate-[0.45]" : ""}`}
-        onError={(e) => {
-          e.currentTarget.style.visibility = "hidden";
-        }}
-      />
+      {imgFailed ? (
+        <span className="grid h-10 w-10 place-items-center rounded-full border border-ink/20 bg-paper/85 font-display text-xl leading-none text-ink-soft">
+          {dir === "prev" ? "‹" : "›"}
+        </span>
+      ) : (
+        <img
+          src={`/ui/page-${dir}.png`}
+          alt=""
+          className={`h-11 w-11 object-contain drop-shadow-md ${disabled ? "saturate-[0.45]" : ""}`}
+          onError={() => setImgFailed(true)}
+        />
+      )}
     </button>
   );
 }
