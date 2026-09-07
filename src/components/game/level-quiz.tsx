@@ -400,20 +400,20 @@ export function LevelQuiz({
             <ProgressDots results={results} active={filled} />
           </div>
 
-          {/* 道具行：持有的道具在这里直接用 */}
+          {/* 道具行：持有的道具在这里直接用（木牌可点用，已用/已就绪有角标） */}
           <div className="absolute inset-x-0 top-[max(6.6rem,calc(env(safe-area-inset-top)+6.2rem))] z-10 flex justify-center gap-2">
             <ItemChip
               item="reveal"
               count={inventory.reveal}
-              disabled={revealUsed}
-              label={revealUsed ? "排除·已用" : undefined}
+              tone={revealUsed ? "spent" : "idle"}
+              badge={revealUsed ? "已用" : undefined}
               onClick={useReveal}
             />
             <ItemChip
               item="double"
               count={inventory.double}
-              disabled={doubleArmed}
-              label={doubleArmed ? "双倍·已就绪" : undefined}
+              tone={doubleArmed ? "armed" : "idle"}
+              badge={doubleArmed ? "已就绪" : undefined}
               onClick={useDouble}
             />
           </div>
@@ -544,32 +544,68 @@ function ProgressDots({ results, active }: { results: ("correct" | "wrong" | "re
   );
 }
 
-/** 道具按钮：数量为 0 时整颗隐藏，保持界面只有能用的东西。 */
+/** 道具牌视觉状态：idle 可点用 / armed 已挂起生效 / spent 已消耗。 */
+type ItemTone = "idle" | "armed" | "spent";
+
+/**
+ * 道具牌：答题场里直接点用的木牌。
+ * 与选项同一族木简质感 + 「用」印 + 呼吸微光，一眼可辨「这是能点的按钮」，
+ * 不再沿用信息条（ink-chip）样式——此前走查被误读成纯信息展示。
+ */
 function ItemChip({
   item,
   count,
-  disabled,
-  label,
+  tone = "idle",
+  badge,
   onClick,
 }: {
   item: ItemId;
   count: number;
-  disabled?: boolean;
-  label?: string;
+  tone?: ItemTone;
+  /** 角标短评：如「已用 / 已就绪」，缺省不显示。 */
+  badge?: string;
   onClick: () => void;
 }) {
-  if (count <= 0 && !label) return null;
+  if (count <= 0 && !badge) return null;
   const def = ITEM_DEFS[item];
-  const showCount = count > 0;
+  const armed = tone === "armed";
+  const spent = tone === "spent";
+  const usable = tone === "idle" && count > 0;
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled || !showCount}
-      className="tap ink-chip paper-glow px-2.5 py-1 text-[11px] tracking-wider text-paper/95 disabled:opacity-60"
+      disabled={!usable}
       title={def.desc}
+      aria-label={`道具${def.name}：${def.desc}`}
+      className={`tap-deep relative block rounded-[10px] border border-[#8a5a2b]/70 bg-gradient-to-b from-[#ecd0a0] to-[#cfa066] shadow-[0_2px_5px_rgb(28_23_18/28%)] ${
+        spent ? "opacity-55 grayscale saturate-50" : armed ? "picked ring-2 ring-pine/45" : "item-invite"
+      }`}
     >
-      {label ?? `${def.name} ×${count}`}
+      <span className="relative z-10 flex min-h-[2.45rem] items-center gap-1.5 px-2.5 py-1">
+        {/* 「用」小朱砂印：与选项甲乙丙丁同族的动作暗示 */}
+        <span
+          aria-hidden
+          className="grid h-4.5 w-4.5 shrink-0 place-items-center rounded-[4px] border border-seal/60 font-display text-[10px] leading-none text-seal/85"
+        >
+          用
+        </span>
+        <span className="text-[12.5px] leading-none text-ink">{def.name}</span>
+        {count > 0 ? (
+          <span className="tabular-nums rounded-full bg-ink/10 px-1.5 py-0.5 text-[10px] leading-none text-ink/75">
+            ×{count}
+          </span>
+        ) : null}
+        {badge ? (
+          <span
+            className={`rounded-full px-1.5 py-0.5 text-[9.5px] leading-none tracking-wider ${
+              armed ? "bg-pine/20 text-pine" : "bg-ink/10 text-ink/55"
+            }`}
+          >
+            {badge}
+          </span>
+        ) : null}
+      </span>
     </button>
   );
 }
@@ -618,6 +654,7 @@ function IntroPanel({
           <p className="mx-auto mt-2 max-w-[24em] rounded-lg bg-ink/5 px-3 py-2 text-[11.5px] leading-relaxed text-ink-soft">
             本关道具：
             {ownedItems.map((item) => `${ITEM_DEFS[item].name}×${inventory[item]}（${ITEM_DEFS[item].desc}）`).join("、")}
+            。答题时点击上方的道具牌即可使用。
           </p>
         ) : null}
         <div className="mt-3 flex justify-center">

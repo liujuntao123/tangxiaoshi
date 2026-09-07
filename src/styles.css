@@ -908,6 +908,21 @@
   border-image-source: url("/ui/choice-miss.png");
 }
 
+/* 道具牌呼吸邀请：可点用的道具牌带一圈缓慢的米白呼吸光（随木牌轮廓的 drop-shadow），
+   提示「这是能点的按钮」；armed/spent 态不呼吸，靠角标与置灰表达状态 */
+@keyframes item-invite {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px rgb(243 235 224 / 0%));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgb(243 235 224 / 65%));
+  }
+}
+.item-invite {
+  animation: item-invite 2.4s ease-in-out infinite;
+}
+
 .tap {
   transition:
     transform 0.14s ease,
