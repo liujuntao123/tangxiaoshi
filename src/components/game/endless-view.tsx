@@ -3,6 +3,13 @@ import { useRef, useState } from "react";
 import { allQuestions } from "@/lib/game/content";
 import { GAME_BACKGROUNDS, HERO } from "@/lib/game/content/meta";
 import { applyEndlessRun, poemContextFor, scoreForAnswer } from "@/lib/game/progress";
+import {
+  ENDLESS_BOARD_SIZE,
+  normalizeEndlessBoard,
+  type EndlessBoardData,
+  type LeaderboardEntry,
+} from "@/lib/game/leaderboard";
+import { getEndlessBoard } from "@/lib/game/ranking";
 import type { Poem, Question } from "@/lib/game/types";
 import { useSave } from "@/lib/game/save-context";
 import { sfxHit, sfxHurt, sfxTap, sfxWin } from "@/lib/game/sfx";
@@ -13,9 +20,70 @@ import { ArtPanel, Stage, StageHud } from "./stage";
  * 无尽（上游口径）：已编译全部题池随机，一题答错即止，无通关概念（ADR-0011）。
  * 答题手感（玩法重做，ADR-0015）：battle -> report ->（收句）-> battle / ended，
  * 连击计分 + 诗气反馈；答错给正确答案与诗句上下文，全程无定时器自动推进。
+ * 排行榜（ADR-0019）：开场/结算可打开 ranking 榜单页——连对/得分双榜看
+ * 前 20 名与自己的名次，纪录向、无压迫（无赛季、无榜单奖励、不嘲讽）。
  */
-type Phase = "idle" | "battle" | "report" | "ended";
+type Phase = "idle" | "battle" | "report" | "ended" | "ranking";
 type Pose = "idle" | "happy" | "sad";
+
+/** 榜单指标：连对榜（主榜，与「本局连对」主口径一致）/ 得分榜（ADR-0019）。 */
+type BoardTab = "streak" | "score";
+
+const BOARD_TABS: { key: BoardTab; title: string }[] = [
+  { key: "streak", title: "连对榜" },
+  { key: "score", title: "得分榜" },
+];
+
+/** 前三名名次印：金 / 银 / 铜底色，其余名次走淡墨描边圆。 */
+const RANK_MEDAL: Record<number, string> = {
+  1: "bg-gradient-to-b from-[#f2d78c] to-[#d9a83f] text-ink shadow-md",
+  2: "bg-gradient-to-b from-[#eae7de] to-[#b9bdb9] text-ink",
+  3: "bg-gradient-to-b from-[#e5b58d] to-[#b97f52] text-ink",
+};
+
+/** 榜单行：名次印 + 展示名 + 双最佳副行，右端是本榜指标的大数字。 */
+function BoardRow({
+  entry,
+  metric,
+  index,
+}: {
+  entry: LeaderboardEntry;
+  metric: BoardTab;
+  index: number;
+}) {
+  const medal = RANK_MEDAL[entry.rank] ?? "border border-ink/20 bg-ink/5 text-ink/45";
+  return (
+    <ArtPanel
+      className={`rise-in flex items-center gap-3 text-left ${entry.isSelf ? "picked" : ""}`}
+      style={{ animationDelay: `${index * 45}ms` }}
+    >
+      <span
+        className={`grid h-9 w-9 shrink-0 place-items-center rounded-full font-display text-sm leading-none ${medal}`}
+      >
+        {entry.rank}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="title-ink truncate text-base leading-tight">
+          {entry.name}
+          {entry.isSelf ? (
+            <span className="ml-1.5 inline-block rounded bg-seal px-1 align-[2px] text-[9px] leading-[1.5] tracking-widest text-paper">
+              你
+            </span>
+          ) : null}
+        </p>
+        <p className="mt-0.5 truncate text-[11px] text-ink-soft">
+          {`连对 ${entry.bestStreak} · ${entry.bestScore} 分`}
+        </p>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="title-ink text-xl tabular-nums">
+          {metric === "streak" ? entry.bestStreak : entry.bestScore}
+        </p>
+        <p className="text-[10px] tracking-widest text-ink-soft">{metric === "streak" ? "连对" : "得分"}</p>
+      </div>
+    </ArtPanel>
+  );
+}
 
 /** 选项序号印：甲乙丙丁，作答仪式感。 */
 const SLIP_MARKS = ["甲", "乙", "丙", "丁"] as const;
@@ -76,9 +144,18 @@ export function EndlessView() {
   const [floatText, setFloatText] = useState<string | null>(null);
   const [resultView, setResultView] = useState<ResultView | null>(null);
 
+  // 排行榜（ADR-0019）：打开时现查现算；boardReturn 记录从哪打开（开场/结算），返回时回哪。
+  const [boardTab, setBoardTab] = useState<BoardTab>("streak");
+  const [board, setBoard] = useState<EndlessBoardData | null>(null);
+  const [boardLoading, setBoardLoading] = useState(false);
+  const [boardError, setBoardError] = useState<string | null>(null);
+  const [boardReturn, setBoardReturn] = useState<Phase>("idle");
+
   // 同步互斥：同 tick 的连点在 React 刷新前到达，用 ref 立刻挡住。
   const busyRef = useRef(false);
   const savedRef = useRef(false);
+  // 榜单请求序号：连续开关榜单时丢弃过期响应，避免旧数据回写。
+  const boardSeqRef = useRef(0);
 
   const item: DeckItem | undefined = deck.length > 0 ? deck[index % deck.length] : undefined;
   const question = item?.question;
@@ -104,6 +181,37 @@ export function EndlessView() {
     if (phase !== "ended") return;
     sfxTap();
     resetRun();
+  }
+
+  // —— 排行榜：每次打开都重新拉取（刚结束的一局等存档落库后即可上榜） ——
+  async function loadBoard() {
+    const seq = boardSeqRef.current + 1;
+    boardSeqRef.current = seq;
+    setBoardLoading(true);
+    setBoardError(null);
+    try {
+      // 渲染前再规范化一次：与服务端共用同一套兜底，脏数据不会画崩榜单。
+      const data = normalizeEndlessBoard(await getEndlessBoard());
+      if (boardSeqRef.current !== seq) return;
+      setBoard(data);
+    } catch (err) {
+      if (boardSeqRef.current !== seq) return;
+      setBoardError(err instanceof Error ? err.message : "榜单加载失败");
+    } finally {
+      if (boardSeqRef.current === seq) setBoardLoading(false);
+    }
+  }
+
+  function openBoard(from: Phase) {
+    sfxTap();
+    setBoardReturn(from === "ended" ? "ended" : "idle");
+    setPhase("ranking");
+    void loadBoard();
+  }
+
+  function backFromBoard() {
+    sfxTap();
+    setPhase(boardReturn);
   }
 
   // —— 作答：一次点击只结算一次，不用定时器推进 ——
@@ -257,7 +365,7 @@ export function EndlessView() {
             <p className="mt-2 text-sm tracking-widest text-ink-soft">
               {`历史最高连对 ${save.endlessBestStreak} · 历史最高分 ${best}`}
             </p>
-              <div className="mt-4 flex justify-center">
+              <div className="mt-4 flex justify-center gap-3">
                 <PlaqueButton
                   onClick={() => {
                     sfxTap();
@@ -266,6 +374,7 @@ export function EndlessView() {
                 >
                   开始
                 </PlaqueButton>
+                <PlaqueButton onClick={() => openBoard("idle")}>排行榜</PlaqueButton>
               </div>
             </ArtPanel>
           </div>
@@ -312,7 +421,118 @@ export function EndlessView() {
               </Link>
               <PlaqueButton onClick={restartRun}>再来一局</PlaqueButton>
             </div>
+            <button
+              type="button"
+              onClick={() => openBoard("ended")}
+              className="tap mt-3 text-xs tracking-[0.25em] text-pine underline decoration-ink/20 underline-offset-4"
+            >
+              看看排行榜
+            </button>
           </ArtPanel>
+        </div>
+      </Stage>
+    );
+  }
+
+  if (phase === "ranking") {
+    const activeBoard = board ? (boardTab === "streak" ? board.streakBoard : board.scoreBoard) : [];
+    const myRank = board ? (boardTab === "streak" ? board.myStreakRank : board.myScoreRank) : null;
+    return (
+      <Stage bg={GAME_BACKGROUNDS.endless}>
+        <StageHud title="无尽排行榜" />
+        {/* 榜单返回：回到打开前的无尽界面（开场/结算），不跳首页 */}
+        <button
+          type="button"
+          aria-label="返回无尽模式"
+          onClick={backFromBoard}
+          className="tap pointer-events-auto absolute left-3 top-[max(0.6rem,env(safe-area-inset-top))] z-30 grid h-11 w-11 place-items-center"
+        >
+          <img src="/ui/back-btn.png" alt="" className="h-10 w-10 object-contain drop-shadow-md" />
+        </button>
+        <div className="absolute inset-x-0 bottom-0 top-[max(4rem,calc(env(safe-area-inset-top)+3.6rem))] z-10 overflow-y-auto px-5 pb-[max(1.6rem,env(safe-area-inset-bottom))]">
+          {/* 榜单切换：与诗册分类筛选同一套胶囊语言 */}
+          <div className="sticky top-0 z-10 mb-3 flex justify-center gap-1.5 bg-gradient-to-b from-ink/40 to-transparent pb-1 pt-1">
+            {BOARD_TABS.map((tab) => {
+              const on = tab.key === boardTab;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  aria-pressed={on}
+                  className={`tap rounded-full border px-4 py-1 text-xs tracking-[0.25em] transition-colors ${
+                    on
+                      ? "border-paper bg-paper text-ink shadow-md"
+                      : "border-paper/40 bg-ink/45 text-paper/90"
+                  }`}
+                  onClick={() => {
+                    if (tab.key !== boardTab) {
+                      sfxTap();
+                      setBoardTab(tab.key);
+                    }
+                  }}
+                >
+                  {tab.title}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 我的纪录数据座：与首页/诗册同语言的碑刻三格 */}
+          <div className="paper-plate paper-plate-ink stat-grid mb-4 px-2 py-2">
+            {[
+              { value: save.endlessBestStreak, label: "我的连对" },
+              { value: save.endlessBestScore, label: "我的最高分" },
+              { value: board ? board.playerCount : "—", label: "上榜玩家" },
+            ].map((s) => (
+              <div key={s.label} className="flex flex-col items-center px-1 py-0.5 text-center">
+                <p className="title-ink text-[15px] tabular-nums">{s.value}</p>
+                <p className="mt-0.5 text-[10px] tracking-widest text-ink-soft">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {boardLoading ? (
+            <ArtPanel className="text-center">
+              <p className="py-6 text-sm text-ink-soft">榜单加载中…</p>
+            </ArtPanel>
+          ) : boardError ? (
+            <ArtPanel className="text-center">
+              <p className="mt-2 text-sm text-ink-soft">榜单暂时读不到，稍后再试。</p>
+              <div className="mb-2 mt-3 flex justify-center">
+                <PlaqueButton onClick={() => void loadBoard()}>重试</PlaqueButton>
+              </div>
+            </ArtPanel>
+          ) : activeBoard.length === 0 ? (
+            <ArtPanel className="text-center">
+              <p className="py-6 text-sm text-ink-soft">还没有人上榜 · 答对 1 题就能留下第一个纪录。</p>
+            </ArtPanel>
+          ) : (
+            <div className="flex flex-col gap-2.5">
+              {activeBoard.map((entry, i) => (
+                <BoardRow key={`${entry.rank}-${entry.name}-${i}`} entry={entry} metric={boardTab} index={i} />
+              ))}
+            </div>
+          )}
+
+          {/* 名次脚注：在榜报名次；不在榜只给一句鼓励，不做任何压迫性对比。
+              空榜时不出示（避免与空榜文案说同一句话）。 */}
+          {board && !boardLoading && !boardError && activeBoard.length > 0 ? (
+            <div className="paper-plate paper-plate-ink mt-4 px-4 py-3 text-center">
+              <p className="text-[11px] tracking-wider text-ink-soft">
+                {myRank !== null ? (
+                  <>
+                    {"本榜你的名次"}
+                    <span className="title-ink mx-1 text-sm">{`第 ${myRank} 名`}</span>
+                    {` · 榜上共 ${board.playerCount} 人${
+                      myRank > ENDLESS_BOARD_SIZE ? ` · 榜单展示前 ${ENDLESS_BOARD_SIZE} 名` : ""
+                    }`}
+                  </>
+                ) : (
+                  "还没有上榜纪录 · 答对 1 题就能上榜"
+                )}
+              </p>
+            </div>
+          ) : null}
         </div>
       </Stage>
     );

@@ -2,6 +2,22 @@
 
 本文件记录项目的产品、玩法、工程和文档变更。未发布变更统一放在 `[Unreleased]`，发布版本再改为具体版本号。每次修改项目相关内容时，必须同步追加一条记录。
 
+## [Unreleased] - 2026-09-06（无尽排行榜）
+
+### Added
+
+- **无尽模式排行榜（ADR-0019）**：`/endless` 开场面板新增「排行榜」按钮、结算面板新增「看看排行榜」入口，打开榜单页——连对榜（主榜）/ 得分榜双榜切换，各取前 20 名与自己名次，并列同名次（1,2,2,4）；榜上行是名次印（前三名金银铜）+ 展示名 + 双最佳，自己一行朱砂「你」印高亮；底部数据座（我的连对/最高分/上榜玩家）与名次脚注，无纪录时显示「答对 1 题就能上榜」鼓励。纪录向、无压迫：无赛季、无榜单奖励、不嘲讽。
+- 新增 `getEndlessBoard` 服务函数（`src/lib/game/ranking.ts`）：榜单从 `player_saves` 的无尽双最佳现查现算派生，不建新表、不加存档字段、零迁移（Neon 与 PGLite 通用）；只返回展示名（缺省「无名小诗」，截断 12 字）与成绩，不泄漏 userId / 邮箱。
+- 新增纯模块 `src/lib/game/leaderboard.ts`（榜单契约 + `normalizeEndlessBoard` 兜底规范化，服务端出库与客户端渲染前各跑一次）与配套 `leaderboard.test.ts`（已加入 `npm test` 清单）。
+
+### Changed
+
+- 榜单页返回回到打开前的界面（开场或结算），不跳首页；榜单每次打开现拉最新，刚结束的一局等存档落库后即可上榜。
+
+### Docs
+
+- 新增 `docs/adr/0019-endless-leaderboard.md` 并更新 ADR 索引；`docs/game-design.md`（新增「无尽排行榜」小节、`/endless` 页面职责与验收项）、`README.md`、`CONTEXT.md`、`docs/playtest-checklist.md` 同步。
+
 ## [Unreleased] - 2026-09-06（开场面板与面板质感微调）
 
 ### Changed
