@@ -44,9 +44,10 @@ export function HomeScreen() {
         </p>
       </div>
 
-      {/* 远征牌：数据三格 + 墨线 + 下一关进度，归入同一座纸面读作一块「战报」 */}
-      <div className="absolute inset-x-0 top-[18.5%] z-10 flex justify-center px-4">
-        <div className="paper-plate paper-plate-ink w-full max-w-sm px-3 py-2.5">
+      {/* 远征牌：数据三格 + 墨线 + 下一关进度，归入同一座纸面读作一块「战报」；
+          位置压在副标题之下，airy 纸底透出庭院场景 */}
+      <div className="absolute inset-x-0 top-[19.5%] z-10 flex justify-center px-4">
+        <div className="paper-plate paper-plate-ink paper-plate-airy w-full max-w-sm px-3 py-2.5">
           <div className="stat-grid">
             <StatCell icon="/ui/icon-scroll.png" value={progress.cleared} suffix={`/${LEVEL_COUNT}`} label="已通关" />
             <StatCell icon="/ui/icon-star.png" value={progress.stars} label="星星" />

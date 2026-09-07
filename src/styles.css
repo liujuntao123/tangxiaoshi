@@ -828,6 +828,12 @@
 .paper-plate-ink {
   color: var(--color-ink);
 }
+/* 主页远征牌专用：透得更明显，让庭院场景从面板后隐约透出 */
+.paper-plate-airy {
+  background: linear-gradient(180deg, rgb(247 240 223 / 74%), rgb(234 220 194 / 62%));
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
 .paper-plate .stat-grid > * + *,
 .paper-plate.stat-grid > * + * {
   border-left: 1px solid rgb(28 23 18 / 14%);
