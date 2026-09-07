@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""质检门：bank.json 必须全绿（docs/content-rules.md 第四节）。"""
+"""质检门：bank.json 必须全绿（docs/content-rules.md 第五节）。"""
 
 import json
 import re
@@ -101,14 +101,27 @@ def main() -> None:
         if p["collectionId"] not in collections:
             err(f"{p['id']} 引用不存在的文集 {p['collectionId']}")
 
+    # 5) 学段难度（ADR-0020）：1-5 合法，且每档至少够铺一关（13 首）
+    tier_counts: Counter = Counter()
+    for p in poems:
+        difficulty = p.get("difficulty")
+        if difficulty in (1, 2, 3, 4, 5):
+            tier_counts[difficulty] += 1
+        else:
+            err(f"{p['id']}「{p['title']}」难度档缺失或非法: {difficulty!r}")
+    for t in range(1, 6):
+        if tier_counts[t] < 13:
+            err(f"难度档 T{t} 仅 {tier_counts[t]} 首，不足一关（13 首）")
+
     if errors:
         print(f"✘ validate_content：{len(errors)} 处问题")
         for e in errors:
             print("  -", e)
         sys.exit(1)
     q_total = sum(len(p["questions"]) for p in poems)
+    tier_text = "、".join(f"T{t} {tier_counts.get(t, 0)} 首" for t in range(1, 6))
     print(f"✔ validate_content：{len(poems)} 诗卡 {q_total} 题、{len(authors)} 作者、"
-          f"{len(bank['achievements'])} 成就，全部通过")
+          f"{len(bank['achievements'])} 成就、难度档 {tier_text}，全部通过")
 
 
 if __name__ == "__main__":

@@ -21,7 +21,8 @@
 | [0015](0015-poem-card-gameplay.md) | 诗签/连击/收句/诗印落到诗卡 | 诗卡规则有效；诗签被 [0018](0018-level-based-expedition.md) 移除，诗印仍用于资料库诗卡 |
 | [0016](0016-ink-tide-expedition.md) | 墨潮远征三节点、三路线、诗火、修页奖励 | 被 [0018](0018-level-based-expedition.md) 取代 |
 | [0017](0017-expedition-library-entry-split.md) | 远征与文集分家：`/tour` 只留墨路，文集迁 `/library`，旧路径重定向 | `/library` 分家有效；`/tour` 已被 [0018](0018-level-based-expedition.md) 的 `/levels` 取代 |
-| [0018](0018-level-based-expedition.md) | 关卡制远征：50 关平铺、每关 10 题、玩家专属题序、道具奖励 | 当前主线有效 |
+| [0018](0018-level-based-expedition.md) | 关卡制远征：50 关平铺、每关 10 题、玩家专属题序、道具奖励 | 当前主线有效；「无难度维度」条款被 [0020](0020-level-difficulty-tiers.md) 修订 |
 | [0019](0019-endless-leaderboard.md) | 无尽排行榜：纪录向无压迫、从 `player_saves` 派生、连对/得分双榜并列同名次 | 有效 |
+| [0020](0020-level-difficulty-tiers.md) | 学段难度分档：每 10 关一档（小学·低 → 高中）、编译期定档、档内篇幅循序渐进 | 有效 |
 
 旧 ADR 不删除，因为它们记录历史取舍；新功能只能依据“有效”且未被取代的条款。

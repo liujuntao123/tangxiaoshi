@@ -6,6 +6,8 @@ import {
   LEVEL_COUNT,
   LEVEL_PASS,
   applyLevelResult,
+  tierForLevel,
+  tierLabel,
   type LevelPlan,
   type PlanQuestion,
 } from "@/lib/game/levels";
@@ -17,8 +19,9 @@ import { ChoiceSlip, PlaqueButton } from "./choice-slip";
 import { ArtPanel, Stage, StageHud } from "./stage";
 
 /**
- * 关卡答题场（ADR-0018）：一关 10 题，答对 6 题过关。
+ * 关卡答题场（ADR-0018/0020）：一关 10 题，答对 6 题过关。
  * - 题目来自玩家专属计划（plan），本关内容固定，重试不换题；
+ * - 学段难度随关卡循序渐进，出处与报告标明诗文所属学段；
  * - 道具是持久库存：去伪 / 双倍在作答前主动使用，补答在答错后换题补位；
  * - 结算写存档：星级只升不降，每颗新星奖励 1 个道具。
  */
@@ -358,6 +361,8 @@ export function LevelQuiz({
         ? "的下一句是？"
         : "的上一句是？"
     : "";
+  /** 当前诗文的学段难度（ADR-0020）；缺失时为空串，界面自动不显示。 */
+  const poemTier = tierLabel(poem?.difficulty ?? 0);
 
   return (
     <Stage bg={phase === "intro" || phase === "result" ? poem.background || "/art/bg/home.png" : poem.background} dim={phase === "result"}>
@@ -366,6 +371,7 @@ export function LevelQuiz({
       {phase === "intro" ? (
         <IntroPanel
           inventory={inventory}
+          tier={tierLabel(tierForLevel(level))}
           onStart={() => {
             sfxTap();
             setPhase("battle");
@@ -458,6 +464,7 @@ export function LevelQuiz({
               {question.type !== "title" ? (
                 <p className="poem-line mt-0.5 text-center text-[11px] text-ink-soft/75">
                   「{poem.title}」·{poem.authorName}
+                  {poemTier ? ` · ${poemTier}` : ""}
                 </p>
               ) : null}
             </div>
@@ -489,6 +496,7 @@ export function LevelQuiz({
               res={resolution}
               poemTitle={poem.title}
               authorName={poem.authorName}
+              poemTier={poemTier}
               redoCount={inventory.redo}
               canRedo={nextSpare < plan.spares.length}
               onContinue={continueAfterResolution}
@@ -566,12 +574,15 @@ function ItemChip({
   );
 }
 
-/** 开场说明：把过关线、星级和道具规则一次讲清楚。 */
+/** 开场说明：本关学段难度、过关线、星级和道具规则一次讲清楚。 */
 function IntroPanel({
   inventory,
+  tier,
   onStart,
 }: {
   inventory: Inventory;
+  /** 本关学段难度标签（ADR-0020）。 */
+  tier: string;
   onStart: () => void;
 }) {
   const ownedItems = (["reveal", "redo", "double"] as ItemId[]).filter((item) => inventory[item] > 0);
@@ -594,7 +605,12 @@ function IntroPanel({
         <div className="ink-divider mx-auto mt-2 max-w-[13rem]" aria-hidden>
           <span className="font-display text-[9px]">◈</span>
         </div>
-        <p className="mt-2 text-sm text-ink-soft">10 道题，答对 6 题过关。</p>
+        {tier ? (
+          <p className="mt-2 text-sm text-ink-soft">
+            本关诗文 · <span className="text-seal">{tier}</span>
+          </p>
+        ) : null}
+        <p className={`text-sm text-ink-soft ${tier ? "mt-0.5" : "mt-2"}`}>10 道题，答对 6 题过关。</p>
         <p className="mt-0.5 text-xs tracking-wider text-ink/60">
           一道不错 = 三星 · 错 1–2 题 = 两星 · 过关 = 一星
         </p>
@@ -612,11 +628,12 @@ function IntroPanel({
   );
 }
 
-/** 作答报告：对错 + 完整诗句 + 出处；答错时可以决定是否用补答换题。 */
+/** 作答报告：对错 + 完整诗句 + 出处（含学段）；答错时可以决定是否用补答换题。 */
 function ReportPanel({
   res,
   poemTitle,
   authorName,
+  poemTier,
   redoCount,
   canRedo,
   onContinue,
@@ -625,6 +642,8 @@ function ReportPanel({
   res: Resolution;
   poemTitle: string;
   authorName: string;
+  /** 出处诗的学段难度标签（ADR-0020），空串不显示。 */
+  poemTier: string;
   redoCount: number;
   canRedo: boolean;
   onContinue: () => void;
@@ -636,6 +655,7 @@ function ReportPanel({
       : res.questionType === "complete-prev"
         ? `「${res.answerText}，${res.prompt}」`
         : `「${res.answerText}」`;
+  const source = `出自「${poemTitle}」·${authorName}${poemTier ? ` · ${poemTier}` : ""}`;
   const redoAvailable = !res.correct && redoCount > 0 && canRedo;
   return (
     <section className="sheet-up absolute inset-x-2 bottom-[max(0.6rem,env(safe-area-inset-bottom))] z-30">
@@ -644,9 +664,7 @@ function ReportPanel({
           <>
             <p className="title-ink text-2xl">答对了</p>
             <p className="poem-line mt-1 text-base font-medium leading-snug text-ink">{fullCouplet}</p>
-            <p className="poem-line mt-0.5 text-[11px] text-ink-soft/70">
-              {`出自「${poemTitle}」·${authorName}`}
-            </p>
+            <p className="poem-line mt-0.5 text-[11px] text-ink-soft/70">{source}</p>
             <p className="mt-1 text-xs tracking-wider text-ink-soft">
               连击 ×{res.comboAfter} · +{res.scoreGain} 分
               {res.doubleApplied ? " · 双倍" : ""}
@@ -656,9 +674,7 @@ function ReportPanel({
           <>
             <p className="title-ink text-2xl">答错了</p>
             <p className="poem-line mt-1 text-sm font-medium leading-snug text-pine">正确答案：{fullCouplet}</p>
-            <p className="poem-line mt-0.5 text-[11px] text-ink-soft/70">
-              {`出自「${poemTitle}」·${authorName}`}
-            </p>
+            <p className="poem-line mt-0.5 text-[11px] text-ink-soft/70">{source}</p>
             {res.context.map((line) => (
               <p key={line} className="poem-line text-xs leading-snug text-ink-soft/70">
                 {line}

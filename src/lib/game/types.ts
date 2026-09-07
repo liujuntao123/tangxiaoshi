@@ -1,4 +1,4 @@
-// 内容契约 v2 —— 编译器（scripts/content/build-bank.py）与前端共同遵守。
+// 内容契约 v3 —— 编译器（scripts/content/build-bank.py）与前端共同遵守。
 // 层级：文集 → 章节 → 作者 → 诗卡（问答单位）。
 
 export type QuestionType = "complete-next" | "complete-prev" | "title";
@@ -30,6 +30,8 @@ export type Poem = {
   text: string;
   /** 该诗卡固定背景（所属文集 5 张之一，按 id 稳定轮换） */
   background: string;
+  /** 学段难度档 1-5（小学·低/中/高、初中、高中），编译期推导，规则见 docs/content-rules.md */
+  difficulty: number;
   questions: Question[];
 };
 

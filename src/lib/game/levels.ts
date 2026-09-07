@@ -1,11 +1,13 @@
 /**
- * 关卡系统（ADR-0018）：平铺关卡 + 每关 10 题 + 道具奖励。
+ * 关卡系统（ADR-0018 平铺关卡 + ADR-0020 学段难度）：每关 10 题 + 道具奖励。
  *
- * - 关卡只有序号（第 1 关…第 50 关），没有难度维度；顺序解锁，过关即开下一关。
+ * - 关卡序号 1..50，每 10 关一个学段难度档（小学·低 → 小学·中 → 小学·高 → 初中 → 高中）；
+ *   顺序解锁，过关即开下一关。
+ * - 每档关卡只从该档诗里出题，档内按篇幅由短到长排布，逐关递增；
+ *   某档诗不足铺满 10 关时，由相邻档按篇幅就近补足，且一首诗只会进入一个档。
  * - 每关 10 道题来自 10 首不同的诗（一诗一题），另备 3 道补答题供「补答」道具换题。
  * - 出题序列由玩家 userId 派生：同一玩家的每关题目永远固定，不同玩家互不相同，
- *   因此玩家之间无法互相透题。
- * - 题目不重复：全库诗按玩家种子确定性洗牌后顺序切段，关卡之间占用的诗互不重叠。
+ *   因此玩家之间无法互相透题（档内每 2 关一段做玩家专属洗牌，难度带全服一致）。
  *
  * 本模块只依赖 `./types`，不引入内容库（bank.json），可被 `node --test` 直接加载；
  * 与真实题库的绑定（POEMS + userId）见 progress.ts 的 levelPlanFor。
@@ -24,6 +26,12 @@ import {
 
 /** 关卡总数：一次完整远征的全部关卡。 */
 export const LEVEL_COUNT = 50;
+/** 学段难度档数（ADR-0020）：1 小学·低 → 5 高中，每档连占 LEVELS_PER_TIER 关。 */
+export const TIER_COUNT = 5;
+/** 每档关卡数 = LEVEL_COUNT / TIER_COUNT。 */
+export const LEVELS_PER_TIER = LEVEL_COUNT / TIER_COUNT;
+/** 学段难度标签（1 起，与 bank 诗卡 difficulty 字段一致的口径，见 docs/content-rules.md）。 */
+export const TIER_LABELS = ["小学·低", "小学·中", "小学·高", "初中", "高中"] as const;
 /** 每关正式题目数。 */
 export const QUESTIONS_PER_LEVEL = 10;
 /** 每关备用题数（被「补答」换掉的题目由此补位）。 */
@@ -35,7 +43,24 @@ export const LEVEL_PASS = 6;
 /** 关卡星级口径：零答错三星，答错不超过 2 两星，其余一星。 */
 export const LEVEL_STAR_MISTAKES = 2;
 
-export type PlanPoem = Pick<Poem, "id" | "title" | "authorName" | "lines" | "background" | "questions">;
+/** 学段难度档：1..TIER_COUNT。 */
+export type Tier = 1 | 2 | 3 | 4 | 5;
+
+/** 关卡 → 学段难度档：第 1–10 关 T1，11–20 关 T2……41–50 关 T5。 */
+export function tierForLevel(level: number): Tier {
+  const tier = Math.ceil(level / LEVELS_PER_TIER);
+  return Math.min(TIER_COUNT, Math.max(1, tier)) as Tier;
+}
+
+/** 学段难度标签：越界返回空串（调用方直接拼接即可，无需判空）。 */
+export function tierLabel(tier: number): string {
+  return TIER_LABELS[tier - 1] ?? "";
+}
+
+export type PlanPoem = Pick<
+  Poem,
+  "id" | "title" | "authorName" | "lines" | "text" | "background" | "questions" | "difficulty"
+>;
 
 /** 关卡里的一道题：题目连同它所属的诗（来源展示与错题反馈用）。 */
 export type PlanQuestion = { poem: PlanPoem; question: Question };
@@ -98,15 +123,88 @@ export function deterministicShuffle<T>(items: readonly T[], seed: number): T[] 
   return copy;
 }
 
+/** 每档关卡需要的诗数：10 关 × 每关 13 首。 */
+const POEMS_PER_TIER = LEVELS_PER_TIER * POEMS_PER_LEVEL;
+
+/** 档内排序键：篇幅升序（短诗在前），同长按 id 稳定。 */
+function byLengthThenId<T extends PlanPoem>(a: T, b: T): number {
+  return a.text.length - b.text.length || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+}
+
+function tierOfPoem(poem: PlanPoem): Tier {
+  const difficulty = Number(poem.difficulty);
+  const tier = Number.isFinite(difficulty) ? Math.round(difficulty) : Math.ceil(TIER_COUNT / 2);
+  return Math.min(TIER_COUNT, Math.max(1, tier)) as Tier;
+}
+
 /**
- * 玩家的全库诗顺序：同一玩家固定，不同玩家不同。
- * 关卡按 13 首一段顺序占用，保证关卡之间零重复。
+ * 全部诗按学段难度分档（ADR-0020）：每档关卡只用自己的档。
+ * - 档内按篇幅升序铺位，玩家在档内也是先易后难；
+ * - 本档不足铺满 10 关时，按 +1、-1、+2、-2… 就近补足，补足占用的诗登记为已用，
+ *   保证同一首诗只进入一个档（关卡之间零重复的全局前提）；
+ * - 极端小题库下某档可能为空，此时回落到全库统一顺序的兜底段（不再保证档位语义）。
  */
-export function poemOrder<T extends PlanPoem>(poems: readonly T[], userId: string): T[] {
-  return deterministicShuffle(poems, levelSeed(userId));
+export function buildTierBands<T extends PlanPoem>(poems: readonly T[]): T[][] {
+  const byTier: T[][] = Array.from({ length: TIER_COUNT + 1 }, () => []);
+  for (const poem of poems) byTier[tierOfPoem(poem)].push(poem);
+  for (const tier of byTier) tier.sort(byLengthThenId);
+
+  const used = new Set<string>();
+  const bands: T[][] = Array.from({ length: TIER_COUNT + 1 }, () => []);
+  for (let tier = 1; tier <= TIER_COUNT; tier += 1) {
+    const own = byTier[tier].filter((poem) => !used.has(poem.id));
+    const band = own.slice(0, POEMS_PER_TIER);
+    if (band.length < POEMS_PER_TIER) {
+      for (let step = 1; step < TIER_COUNT && band.length < POEMS_PER_TIER; step += 1) {
+        for (const neighbor of [tier + step, tier - step]) {
+          if (neighbor < 1 || neighbor > TIER_COUNT) continue;
+          for (const poem of byTier[neighbor]) {
+            if (band.length >= POEMS_PER_TIER) break;
+            if (used.has(poem.id)) continue;
+            band.push(poem);
+          }
+          if (band.length >= POEMS_PER_TIER) break;
+        }
+      }
+      band.sort(byLengthThenId);
+    }
+    for (const poem of band) used.add(poem.id);
+    bands[tier] = band;
+  }
+
+  if (bands.slice(1).some((band) => band.length === 0)) {
+    const global = [...poems].sort(byLengthThenId);
+    for (let tier = 1; tier <= TIER_COUNT; tier += 1) {
+      if (bands[tier].length === 0) {
+        bands[tier] = global.slice((tier - 1) * POEMS_PER_TIER, tier * POEMS_PER_TIER);
+        if (bands[tier].length === 0) bands[tier] = global;
+      }
+    }
+  }
+  return bands;
+}
+
+/**
+ * 档内关卡顺序：每 2 关一段做玩家专属洗牌。
+ * 段间保持篇幅升序 → 每一关的难度带全服一致（循序渐进可见）；
+ * 段内顺序因人而异 → 不同玩家同一关拿到的诗互不相同（防透题）。
+ */
+export function bandOrder<T extends PlanPoem>(band: readonly T[], userId: string): T[] {
+  const chunkSize = POEMS_PER_LEVEL * 2;
+  const out: T[] = [];
+  for (let start = 0; start < band.length; start += chunkSize) {
+    out.push(
+      ...deterministicShuffle(
+        band.slice(start, start + chunkSize),
+        hashString(`${userId}#band#${start}`),
+      ),
+    );
+  }
+  return out;
 }
 
 /** 一首诗抽一题：按关卡独立的随机流选择，诗内 5 题都可能出场。 */
+
 function pickQuestion<T extends PlanPoem>(poem: T, rng: () => number): PlanQuestion {
   const pool = poem.questions.length > 0 ? poem.questions : undefined;
   if (!pool) throw new Error(`poem ${poem.id} has no questions`);
@@ -116,19 +214,21 @@ function pickQuestion<T extends PlanPoem>(poem: T, rng: () => number): PlanQuest
 
 /**
  * 生成某一关的完整出题计划（纯函数）：
- * 全库诗按玩家顺序切段，第 k 关占用第 [(k-1)*13, k*13) 首；
+ * 只用本关学段档的诗；档内顺序见 bandOrder，第 k 关（档内）占用第 [(k-1)*13, k*13) 首；
  * 前 10 首出正式题，后 3 首出备用题。
  */
 export function buildLevelPlan(poems: readonly PlanPoem[], userId: string, level: number): LevelPlan {
   if (!Number.isInteger(level) || level < 1 || level > LEVEL_COUNT) {
     throw new Error(`level out of range: ${level}`);
   }
-  const order = poemOrder(poems, userId);
-  if (order.length === 0) throw new Error("poem bank is empty");
-  const start = (level - 1) * POEMS_PER_LEVEL;
+  const band = buildTierBands(poems)[tierForLevel(level)] ?? [];
+  if (band.length === 0) throw new Error("poem bank is empty");
+  const order = bandOrder(band, userId);
+  // 档内偏移：第 11 关是 T2 的第 1 关，从本档第 0 首开始
+  const start = ((level - 1) % LEVELS_PER_TIER) * POEMS_PER_LEVEL;
   const rng = mulberry32((levelSeed(userId) ^ Math.imul(level, 0x9e3779b9)) >>> 0);
   const take = (offset: number): PlanQuestion => {
-    // 题库不足以铺满全部关卡时回绕复用（当前 2147 首 > 50 关 × 13 首，不会触发）。
+    // 档内诗不足以铺满本档全部关卡时回绕复用（当前每档 band ≥ 130 首，不会触发）
     const poem = order[(start + offset) % order.length];
     return pickQuestion(poem as PlanPoem, rng);
   };

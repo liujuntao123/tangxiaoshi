@@ -11,9 +11,9 @@
 
 | 入口 | 规则 |
 | --- | --- |
-| 墨潮远征（主线） | 首页「继续闯关」进入 `/levels` 关卡列表选关。共 50 关平铺、顺序解锁；每关 10 道题，答对 6 题过关。 |
+| 墨潮远征（主线） | 首页「继续闯关」进入 `/levels` 关卡列表选关。共 50 关平铺、顺序解锁，难度按学段循序渐进：每 10 关一个学段档（小学·低/中/高 → 初中 → 高中），关卡卡与题目出处都标明学段。每关 10 道题，答对 6 题过关。 |
 | 星星与道具 | 过关拿星星：零答错三星、答错 ≤2 两星、其余一星。每拿到一颗新星奖励 1 个道具：去伪（隐两个错项）、补答（错题换新题）、双倍（下次答对翻倍）。道具是持久库存，答题时随时可用。 |
-| 专属题序 | 每关题目由你的账号专属生成：同一关卡你的题目永远固定，不同玩家互不相同，无法互相透题；整个战役内题目零重复。 |
+| 专属题序 | 每关题目由你的账号专属生成：同一关卡你的题目永远固定，不同玩家互不相同，无法互相透题；整个战役 650 个诗位零重复。每关只出本学段档的诗，档内先短后长、逐关递进。 |
 | 诗库 | 自由练习：按文集、章节、作者、朝代筛选诗卡，可先看答案，不写存档。 |
 | 无尽模式 | 全部题池随机，一题答错本局结束，记录最高连对和最高分；开场/结算可打开排行榜，看连对/得分双榜前 20 名和自己的名次。 |
 | 诗册 | 成就页：查看作者、文集、朝代全通成就，以及诗印、总分和无尽纪录。 |
@@ -27,7 +27,7 @@
 
 - 永久成绩按用户 ID 存入 `player_saves`（`migrations/0001–0005`）：诗卡通关、诗印、最佳分、环游总分、成就、已遇作者、无尽模式纪录、关卡星星（`level_stars`）与道具库存（`items`）。
 - 关卡进度与道具是账号级数据：换设备登录同一账号不丢。
-- 关卡题目不存档：由 userId 即时确定性生成（FNV-1a 种子 → 全库诗洗牌切段），同一账号永远同一份题。
+- 关卡题目不存档：由 userId 即时确定性生成（学段分档 → 档内按篇幅分段，段内 FNV-1a 种子洗牌），同一账号永远同一份题。
 - 存档契约和文档同步规则见根目录 [`AGENTS.md`](AGENTS.md)。
 
 ## 本地运行
@@ -74,11 +74,11 @@ python3 scripts/content/export_story_docs.py
 - Vite 8、TanStack Start、React 19、Tailwind CSS 4
 - 路由：TanStack Router；主线关卡 `/levels`、`/levels/$levelId`，资料库层级 `/library/$collectionId/$chapterId/$authorId`，诗卡答题 `/play/$poemId`，练习 `/practice/$poemId`
 - 登录：Better Auth 邮箱密码；永久存档按用户 ID
-- 关卡：`src/lib/game/levels.ts`（出题算法与道具规则，纯函数可直测）；绑定真实题库见 `progress.ts` 的 `levelPlanFor`
+- 关卡：`src/lib/game/levels.ts`（学段分档、出题算法与道具规则，纯函数可直测）；绑定真实题库见 `progress.ts` 的 `levelPlanFor`
 - 永久存档：`PlayerSave`、`migrations/0001–0005`；最新数据库字段为 `level_stars` 和 `items`
 - 画面：古风 Q 版绘本、文集背景、作者立绘、轻边框纸面板（9-slice）
 
-设计取舍见 [`docs/adr/`](docs/adr/)，当前主线决策见 [`docs/adr/0018-level-based-expedition.md`](docs/adr/0018-level-based-expedition.md)。所有后续变更必须同步文档并记录在 [`changelog.md`](changelog.md)。
+设计取舍见 [`docs/adr/`](docs/adr/)，当前主线决策见 [`docs/adr/0018-level-based-expedition.md`](docs/adr/0018-level-based-expedition.md) 与 [`docs/adr/0020-level-difficulty-tiers.md`](docs/adr/0020-level-difficulty-tiers.md)。所有后续变更必须同步文档并记录在 [`changelog.md`](changelog.md)。
 
 ## 部署
 

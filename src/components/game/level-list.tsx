@@ -1,5 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
-import { LEVEL_COUNT, isLevelUnlocked, levelProgress, levelStars } from "@/lib/game/levels";
+import {
+  LEVEL_COUNT,
+  isLevelUnlocked,
+  levelProgress,
+  levelStars,
+  tierForLevel,
+  tierLabel,
+} from "@/lib/game/levels";
 import { useSave } from "@/lib/game/save-context";
 import { sfxTap } from "@/lib/game/sfx";
 import { GAME_BACKGROUNDS } from "@/lib/game/content/meta";
@@ -23,8 +30,8 @@ function StarRow({ stars }: { stars: number }) {
 }
 
 /**
- * 关卡列表（ADR-0018）：50 关平铺、顺序解锁，左右按钮分页。
- * 每张卡只回答三件事：第几关、几颗星、能不能打。
+ * 关卡列表（ADR-0018/0020）：50 关平铺、每 10 关一个学段难度档，顺序解锁，分页浏览。
+ * 每张卡只回答三件事：第几关、几颗星、属于哪个学段（能不能打由锁与置灰表达）。
  */
 export function LevelList() {
   const navigate = useNavigate();
@@ -56,6 +63,7 @@ export function LevelList() {
                 const stars = levelStars(save, level);
                 const unlocked = isLevelUnlocked(save, level);
                 const isNext = level === progress.cleared + 1;
+                const tier = tierLabel(tierForLevel(level));
                 return (
                   <button
                     key={level}
@@ -64,7 +72,7 @@ export function LevelList() {
                     onClick={() => enter(level)}
                     className={`tap block ${unlocked ? "" : "opacity-85"}`}
                     aria-label={
-                      unlocked ? `进入第 ${level} 关` : `第 ${level} 关未解锁，先通过第 ${level - 1} 关`
+                      unlocked ? `进入第 ${level} 关（${tier}）` : `第 ${level} 关未解锁，先通过第 ${level - 1} 关`
                     }
                   >
                     <ArtPanel
@@ -84,15 +92,10 @@ export function LevelList() {
                           <span className="mt-1 block">
                             <StarRow stars={stars} />
                           </span>
+                          {/* 学段难度（ADR-0020）：状态行直接标学段，下一关前置圆点提示「就打这关」 */}
                           <p className="mt-0.5 flex h-3.5 items-center justify-center gap-1 whitespace-nowrap text-[9.5px] leading-none text-seal">
-                            {isNext ? (
-                              <>
-                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-seal" />
-                                可挑战
-                              </>
-                            ) : (
-                              "可挑战"
-                            )}
+                            {isNext ? <span className="inline-block h-1.5 w-1.5 rounded-full bg-seal" /> : null}
+                            {tier}
                           </p>
                         </>
                       ) : (
@@ -109,7 +112,7 @@ export function LevelList() {
                             />
                           </span>
                           <p className="mt-0.5 flex h-3.5 items-center justify-center whitespace-nowrap text-[9.5px] leading-none text-ink/45">
-                            未解锁
+                            {`${tier} · 未解锁`}
                           </p>
                         </>
                       )}

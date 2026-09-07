@@ -3,11 +3,16 @@ import assert from "node:assert/strict";
 import {
   LEVEL_COUNT,
   LEVEL_PASS,
+  LEVELS_PER_TIER,
   POEMS_PER_LEVEL,
   QUESTIONS_PER_LEVEL,
   SPARES_PER_LEVEL,
+  TIER_COUNT,
+  TIER_LABELS,
   applyLevelResult,
+  bandOrder,
   buildLevelPlan,
+  buildTierBands,
   deterministicShuffle,
   hashString,
   isLevelUnlocked,
@@ -16,11 +21,17 @@ import {
   levelStars,
   nextLevelTarget,
   starsForLevelRun,
+  tierForLevel,
+  tierLabel,
 } from "./levels.ts";
 import { EMPTY_SAVE, type PlayerSave, type Poem, type Question, type Stars } from "./types.ts";
 
-/** 造 N 首合成诗，每首 5 题，题目内容带诗 id 便于断言。 */
-function makePoems(count: number): Poem[] {
+/** 造 N 首合成诗，每首 5 题，题目内容带诗 id 便于断言；难度与篇幅可注入。 */
+function makePoems(
+  count: number,
+  difficulty: (index: number) => number = () => 1,
+  textLen?: (index: number) => number,
+): Poem[] {
   return Array.from({ length: count }, (_, i) => {
     const id = String(i + 1);
     const questions: Question[] = Array.from({ length: 5 }, (_, q) => ({
@@ -40,8 +51,9 @@ function makePoems(count: number): Poem[] {
       dynastyId: "tang",
       title: `诗${id}`,
       lines: [],
-      text: "",
+      text: textLen ? "字".repeat(textLen(i)) : "",
       background: "",
+      difficulty: difficulty(i),
       questions,
     };
   });
@@ -100,6 +112,120 @@ describe("关卡计划（buildLevelPlan）", () => {
   it("关卡序号越界直接报错", () => {
     assert.throws(() => buildLevelPlan(poems, "player-a", 0));
     assert.throws(() => buildLevelPlan(poems, "player-a", LEVEL_COUNT + 1));
+  });
+});
+
+describe("学段难度分档（ADR-0020）", () => {
+  /** 5 档 × 每档 N 首的标准题库；text 长度 = 全局序号，档内篇幅升序可精确断言。 */
+  function makeTierBank(perTier: number): Poem[] {
+    return makePoems(
+      perTier * TIER_COUNT,
+      (i) => Math.floor(i / perTier) + 1,
+      (i) => i + 1,
+    );
+  }
+
+  it("关卡 → 档位映射：每 10 关一档", () => {
+    assert.equal(LEVELS_PER_TIER, 10);
+    assert.equal(TIER_COUNT * LEVELS_PER_TIER, LEVEL_COUNT);
+    assert.equal(tierForLevel(1), 1);
+    assert.equal(tierForLevel(10), 1);
+    assert.equal(tierForLevel(11), 2);
+    assert.equal(tierForLevel(31), 4);
+    assert.equal(tierForLevel(50), 5);
+    assert.equal(tierForLevel(0), 1);
+    assert.equal(tierForLevel(99), 5);
+  });
+
+  it("档位标签：小学·低 → 高中，越界为空串", () => {
+    assert.deepEqual([...TIER_LABELS], ["小学·低", "小学·中", "小学·高", "初中", "高中"]);
+    assert.equal(tierLabel(3), "小学·高");
+    assert.equal(tierLabel(0), "");
+    assert.equal(tierLabel(6), "");
+  });
+
+  it("每关的题只来自本关档位的诗", () => {
+    const bank = makeTierBank(130);
+    for (let level = 1; level <= LEVEL_COUNT; level += 1) {
+      const plan = buildLevelPlan(bank, "player-a", level);
+      const tier = tierForLevel(level);
+      for (const { poem } of [...plan.questions, ...plan.spares]) {
+        assert.equal(poem.difficulty, tier, `第 ${level} 关出现了非 T${tier} 的诗`);
+      }
+    }
+  });
+
+  it("全 50 关题目零重复（档位补足不破坏全局不重叠）", () => {
+    const bank = makeTierBank(130);
+    const seen = new Set<string>();
+    for (let level = 1; level <= LEVEL_COUNT; level += 1) {
+      const plan = buildLevelPlan(bank, "player-a", level);
+      for (const { question } of [...plan.questions, ...plan.spares]) {
+        assert.ok(!seen.has(question.id), `题目 ${question.id} 在前面的关卡出现过`);
+        seen.add(question.id);
+      }
+    }
+    assert.equal(seen.size, LEVEL_COUNT * POEMS_PER_LEVEL);
+  });
+
+  it("档内循序渐进：第 1 关全是短诗，第 10 关全是更长的诗", () => {
+    const bank = makeTierBank(130);
+    const l1 = buildLevelPlan(bank, "player-a", 1).questions.map((q) => q.poem.text.length);
+    const l10 = buildLevelPlan(bank, "player-a", 10).questions.map((q) => q.poem.text.length);
+    assert.ok(Math.max(...l1) < Math.min(...l10), "第 1 关应整体短于第 10 关");
+    const l41 = buildLevelPlan(bank, "player-a", 41).questions.map((q) => q.poem.text.length);
+    const l50 = buildLevelPlan(bank, "player-a", 50).questions.map((q) => q.poem.text.length);
+    assert.ok(Math.max(...l41) < Math.min(...l50), "第 41 关应整体短于第 50 关");
+  });
+
+  it("档位不足 130 首时由相邻档就近补足，一首诗只进一个档", () => {
+    // T1 只有 50 首（缺 80），T2 充足：T1 档应从 T2 补足，且 T2 档不再重复用这些诗
+    const bank = makePoems(
+      300,
+      (i) => (i < 50 ? 1 : 2),
+      (i) => (i < 50 ? i + 1 : 1000 + i),
+    );
+    const seen = new Set<string>();
+    let toppedUp = false;
+    for (let level = 1; level <= 20; level += 1) {
+      const plan = buildLevelPlan(bank, "player-a", level);
+      for (const { poem, question } of [...plan.questions, ...plan.spares]) {
+        assert.ok(!seen.has(question.id), `题目 ${question.id} 重复出场`);
+        seen.add(question.id);
+        if (poem.difficulty === 2 && level <= 10) toppedUp = true;
+        if (poem.difficulty === 1) assert.ok(level <= 10, "T1 的诗不应出现在 T2 关卡");
+      }
+    }
+    assert.ok(toppedUp, "T1 关卡应包含 T2 补足的诗");
+    assert.equal(seen.size, 20 * POEMS_PER_LEVEL);
+  });
+
+  it("bandOrder：难度带全服一致，段内顺序因人而异", () => {
+    const bank = makeTierBank(130);
+    const band = buildTierBands(bank)[1] as Poem[];
+    const a = bandOrder(band, "player-a");
+    const b = bandOrder(band, "player-b");
+    // 难度带相同：同一位置的距离量级一致（都是同一批诗的某个洗牌）
+    assert.equal(a.length, band.length);
+    assert.deepEqual(
+      [...a].map((p) => p.text.length).sort((x, y) => x - y),
+      [...b].map((p) => p.text.length).sort((x, y) => x - y),
+    );
+    // 顺序因人而异
+    assert.notEqual(a.map((p) => p.id).join(","), b.map((p) => p.id).join(","));
+  });
+
+  it("buildTierBands：档与档之间零重叠", () => {
+    const bank = makeTierBank(130);
+    const bands = buildTierBands(bank);
+    assert.equal(bands.length, TIER_COUNT + 1);
+    const ids = new Set<string>();
+    for (let tier = 1; tier <= TIER_COUNT; tier += 1) {
+      for (const poem of bands[tier] as Poem[]) {
+        assert.ok(!ids.has(poem.id), `诗 ${poem.id} 同时出现在多个档`);
+        ids.add(poem.id);
+      }
+    }
   });
 });
 

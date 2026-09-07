@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,6 +25,59 @@ INTRO_RE = re.compile(r"介绍|序言|前言|凡例|集序")
 MIN_HALF = 2
 MAX_HALF = 14
 BGS_PER_COLLECTION = 5
+
+
+# ---------------------------------------------------------------- 学段难度（ADR-0020）
+
+# 教科书选诗：章节标题自带学段/年级（如「小学古诗·一年级上册」「初中文言文」），直接推导。
+JK_STAGE_RE = re.compile(r"^(小学|初中|高中)(文言文|古诗)")
+JK_GRADE_RE = re.compile(r"([一二三四五六七八九])年级")
+# 低年级（一二）→ T1，中年级（三四）→ T2，其余（五六/未标注）→ T3
+JK_GRADE_TIER = {"一": 1, "二": 1, "三": 2, "四": 2}
+
+# 非教科书文集：基础档 + 篇幅修正（text 含标点；五绝≈22-26 字、七绝≈30-32、律诗≈46-64）。
+# 元组 = (基础档, 篇幅≤short 视为 short_tier, 篇幅≥long 视为 long_tier)。
+# 蒙学/启蒙读本（蒙学唐诗、唐诗三百首、千家诗）的短篇经典按 小学·低 处理；
+# 花间集最高档，诗经/宋词长篇上探 高中 档。规则细则见 docs/content-rules.md。
+COLLECTION_TIERS: dict[str, tuple[int, int | None, int | None, int | None, int | None]] = {
+    "sanzijing": (1, None, None, None, None),
+    "shenglv-qimeng": (1, None, None, None, None),
+    "tangshi-mengxue": (2, 34, 1, 120, 3),
+    "tangshi-sanbaishou": (3, 34, 1, 160, 4),
+    "qianjiashi": (3, 34, 1, 160, 4),
+    "gushi-shijiu-shou": (4, None, None, None, None),
+    "nantang-erzhu-ci": (4, None, None, 120, 5),
+    "shijing": (4, 40, 3, 160, 5),
+    "songci-sanbaishou": (4, None, None, 160, 5),
+    "huajianji": (5, None, None, None, None),
+}
+DEFAULT_TIER_RULE = (3, None, None, None, None)
+
+
+def derive_tier(collection_id: str, chapter_title: str, text_len: int) -> int:
+    """学段难度 1-5：教科书按章节年级，其他文集按基础档 + 篇幅修正（docs/content-rules.md）。"""
+    if collection_id == "jiaokeshu-xuanshi":
+        m = JK_STAGE_RE.match(chapter_title)
+        if m:
+            stage, kind = m.group(1), m.group(2)
+            if stage == "小学":
+                if kind == "文言文":
+                    return 3
+                grade = JK_GRADE_RE.search(chapter_title)
+                return JK_GRADE_TIER.get(grade.group(1), 3) if grade else 3
+            return 4 if stage == "初中" else 5
+        note(f"教科书章节「{chapter_title}」未能识别学段，按 小学·高 处理")
+        return 3
+    if collection_id not in COLLECTION_TIERS:
+        note(f"文集 {collection_id} 无难度规则，按 小学·高 处理")
+    base, short_len, short_tier, long_len, long_tier = COLLECTION_TIERS.get(
+        collection_id, DEFAULT_TIER_RULE
+    )
+    if short_len is not None and text_len <= short_len:
+        return short_tier  # type: ignore[return-value]
+    if long_len is not None and text_len >= long_len:
+        return long_tier  # type: ignore[return-value]
+    return base
 
 
 class SkipPoem(Exception):
@@ -144,6 +198,7 @@ def parse_poems(site: dict[str, dict], name_to_author: dict) -> list[dict]:
                         "paragraphs": paragraphs,
                         "segs": segs,
                         "pairs": qualified_pairs(paragraphs),
+                        "tier": derive_tier(cid, title, len("".join(paragraphs))),
                     }
                 )
     return poems
@@ -367,6 +422,7 @@ def main() -> None:
                 "lines": p["segs"],
                 "text": "".join(p["paragraphs"]),
                 "background": bg,
+                "difficulty": p["tier"],
                 "questions": questions,
             }
         )
@@ -502,7 +558,7 @@ def main() -> None:
         )
 
     bank = {
-        "version": 2,
+        "version": 3,
         "collections": collections_out,
         "chapters": chapters_out,
         "authors": authors_out,
@@ -512,10 +568,12 @@ def main() -> None:
     }
     OUT.write_text(json.dumps(bank, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     q_total = sum(len(p["questions"]) for p in poems_out)
+    tiers = Counter(p["difficulty"] for p in poems_out)
+    tier_text = "、".join(f"T{t} {tiers.get(t, 0)} 首" for t in range(1, 6))
     print(
         f"✔ bank.json：{len(collections_out)} 文集（开放 {len(catalog.OPEN_COLLECTIONS)}）、"
         f"{len(chapters_out)} 章节、{len(authors_out)} 作者、{len(poems_out)} 诗卡、{q_total} 题、"
-        f"{len(achievements)} 成就"
+        f"{len(achievements)} 成就；难度档：{tier_text}"
     )
 
 
