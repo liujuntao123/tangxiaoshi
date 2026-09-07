@@ -16,8 +16,9 @@ type RawQuestion = Omit<Question, "choices" | "answerIndex"> & {
   answerIndex: number;
 };
 
-type RawPoem = Omit<Poem, "questions" | "difficulty"> & {
+type RawPoem = Omit<Poem, "questions" | "difficulty" | "studyRank"> & {
   difficulty?: number;
+  studyRank?: number;
   questions: RawQuestion[];
 };
 
@@ -54,11 +55,13 @@ export const ACHIEVEMENTS: AchievementDef[] = bank.achievements;
 export const POEMS: Poem[] = bank.poems
   .map((poem) => ({
     ...poem,
-    // 学段难度缺失/越界时回落中档（正常编译产物必有该字段，这里只做运行时兜底）
+    // 学段难度/学习常见度缺失越界时回落中档（正常编译产物必有字段，这里只做运行时兜底）
     difficulty:
       typeof poem.difficulty === "number" && poem.difficulty >= 1 && poem.difficulty <= 5
         ? poem.difficulty
         : 3,
+    studyRank:
+      typeof poem.studyRank === "number" && poem.studyRank >= 0 ? Math.round(poem.studyRank) : 2000,
     questions: poem.questions
       .map(asQuestion)
       .filter((q): q is Question => q !== null)

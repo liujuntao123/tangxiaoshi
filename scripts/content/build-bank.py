@@ -53,6 +53,30 @@ COLLECTION_TIERS: dict[str, tuple[int, int | None, int | None, int | None, int |
 }
 DEFAULT_TIER_RULE = (3, None, None, None, None)
 
+# 学习常见度分组（ADR-0020）：关卡档内「教材篇目 → 通识读本 → 经典 → 雅致」依次前置，
+# 组内做玩家专属洗牌。数值只需保证组间递增。
+STUDY_RANK_TEXTBOOK = 0
+STUDY_RANK_GROUPS: dict[str, int] = {
+    "sanzijing": 1000,
+    "shenglv-qimeng": 1000,
+    "tangshi-mengxue": 1000,
+    "qianjiashi": 1000,
+    "tangshi-sanbaishou": 1000,
+    "gushi-shijiu-shou": 2000,
+    "nantang-erzhu-ci": 2000,
+    "shijing": 2000,
+    "songci-sanbaishou": 2000,
+    "huajianji": 3000,
+}
+DEFAULT_STUDY_RANK = 2000
+
+
+def derive_study_rank(collection_id: str) -> int:
+    """学习常见度序（越小越常见）：教材篇目为 0，其余文集按通识程度分档。"""
+    if collection_id == "jiaokeshu-xuanshi":
+        return STUDY_RANK_TEXTBOOK
+    return STUDY_RANK_GROUPS.get(collection_id, DEFAULT_STUDY_RANK)
+
 
 def derive_tier(collection_id: str, chapter_title: str, text_len: int) -> int:
     """学段难度 1-5：教科书按章节年级，其他文集按基础档 + 篇幅修正（docs/content-rules.md）。"""
@@ -199,6 +223,7 @@ def parse_poems(site: dict[str, dict], name_to_author: dict) -> list[dict]:
                         "segs": segs,
                         "pairs": qualified_pairs(paragraphs),
                         "tier": derive_tier(cid, title, len("".join(paragraphs))),
+                        "studyRank": derive_study_rank(cid),
                     }
                 )
     return poems
@@ -423,6 +448,7 @@ def main() -> None:
                 "text": "".join(p["paragraphs"]),
                 "background": bg,
                 "difficulty": p["tier"],
+                "studyRank": p["studyRank"],
                 "questions": questions,
             }
         )
@@ -558,7 +584,7 @@ def main() -> None:
         )
 
     bank = {
-        "version": 3,
+        "version": 4,
         "collections": collections_out,
         "chapters": chapters_out,
         "authors": authors_out,
@@ -570,10 +596,12 @@ def main() -> None:
     q_total = sum(len(p["questions"]) for p in poems_out)
     tiers = Counter(p["difficulty"] for p in poems_out)
     tier_text = "、".join(f"T{t} {tiers.get(t, 0)} 首" for t in range(1, 6))
+    ranks = Counter(p["studyRank"] for p in poems_out)
+    rank_text = "、".join(f"{k} {ranks.get(k, 0)} 首" for k in sorted(ranks))
     print(
         f"✔ bank.json：{len(collections_out)} 文集（开放 {len(catalog.OPEN_COLLECTIONS)}）、"
         f"{len(chapters_out)} 章节、{len(authors_out)} 作者、{len(poems_out)} 诗卡、{q_total} 题、"
-        f"{len(achievements)} 成就；难度档：{tier_text}"
+        f"{len(achievements)} 成就；难度档：{tier_text}；常见度：{rank_text}"
     )
 
 

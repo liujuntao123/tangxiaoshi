@@ -26,11 +26,12 @@ import {
 } from "./levels.ts";
 import { EMPTY_SAVE, type PlayerSave, type Poem, type Question, type Stars } from "./types.ts";
 
-/** 造 N 首合成诗，每首 5 题，题目内容带诗 id 便于断言；难度与篇幅可注入。 */
+/** 造 N 首合成诗，每首 5 题，题目内容带诗 id 便于断言；难度、篇幅、常见度可注入。 */
 function makePoems(
   count: number,
   difficulty: (index: number) => number = () => 1,
   textLen?: (index: number) => number,
+  studyRank: (index: number) => number = () => 1000,
 ): Poem[] {
   return Array.from({ length: count }, (_, i) => {
     const id = String(i + 1);
@@ -54,6 +55,7 @@ function makePoems(
       text: textLen ? "字".repeat(textLen(i)) : "",
       background: "",
       difficulty: difficulty(i),
+      studyRank: studyRank(i),
       questions,
     };
   });
@@ -168,14 +170,38 @@ describe("学段难度分档（ADR-0020）", () => {
     assert.equal(seen.size, LEVEL_COUNT * POEMS_PER_LEVEL);
   });
 
-  it("档内循序渐进：第 1 关全是短诗，第 10 关全是更长的诗", () => {
-    const bank = makeTierBank(130);
-    const l1 = buildLevelPlan(bank, "player-a", 1).questions.map((q) => q.poem.text.length);
-    const l10 = buildLevelPlan(bank, "player-a", 10).questions.map((q) => q.poem.text.length);
-    assert.ok(Math.max(...l1) < Math.min(...l10), "第 1 关应整体短于第 10 关");
-    const l41 = buildLevelPlan(bank, "player-a", 41).questions.map((q) => q.poem.text.length);
-    const l50 = buildLevelPlan(bank, "player-a", 50).questions.map((q) => q.poem.text.length);
-    assert.ok(Math.max(...l41) < Math.min(...l50), "第 41 关应整体短于第 50 关");
+  it("档内常见度递进：第 1 关全是教材篇目，第 10 关只剩生僻诗", () => {
+    // 每档 30 首教材篇目（studyRank 0，即便篇幅长）+ 100 首生僻诗（studyRank 1000）
+    const bank = makePoems(
+      130 * TIER_COUNT,
+      (i) => Math.floor(i / 130) + 1,
+      (i) => i + 1,
+      (i) => (i % 130 < 30 ? 0 : 1000),
+    );
+    for (const first of [1, 11, 21, 31, 41]) {
+      const l1 = buildLevelPlan(bank, "player-a", first).questions;
+      for (const { poem } of l1) {
+        assert.equal(poem.studyRank, 0, `第 ${first} 关应只出教材篇目`);
+      }
+    }
+    for (const last of [10, 20, 30, 40, 50]) {
+      const l10 = buildLevelPlan(bank, "player-a", last).questions;
+      for (const { poem } of l10) {
+        assert.equal(poem.studyRank, 1000, `第 ${last} 关应只剩生僻诗`);
+      }
+    }
+  });
+
+  it("教材篇目即使篇幅更长也优先出现（常见度压过篇幅）", () => {
+    // 16 首教材诗篇幅 500+ 字，114 首生僻诗只有十几字
+    const bank = makePoems(
+      130,
+      () => 1,
+      (i) => (i < 16 ? 500 + i : 10 + i),
+      (i) => (i < 16 ? 0 : 1000),
+    );
+    const l1 = buildLevelPlan(bank, "player-a", 1).questions;
+    for (const { poem } of l1) assert.equal(poem.studyRank, 0, "第 1 关不应出现生僻短诗");
   });
 
   it("档位不足 130 首时由相邻档就近补足，一首诗只进一个档", () => {
@@ -200,19 +226,28 @@ describe("学段难度分档（ADR-0020）", () => {
     assert.equal(seen.size, 20 * POEMS_PER_LEVEL);
   });
 
-  it("bandOrder：难度带全服一致，段内顺序因人而异", () => {
-    const bank = makeTierBank(130);
+  it("bandOrder：常见度组间顺序全服一致，组内顺序因人而异", () => {
+    // 每档 30 教材（rank 0）+ 100 生僻（rank 1000）
+    const bank = makePoems(
+      130,
+      () => 1,
+      (i) => i + 1,
+      (i) => (i < 30 ? 0 : 1000),
+    );
     const band = buildTierBands(bank)[1] as Poem[];
     const a = bandOrder(band, "player-a");
     const b = bandOrder(band, "player-b");
-    // 难度带相同：同一位置的距离量级一致（都是同一批诗的某个洗牌）
     assert.equal(a.length, band.length);
+    // 组间顺序固定：两者的 studyRank 序列完全相同（教材块在前，生僻块在后）
     assert.deepEqual(
-      [...a].map((p) => p.text.length).sort((x, y) => x - y),
-      [...b].map((p) => p.text.length).sort((x, y) => x - y),
+      a.map((p) => p.studyRank),
+      b.map((p) => p.studyRank),
     );
-    // 顺序因人而异
+    // 组内顺序因人而异：具体诗序不同
     assert.notEqual(a.map((p) => p.id).join(","), b.map((p) => p.id).join(","));
+    // 块边界对齐：教材块（前 30 首）完整地排在生僻块之前
+    assert.ok(a.slice(0, 30).every((p) => p.studyRank === 0));
+    assert.ok(a.slice(30).every((p) => p.studyRank === 1000));
   });
 
   it("buildTierBands：档与档之间零重叠", () => {

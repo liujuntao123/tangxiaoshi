@@ -3,11 +3,12 @@
  *
  * - 关卡序号 1..50，每 10 关一个学段难度档（小学·低 → 小学·中 → 小学·高 → 初中 → 高中）；
  *   顺序解锁，过关即开下一关。
- * - 每档关卡只从该档诗里出题，档内按篇幅由短到长排布，逐关递增；
- *   某档诗不足铺满 10 关时，由相邻档按篇幅就近补足，且一首诗只会进入一个档。
+ * - 每档关卡只从该档诗里出题，档内按「学习常见度」铺位：教材篇目最前，其后依次是
+ *   通识读本、经典、雅致——大家学过的诗优先出现；某档不足铺满 10 关时由相邻档
+ *   按同样口径就近补足，且一首诗只会进入一个档。
  * - 每关 10 道题来自 10 首不同的诗（一诗一题），另备 3 道补答题供「补答」道具换题。
- * - 出题序列由玩家 userId 派生：同一玩家的每关题目永远固定，不同玩家互不相同，
- *   因此玩家之间无法互相透题（档内每 2 关一段做玩家专属洗牌，难度带全服一致）。
+ * - 出题序列由玩家 userId 派生：同一玩家的每关题目永远固定；常见度组间顺序全服一致，
+ *   组内做玩家专属洗牌，不同玩家的每关诗单互不相同，无法互相透题。
  *
  * 本模块只依赖 `./types`，不引入内容库（bank.json），可被 `node --test` 直接加载；
  * 与真实题库的绑定（POEMS + userId）见 progress.ts 的 levelPlanFor。
@@ -59,7 +60,7 @@ export function tierLabel(tier: number): string {
 
 export type PlanPoem = Pick<
   Poem,
-  "id" | "title" | "authorName" | "lines" | "text" | "background" | "questions" | "difficulty"
+  "id" | "title" | "authorName" | "lines" | "text" | "background" | "questions" | "difficulty" | "studyRank"
 >;
 
 /** 关卡里的一道题：题目连同它所属的诗（来源展示与错题反馈用）。 */
@@ -126,9 +127,16 @@ export function deterministicShuffle<T>(items: readonly T[], seed: number): T[] 
 /** 每档关卡需要的诗数：10 关 × 每关 13 首。 */
 const POEMS_PER_TIER = LEVELS_PER_TIER * POEMS_PER_LEVEL;
 
-/** 档内排序键：篇幅升序（短诗在前），同长按 id 稳定。 */
-function byLengthThenId<T extends PlanPoem>(a: T, b: T): number {
-  return a.text.length - b.text.length || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+/**
+ * 档内排序键：学习常见度升序（教材 → 通识读本 → 经典 → 雅致），同组按篇幅升序、
+ * 再按 id 稳定。该顺序用于「选哪些诗进档」，真正的出题顺序见 bandOrder。
+ */
+function byStudyRankThenLength<T extends PlanPoem>(a: T, b: T): number {
+  return (
+    a.studyRank - b.studyRank ||
+    a.text.length - b.text.length ||
+    (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)
+  );
 }
 
 function tierOfPoem(poem: PlanPoem): Tier {
@@ -139,15 +147,15 @@ function tierOfPoem(poem: PlanPoem): Tier {
 
 /**
  * 全部诗按学段难度分档（ADR-0020）：每档关卡只用自己的档。
- * - 档内按篇幅升序铺位，玩家在档内也是先易后难；
- * - 本档不足铺满 10 关时，按 +1、-1、+2、-2… 就近补足，补足占用的诗登记为已用，
- *   保证同一首诗只进入一个档（关卡之间零重复的全局前提）；
+ * - 档内按学习常见度铺位（教材篇目优先），玩家先遇到学过的诗；
+ * - 本档不足铺满 10 关时，按 +1、-1、+2、-2… 就近补足（同样常见度优先），
+ *   补足占用的诗登记为已用，保证同一首诗只进入一个档（关卡之间零重复的全局前提）；
  * - 极端小题库下某档可能为空，此时回落到全库统一顺序的兜底段（不再保证档位语义）。
  */
 export function buildTierBands<T extends PlanPoem>(poems: readonly T[]): T[][] {
   const byTier: T[][] = Array.from({ length: TIER_COUNT + 1 }, () => []);
   for (const poem of poems) byTier[tierOfPoem(poem)].push(poem);
-  for (const tier of byTier) tier.sort(byLengthThenId);
+  for (const tier of byTier) tier.sort(byStudyRankThenLength);
 
   const used = new Set<string>();
   const bands: T[][] = Array.from({ length: TIER_COUNT + 1 }, () => []);
@@ -166,14 +174,14 @@ export function buildTierBands<T extends PlanPoem>(poems: readonly T[]): T[][] {
           if (band.length >= POEMS_PER_TIER) break;
         }
       }
-      band.sort(byLengthThenId);
+      band.sort(byStudyRankThenLength);
     }
     for (const poem of band) used.add(poem.id);
     bands[tier] = band;
   }
 
   if (bands.slice(1).some((band) => band.length === 0)) {
-    const global = [...poems].sort(byLengthThenId);
+    const global = [...poems].sort(byStudyRankThenLength);
     for (let tier = 1; tier <= TIER_COUNT; tier += 1) {
       if (bands[tier].length === 0) {
         bands[tier] = global.slice((tier - 1) * POEMS_PER_TIER, tier * POEMS_PER_TIER);
@@ -185,22 +193,20 @@ export function buildTierBands<T extends PlanPoem>(poems: readonly T[]): T[][] {
 }
 
 /**
- * 档内关卡顺序：每 2 关一段做玩家专属洗牌。
- * 段间保持篇幅升序 → 每一关的难度带全服一致（循序渐进可见）；
- * 段内顺序因人而异 → 不同玩家同一关拿到的诗互不相同（防透题）。
+ * 档内关卡顺序：按学习常见度分组，组间顺序固定（教材 → 通识读本 → 经典 → 雅致，
+ * 全服一致），组内做玩家专属洗牌——每一关的诗都来自同一个常见度组，
+ * 先学过的先出现；组内顺序与每关诗单因人而异（防透题）。
  */
 export function bandOrder<T extends PlanPoem>(band: readonly T[], userId: string): T[] {
-  const chunkSize = POEMS_PER_LEVEL * 2;
-  const out: T[] = [];
-  for (let start = 0; start < band.length; start += chunkSize) {
-    out.push(
-      ...deterministicShuffle(
-        band.slice(start, start + chunkSize),
-        hashString(`${userId}#band#${start}`),
-      ),
-    );
+  const groups: T[][] = [];
+  for (const poem of band) {
+    const last = groups[groups.length - 1];
+    if (last && last[0].studyRank === poem.studyRank) last.push(poem);
+    else groups.push([poem]);
   }
-  return out;
+  return groups.flatMap((group, index) =>
+    deterministicShuffle(group, hashString(`${userId}#study#${index}`)),
+  );
 }
 
 /** 一首诗抽一题：按关卡独立的随机流选择，诗内 5 题都可能出场。 */

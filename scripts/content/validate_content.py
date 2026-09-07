@@ -101,14 +101,23 @@ def main() -> None:
         if p["collectionId"] not in collections:
             err(f"{p['id']} 引用不存在的文集 {p['collectionId']}")
 
-    # 5) 学段难度（ADR-0020）：1-5 合法，且每档至少够铺一关（13 首）
+    # 5) 学段难度与学习常见度（ADR-0020）：难度 1-5、每档至少一关；常见度按分组口径
+    VALID_STUDY_RANKS = (0, 1000, 2000, 3000)
     tier_counts: Counter = Counter()
+    rank_bad: list[str] = []
     for p in poems:
         difficulty = p.get("difficulty")
         if difficulty in (1, 2, 3, 4, 5):
             tier_counts[difficulty] += 1
         else:
             err(f"{p['id']}「{p['title']}」难度档缺失或非法: {difficulty!r}")
+        study_rank = p.get("studyRank")
+        if study_rank not in VALID_STUDY_RANKS:
+            rank_bad.append(f"{p['id']}:{study_rank!r}")
+        elif (study_rank == 0) != (p["collectionId"] == "jiaokeshu-xuanshi"):
+            err(f"{p['id']}「{p['title']}」常见度 {study_rank} 与文集 {p['collectionId']} 不匹配")
+    if rank_bad:
+        err(f"学习常见度缺失或非法（{len(rank_bad)} 处，前 5: {', '.join(rank_bad[:5])}）")
     for t in range(1, 6):
         if tier_counts[t] < 13:
             err(f"难度档 T{t} 仅 {tier_counts[t]} 首，不足一关（13 首）")

@@ -56,6 +56,7 @@ const testPoem: Poem = {
   text: "床前，明月光，疑是，地上霜。",
   background: "/art/bg/collections/c-1.png",
   difficulty: 1,
+  studyRank: 1000,
   questions: [],
 };
 
