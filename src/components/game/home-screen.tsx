@@ -21,7 +21,7 @@ function StatCell({ icon, value, suffix, label }: { icon: string; value: number;
 
 /**
  * 首页：游戏标题 + 关卡进度 + 唯一主按钮「继续闯关」。
- * 底部次级导航（文集/诗库/墨潮试炼/诗册）。
+ * 底部次级导航（文集/诗库/无尽模式/诗册）。
  */
 export function HomeScreen() {
   const { save } = useSave();
@@ -44,18 +44,17 @@ export function HomeScreen() {
         </p>
       </div>
 
-      {/* 数据座：卷轴=已通关，星=关卡星星，铜钱=环游总分（纸座 + 墨字） */}
-      <div className="absolute inset-x-0 top-[17.5%] z-10 flex justify-center px-4">
-        <div className="paper-plate paper-plate-ink stat-grid w-full max-w-sm px-3 py-2.5">
-          <StatCell icon="/ui/icon-scroll.png" value={progress.cleared} suffix={`/${LEVEL_COUNT}`} label="已通关" />
-          <StatCell icon="/ui/icon-star.png" value={progress.stars} label="星星" />
-          <StatCell icon="/ui/icon-coin.png" value={save.totalScore} label="总分" />
-        </div>
-      </div>
-
-      {/* 关卡进度条：下一关提示并入同一座纸面，读作一条「远征路线」 */}
-      <div className="absolute inset-x-0 top-[31%] z-10 flex justify-center px-6">
-        <div className="paper-plate paper-plate-ink w-full max-w-sm px-3 py-2">
+      {/* 远征牌：数据三格 + 墨线 + 下一关进度，归入同一座纸面读作一块「战报」 */}
+      <div className="absolute inset-x-0 top-[15.5%] z-10 flex justify-center px-4">
+        <div className="paper-plate paper-plate-ink w-full max-w-sm px-3 py-2.5">
+          <div className="stat-grid">
+            <StatCell icon="/ui/icon-scroll.png" value={progress.cleared} suffix={`/${LEVEL_COUNT}`} label="已通关" />
+            <StatCell icon="/ui/icon-star.png" value={progress.stars} label="星星" />
+            <StatCell icon="/ui/icon-coin.png" value={save.totalScore} label="总分" />
+          </div>
+          <div className="ink-divider my-2" aria-hidden>
+            <span className="font-display text-[9px]">◈</span>
+          </div>
           <p className="mb-1.5 text-center text-[10.5px] tracking-[0.3em] text-ink-soft">
             {allCleared ? "50 关全部通关！" : `下一关 · 第 ${nextLevel} 关`}
           </p>
@@ -97,7 +96,7 @@ export function HomeScreen() {
         </Link>
         <Link to="/endless" className="tap flex flex-col items-center gap-1 py-2">
           <img src="/ui/icon-endless.png" alt="" className="h-8 w-8 object-contain drop-shadow-md" />
-          <span className="font-display text-[13px] tracking-[0.18em] text-paper paper-glow">墨潮试炼</span>
+          <span className="font-display text-[13px] tracking-[0.18em] text-paper paper-glow">无尽模式</span>
         </Link>
         <Link to="/achievements" className="tap flex flex-col items-center gap-1 py-2">
           <img src="/ui/icon-achieve.png" alt="" className="h-8 w-8 object-contain drop-shadow-md" />

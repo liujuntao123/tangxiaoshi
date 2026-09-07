@@ -211,7 +211,7 @@ export function EndlessView() {
   if (deck.length === 0 || (inRun && !question)) {
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
-        <StageHud title="墨潮试炼" backTo="/" />
+        <StageHud title="无尽模式" backTo="/" />
         <div className="absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10">
           <ArtPanel className="text-center">
             <p className="title-ink mt-2 text-2xl">这一局没有可出的题</p>
@@ -230,7 +230,7 @@ export function EndlessView() {
   if (phase === "idle") {
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
-        <StageHud title="墨潮试炼" backTo="/" />
+        <StageHud title="无尽模式" backTo="/" />
         <div className="absolute inset-x-3 inset-y-0 z-10 flex flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
           {/* 开局仪式感：唐小诗立绘跃然卷上（审查 P1-13） */}
           <div className="relative mx-auto mb-2 flex h-28 items-end justify-center">
@@ -286,7 +286,7 @@ export function EndlessView() {
     const newRecord = view.streak > view.prevStreak && view.streak > 0;
     return (
       <Stage bg={GAME_BACKGROUNDS.endless}>
-        <StageHud title="墨潮试炼" backTo="/" />
+        <StageHud title="无尽模式" backTo="/" />
         <div className="absolute inset-x-3 inset-y-0 z-10 flex flex-col justify-center pb-[max(1rem,env(safe-area-inset-bottom))]">
           <ArtPanel className="text-center">
             <p className="title-ink text-2xl">本局结束</p>
@@ -316,7 +316,7 @@ export function EndlessView() {
 
   return (
     <Stage bg={GAME_BACKGROUNDS.endless}>
-      <StageHud title="墨潮试炼" backTo="/" />
+      <StageHud title="无尽模式" backTo="/" />
       <div className="absolute inset-x-0 top-[max(3.8rem,calc(env(safe-area-inset-top)+3.4rem))] z-10 flex items-center justify-center gap-2">
         <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-[0.3em] text-paper/95">
           连对 <span key={streak} className="combo-bump inline-block text-[#b9e2d2]">{streak}</span>

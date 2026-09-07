@@ -365,7 +365,6 @@ export function LevelQuiz({
 
       {phase === "intro" ? (
         <IntroPanel
-          level={level}
           inventory={inventory}
           onStart={() => {
             sfxTap();
@@ -569,11 +568,9 @@ function ItemChip({
 
 /** 开场说明：把过关线、星级和道具规则一次讲清楚。 */
 function IntroPanel({
-  level,
   inventory,
   onStart,
 }: {
-  level: number;
   inventory: Inventory;
   onStart: () => void;
 }) {
@@ -581,7 +578,8 @@ function IntroPanel({
   return (
     <section className="pop-in absolute inset-x-3 bottom-[max(1rem,env(safe-area-inset-bottom))] z-20">
       <ArtPanel className="text-center">
-        <p className="title-ink text-3xl">{`第 ${level} 关`}</p>
+        {/* 页头横匾已标「第 N 关」，面板标题改用出发口令，避免重复 */}
+        <p className="title-ink text-3xl">整装出发</p>
         {/* 三星预览：实心=可冲星档，给「开打前」一个具体目标 */}
         <div className="mt-1.5 flex justify-center gap-1.5" aria-label="星档：最高三星">
           {[1, 2, 3].map((n) => (
@@ -723,15 +721,19 @@ function ResultPanel({
           {result.won ? (
             <div className="mt-2 flex justify-center gap-2" aria-label={`${result.stars} 星`}>
               {[1, 2, 3].map((n) => (
-                <img
+                /* 落印动画会以 fill-mode 把 opacity 钉回 1，置灰必须挂在父级，
+                   否则未获得的星也会被动画「点亮」（走查实锤） */
+                <span
                   key={n}
-                  src="/ui/icon-star.png"
-                  alt=""
-                  style={{ animationDelay: `${(n - 1) * 160}ms` }}
-                  className={`seal-pop h-10 w-10 object-contain drop-shadow-md ${
-                    n <= result.stars ? "" : "opacity-25 grayscale"
-                  }`}
-                />
+                  className={`inline-block ${n <= result.stars ? "" : "opacity-30 grayscale"}`}
+                >
+                  <img
+                    src="/ui/icon-star.png"
+                    alt=""
+                    style={{ animationDelay: `${(n - 1) * 160}ms` }}
+                    className="seal-pop h-10 w-10 object-contain drop-shadow-md"
+                  />
+                </span>
               ))}
             </div>
           ) : null}

@@ -93,7 +93,7 @@ export function LibraryAuthor({
                       }}
                       className="absolute inset-0 h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-ink/15 via-transparent to-ink/70" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-ink/25 via-transparent to-ink/80" />
                     {cleared ? (
                       <img
                         src="/ui/check-on.png"

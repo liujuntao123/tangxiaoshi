@@ -373,7 +373,10 @@ export function PoemQuiz({
       <div className="absolute inset-x-0 top-[max(3.6rem,calc(env(safe-area-inset-top)+3.2rem))] z-10 flex items-center justify-between gap-2 px-4">
         <div className="flex min-w-0 items-center gap-1.5">
           {poemMode ? (
-            <HpPips value={lanternsLeft} label="灯笼" max={chances} />
+            /* 灯笼行收进墨签：与右侧题号签同一套 HUD 语言 */
+            <span className="ink-chip paper-glow flex items-center gap-1.5 px-2.5 py-1">
+              <HpPips value={lanternsLeft} label="灯笼" max={chances} />
+            </span>
           ) : (
             <span className="ink-chip paper-glow px-3 py-1 text-[11px] tracking-[0.3em] text-paper/95">练习</span>
           )}

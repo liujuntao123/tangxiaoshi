@@ -37,7 +37,11 @@ export function PagedList({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="min-h-0 flex-1">{children(from, to)}</div>
+      {/* overflow-y-auto：页内容超出预算时在本区内滚动（移动端隐藏滚动条），
+          绝不溢出盖住下方的翻页玉钮；m-auto 让短页（如只有 2 章）垂直居中不显空 */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="m-auto w-full">{children(from, to)}</div>
+      </div>
       {/* 翻页玉钮：page-prev/next.png 玉盘箭头（缺图回退字衬 ‹ ›），游戏 UI 风格 */}
       <div className="flex items-center justify-center gap-4 pb-4 pt-2">
         <PageArrow dir="prev" disabled={page <= 0} onClick={() => go(-1)} />
@@ -68,7 +72,7 @@ function PageArrow({
       aria-label={dir === "prev" ? "上一页" : "下一页"}
       disabled={disabled}
       onClick={onClick}
-      className="tap relative grid h-11 w-11 place-items-center disabled:opacity-45"
+      className="tap relative grid h-11 w-11 place-items-center disabled:opacity-60"
     >
       {/* 字衬兜底：贴图缺失时露出（生成图正常时被完全盖住） */}
       <span className="absolute inset-0 grid place-items-center rounded-full border border-paper/30 bg-paper/85 font-display text-xl leading-none text-ink-soft">
@@ -77,7 +81,7 @@ function PageArrow({
       <img
         src={`/ui/page-${dir}.png`}
         alt=""
-        className={`relative h-11 w-11 object-contain drop-shadow-md ${disabled ? "grayscale" : ""}`}
+        className={`relative h-11 w-11 object-contain drop-shadow-md ${disabled ? "saturate-[0.45]" : ""}`}
         onError={(e) => {
           e.currentTarget.style.visibility = "hidden";
         }}

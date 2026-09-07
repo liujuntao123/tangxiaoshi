@@ -3,7 +3,7 @@
 问答与引导语由 `scripts/content/build-bank.py` 从 `data/poetry-site/` + `scripts/content/catalog.py`
 编译生成。本文是生成规则的唯一权威；改规则先改这里，再改编译器。
 
-“墨潮远征”（关卡制）、诗集资料库、诗库和墨潮试炼共用同一份 `bank.json`；关卡只按确定性算法从题池抽题，不在运行时生成新题。内容源、编译命令和文档同步规则见 [`content.md`](content.md) 与根目录 [`AGENTS.md`](../AGENTS.md)。
+“墨潮远征”（关卡制）、诗集资料库、诗库和无尽模式共用同一份 `bank.json`；关卡只按确定性算法从题池抽题，不在运行时生成新题。内容源、编译命令和文档同步规则见 [`content.md`](content.md) 与根目录 [`AGENTS.md`](../AGENTS.md)。
 
 ## 一、诗句问答（每诗 5 题）
 

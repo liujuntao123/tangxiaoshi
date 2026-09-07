@@ -82,11 +82,12 @@ await shot("quiz-q1", 1100);
   const quoteEl = page.locator("section .title-art").first();
   const quote = (await quoteEl.innerText().catch(() => "")).trim();
   const answer = answerByQuote.get(quote);
-  // 直接点第一个非正确项：选项按钮都在选项容器里，取与正确答案不同的第一个
+  // 直接点第一个非正确项；选项木牍带「甲乙丙丁」序号印前缀，比较时剥掉
+  const norm = (s) => s.replace(/^[甲乙丙丁]\s*\n?/, "").trim();
   const candidates = page.getByRole("button").filter({ hasText: /\S/ });
   let clicked = false;
   for (let i = 0; i < (await candidates.count()); i++) {
-    const t = (await candidates.nth(i).innerText().catch(() => "")).trim();
+    const t = norm((await candidates.nth(i).innerText().catch(() => "")).trim());
     if (t && t !== answer && t.length <= 30) {
       await candidates.nth(i).click();
       clicked = true;

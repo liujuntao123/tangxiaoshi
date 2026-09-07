@@ -72,7 +72,7 @@ export function PracticeView() {
             {/* 维度 1：文集 */}
             <div className="flex items-center gap-2">
               <span className="w-8 shrink-0 font-display text-xs tracking-widest text-ink-soft">文集</span>
-              <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,black_90%,transparent)]">
                 <button
                   type="button"
                   className={chip(!collectionId)}
@@ -105,7 +105,7 @@ export function PracticeView() {
             {chapters.length > 0 ? (
               <div className="flex items-center gap-2">
                 <span className="w-8 shrink-0 font-display text-xs tracking-widest text-ink-soft">章节</span>
-                <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,black_90%,transparent)]">
                   <button
                     type="button"
                     className={chip(!chapterId)}
@@ -136,7 +136,7 @@ export function PracticeView() {
             {/* 维度 2：作者 */}
             <div className="flex items-center gap-2">
               <span className="w-8 shrink-0 font-display text-xs tracking-widest text-ink-soft">作者</span>
-              <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,black_90%,transparent)]">
                 <button
                   type="button"
                   className={chip(authorIds.length === 0)}
@@ -166,7 +166,7 @@ export function PracticeView() {
             {/* 维度 3：朝代 */}
             <div className="flex items-center gap-2">
               <span className="w-8 shrink-0 font-display text-xs tracking-widest text-ink-soft">朝代</span>
-              <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex flex-1 items-center gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,black_90%,transparent)]">
                 <button
                   type="button"
                   className={chip(dynastyIds.length === 0)}
@@ -218,7 +218,7 @@ export function PracticeView() {
                       }}
                       className="absolute inset-0 h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-ink/25 via-transparent to-ink/70" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-ink/25 via-transparent to-ink/80" />
                     <p className="absolute inset-x-1 bottom-1 line-clamp-2 text-[11px] leading-tight text-paper [text-shadow:0_1px_3px_rgb(28_23_18/90%)]">
                       {poem.title}
                     </p>

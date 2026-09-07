@@ -19,17 +19,18 @@ export function CollectionGrid() {
   return (
     <PagedList pageSize={6} count={COLLECTIONS.length}>
       {(from, to) => (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-2.5">
           {COLLECTIONS.slice(from, to).map((c, i) => {
-          {/* 使用 ui-panel-compact 轻面板外壳 + p-2.5 释放封面与标题宽度 */}
+          {/* 使用 ui-panel-compact 轻面板外壳 + p-2 释放封面与标题宽度；
+              卡面收紧保证 3 行卡 + 分页控件一屏放下（与关卡列表同款预算） */}
           const card = (
             <div
-              className={`ui-panel-compact rise-in h-full p-2.5 text-center ${c.playable ? "" : "opacity-60 grayscale"}`}
+              className={`ui-panel-compact rise-in h-full p-2 text-center ${c.playable ? "" : "opacity-60 grayscale"}`}
               style={{ animationDelay: `${i * 45}ms` }}
             >
-              <ArtSlot className="mx-auto h-24 w-24 rounded-full" imgClassName="h-20" src={c.art} />
-              <p className="title-ink mt-1.5 text-base leading-tight">{c.title}</p>
-              <p className="mt-1 inline-block rounded-full border border-ink/20 bg-ink/5 px-2 py-px text-[11px] text-ink-soft">
+              <ArtSlot className="mx-auto h-20 w-20 rounded-full" imgClassName="h-16" src={c.art} />
+              <p className="title-ink mt-1 text-[15px] leading-tight">{c.title}</p>
+              <p className="mt-1 inline-block rounded-full border border-ink/20 bg-ink/5 px-2 py-px text-[10.5px] text-ink-soft">
                 {c.playable ? `${c.poemCount} 首 · ${c.chapterIds.length} 章` : "待开放"}
               </p>
             </div>
